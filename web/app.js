@@ -1,5 +1,5 @@
 import {
-  stateAt, apparentSolarTime, subdivisionsOf, subdivisionAt, moonEvents, moonPhase,
+  stateAt, apparentSolarTime, subdivisionsOf, subdivisionAt, moonEvents, moonPhase, makeTransliterator,
 } from './engine/index.js';
 
 const $ = (id) => document.getElementById(id);
@@ -13,6 +13,7 @@ const store = {
 
 let places = [];
 let names = null;
+let anbur = (s) => s;
 let place = null;
 let dialect = store.get('dialect') === 'inv' ? 'inv' : 'kp';
 let state = null;
@@ -21,10 +22,12 @@ let moon = null;
 /* ---------- данные ---------- */
 
 async function loadData() {
-  const [p, n] = await Promise.all([
+  const [p, n, a] = await Promise.all([
     fetch('data/places.json').then((r) => r.json()),
     fetch('data/names.json').then((r) => r.json()),
+    fetch('data/anbur.json').then((r) => r.json()),
   ]);
+  anbur = makeTransliterator(a);
   places = p.places;
   names = n;
 }
@@ -289,6 +292,7 @@ function renderText() {
   const q = quarterById(state.quarter);
   const nextR = rubezh(state.next.id);
   $('part-kp').textContent = word(part);
+  $('part-anbur').textContent = anbur(word(part));
   $('part-ru').textContent = part.gloss;
   document.body.dataset.quarter = state.quarter;
   $('quarter').textContent = `Четверть ${word(q)} — ${q.ru}, сторона света — ${q.direction}.`;
@@ -305,9 +309,10 @@ function renderText() {
     if (r.t <= state.now) li.classList.add('past');
     if (r === state.current || (r.id === state.current.id && r.t === state.current.t)) li.classList.add('current');
     if (r.merged) li.classList.add('merged');
-    li.innerHTML = '<span class="id"></span><span class="kp"><span class="w"></span><span class="ru"></span></span><span class="t"></span>';
+    li.innerHTML = '<span class="id"></span><span class="kp"><span class="w"></span> <span class="a anbur" aria-hidden="true"></span><span class="ru"></span></span><span class="t"></span>';
     li.querySelector('.id').textContent = r.id;
     li.querySelector('.w').textContent = word(info);
+    li.querySelector('.a').textContent = anbur(word(info));
     li.querySelector('.ru').textContent = `${info.ru}: ${info.oldBelievers.toLowerCase()}, ${info.muslims.toLowerCase()}`;
     li.querySelector('.t').textContent = fmt.format(r.t);
     ol.append(li);

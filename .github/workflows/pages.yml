@@ -23,8 +23,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Шрифты PT Serif и PT Sans
-        run: npm install --no-save @fontsource/pt-serif @fontsource/pt-sans
+      - name: Шрифты PT Serif, PT Sans и Noto Sans Old Permic
+        run: npm install --no-save @fontsource/pt-serif @fontsource/pt-sans @fontsource/noto-sans-old-permic
       - name: Тесты ядра
         run: npm test
       - name: Сборка сайта

@@ -1,0 +1,75 @@
+/* Анбур: Noto Sans Old Permic (OFL). Файл кладёт в fonts/ сборка. */
+@font-face {
+  font-family: "Anbur";
+  font-display: swap;
+  src: local("Noto Sans Old Permic"), local("NotoSansOldPermic-Regular"),
+       url("fonts/noto-sans-old-permic.woff2") format("woff2");
+  unicode-range: U+10350-1037F, U+0300-036F;
+}
+
+.anbur { font-family: "Anbur", var(--serif); font-feature-settings: normal; }
+
+.nav a { color: var(--soft); }
+
+.gen {
+  display: grid; gap: 1.5rem 3rem;
+  max-width: 68rem; margin: 0 auto; padding: 1rem;
+}
+@media (min-width: 60rem) {
+  .gen { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .letters { grid-column: 1 / -1; }
+}
+
+.gen-out {
+  border: 1px solid var(--line); border-radius: 0.6rem;
+  padding: 1.5rem 1.25rem 1rem; min-height: 12rem;
+  background: rgba(255, 255, 255, 0.35);
+}
+.out {
+  margin: 0; font-size: clamp(2.6rem, 8vw, 4.2rem); line-height: 1.35;
+  overflow-wrap: anywhere; white-space: pre-wrap; min-height: 1.4em;
+}
+.out-src { margin: 0.5rem 0 1rem; color: var(--soft); font: 400 1.1rem/1.4 var(--serif); white-space: pre-wrap; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.lang { display: flex; gap: 1.25rem; margin-bottom: 0.75rem; color: var(--soft); }
+.lang input { accent-color: var(--accent); }
+
+textarea {
+  width: 100%; font: 400 1.25rem/1.4 var(--serif); color: var(--ink);
+  background: rgba(255, 255, 255, 0.6); border: 1px solid var(--line); border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem; resize: vertical;
+}
+textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Клавиатура: на каждой клавише — кириллица и буква анбура */
+.kbd { margin-top: 0.75rem; display: grid; gap: 0.35rem; user-select: none; }
+.kbd-row { display: flex; gap: 0.3rem; justify-content: center; }
+.key {
+  flex: 1 1 0; min-width: 0; max-width: 3.4rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0.3rem 0 0.25rem; border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.7); border: 1px solid var(--line);
+  line-height: 1.1;
+}
+.key .k-cyr { font: 700 1rem/1 var(--serif); }
+.key .k-anb { font-size: 1.15rem; color: var(--q-ryt); margin-top: 0.15rem; }
+.key.extra { background: #f3e7cf; }
+.key.wide { flex: 3 1 0; max-width: none; }
+.key.mid { flex: 1.6 1 0; max-width: 5rem; }
+.key:active { transform: translateY(1px); }
+
+.letter-table {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: 0.5rem;
+}
+.letter-table li {
+  display: grid; grid-template-columns: 2.6rem 1fr; gap: 0 0.5rem; align-items: center;
+  padding: 0.45rem 0.6rem; border: 1px solid var(--line); border-radius: 0.4rem;
+}
+.letter-table .g { grid-row: span 3; font-size: 2rem; text-align: center; }
+.letter-table .c { font: 700 1rem/1.2 var(--serif); }
+.letter-table .n { font-size: 0.85rem; }
+.letter-table .b { font-size: 0.75rem; color: var(--soft); }
+.letter-table li.late { border-style: dashed; }
+.letter-table li.convention { border-style: dotted; }

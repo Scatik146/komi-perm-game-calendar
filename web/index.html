@@ -9,11 +9,13 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="anbur.css">
   <script type="module" src="app.js"></script>
 </head>
 <body data-quarter="lun">
   <header class="bar">
     <h1 class="title">Шонді</h1>
+    <nav class="nav"><a href="anbur.html">Надписи анбуром</a></nav>
     <div class="where">
       <label for="place" class="sr">Место</label>
       <select id="place"></select>
@@ -31,6 +33,7 @@
     <section class="info">
       <div class="now" aria-live="polite">
         <p id="part-kp" class="part-kp"></p>
+        <p id="part-anbur" class="part-anbur anbur" aria-hidden="true"></p>
         <p id="part-ru" class="part-ru"></p>
         <p id="sub" class="sub-share"></p>
       </div>

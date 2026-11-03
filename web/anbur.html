@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Анбур — надписи древнепермским письмом</title>
+  <meta name="description" content="Генератор надписей анбуром — древнепермским письмом Стефана Пермского — с экранной клавиатурой для коми-пермяцкого и русского языков.">
+  <meta name="theme-color" content="#1d2b3a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="anbur.css">
+  <script type="module" src="anbur.js"></script>
+</head>
+<body data-quarter="lun" class="anbur-page">
+  <header class="bar">
+    <h1 class="title">Анбур</h1>
+    <nav class="nav"><a href="./">Солнечные часы</a></nav>
+  </header>
+
+  <main class="gen">
+    <section class="gen-out" aria-label="Надпись анбуром">
+      <p id="out" class="anbur out" lang="kv-Perm"></p>
+      <p id="out-src" class="out-src"></p>
+      <div class="actions">
+        <button type="button" id="copy">Скопировать надпись</button>
+        <button type="button" id="png">Скачать картинку</button>
+        <button type="button" id="svg">Скачать SVG</button>
+      </div>
+      <p id="msg" class="status" role="status"></p>
+    </section>
+
+    <section class="gen-in">
+      <div class="lang" role="radiogroup" aria-label="Язык текста">
+        <label><input type="radio" name="lang" value="kp" checked> коми-пермяцкий</label>
+        <label><input type="radio" name="lang" value="ru"> русский</label>
+      </div>
+      <label for="src" class="sr">Текст кириллицей</label>
+      <textarea id="src" rows="3" spellcheck="false" autocomplete="off">Луншӧр</textarea>
+      <div id="kbd" class="kbd" aria-label="Экранная клавиатура"></div>
+    </section>
+
+    <section class="letters">
+      <h2 class="list-title">Буквы</h2>
+      <p class="small">Названия букв — по реконструкции В. И. Лыткина. «Стефановская» — буква азбуки Стефана Пермского (XIV в.), «поздняя» — добавлена в XVI–XVII вв., «условная» — наше решение для современных букв, которых в старом письме не было.</p>
+      <ol id="table" class="letter-table"></ol>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>В коми-пермяцком тексте буква о пишется буквой вой — её название значит «год» и «ночь», а ӧ — буквой о, как писал её сам Стефан. В русском тексте о пишется буквой о, как в старых русских надписях анбуром.</p>
+    <p>По книге: Лыткин В. И. Древнепермский язык. М., 1952. Шрифт — Noto Sans Old Permic (OFL).</p>
+    <p>© 2026 Scatik146. Код — Apache 2.0, тексты — CC BY 4.0. <a href="https://github.com/Scatik146/komi-perm-game-calendar">Исходники на GitHub</a></p>
+  </footer>
+</body>
+</html>

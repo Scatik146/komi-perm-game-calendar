@@ -1,0 +1,48 @@
+{
+  "_comment": "Соответствие современной кириллицы (коми-пермяцкой и русской) буквам анбура (древнепермского письма, блок Unicode U+10350–U+1037F). Каждой кириллической букве — свой знак, запись обратима. basis: stefan — буква стефановской азбуки в том же значении; late — буква, добавленная в XVI–XVII вв. (по Лыткину, 1952); convention — наше условное решение, исторически не засвидетельствовано в таком виде. Названия букв — по Лыткину (приложение 3) и по именам Unicode.",
+  "source": "Лыткин В. И. Древнепермский язык. М., 1952; заявка в Unicode N4263 (М. Эверсон, 2012)",
+  "diacritics": {
+    "dots": "̈",
+    "dot": "̇"
+  },
+  "letters": [
+    { "cyr": "дж", "anbur": "𐍖", "name": "джой",  "basis": "stefan" },
+    { "cyr": "дз", "anbur": "𐍘", "name": "дзита", "basis": "stefan", "note": "мягкая аффриката д'з'" },
+
+    { "cyr": "а", "anbur": "𐍐", "name": "ан",    "basis": "stefan", "meaning": "челюсть" },
+    { "cyr": "б", "anbur": "𐍑", "name": "бур",   "basis": "stefan", "meaning": "плесень (хороший)" },
+    { "cyr": "в", "anbur": "𐍮", "name": "вэр",   "basis": "late",   "meaning": "раб (всегда)", "note": "у Стефана в писалось буквой у; вэр введена позже" },
+    { "cyr": "г", "anbur": "𐍒", "name": "гай",   "basis": "stefan" },
+    { "cyr": "д", "anbur": "𐍓", "name": "дой",   "basis": "stefan", "meaning": "рана" },
+    { "cyr": "е", "anbur": "𐍲", "name": "йэ",    "basis": "late" },
+    { "cyr": "ё", "anbur": "𐍞̈", "name": "вой с двумя точками", "basis": "convention", "note": "по образцу й = и с двумя точками" },
+    { "cyr": "ж", "anbur": "𐍕", "name": "жой",   "basis": "stefan" },
+    { "cyr": "з", "anbur": "𐍗", "name": "зата",  "basis": "stefan" },
+    { "cyr": "и", "anbur": "𐍙", "name": "и",     "basis": "stefan" },
+    { "cyr": "і", "anbur": "𐍙̇", "name": "и с точкой", "basis": "convention", "note": "коми і после твёрдого согласного" },
+    { "cyr": "й", "anbur": "𐍙̈", "name": "и с двумя точками", "basis": "late", "note": "так й писали в подписи епископа Филофея (1474) и в надписях Тр., Сош." },
+    { "cyr": "к", "anbur": "𐍚", "name": "кокэ",  "basis": "stefan", "meaning": "мотыжит" },
+    { "cyr": "л", "anbur": "𐍛", "name": "лэй",   "basis": "stefan" },
+    { "cyr": "м", "anbur": "𐍜", "name": "мэнӧ",  "basis": "stefan", "meaning": "меня" },
+    { "cyr": "н", "anbur": "𐍝", "name": "нэнӧ",  "basis": "stefan" },
+    { "cyr": "о", "anbur": "𐍞", "name": "вой",   "basis": "stefan", "meaning": "год; ночь", "ru": "𐍩", "note": "коми о — потомок закрытого ô (буква вой); в русских текстах о писали омегой" },
+    { "cyr": "ӧ", "anbur": "𐍩", "name": "о",     "basis": "stefan", "note": "Стефан писал ӧ буквой о" },
+    { "cyr": "п", "anbur": "𐍟", "name": "пэй",   "basis": "stefan", "meaning": "пазуха (?)" },
+    { "cyr": "р", "anbur": "𐍠", "name": "рэй",   "basis": "stefan" },
+    { "cyr": "с", "anbur": "𐍡", "name": "сий",   "basis": "stefan", "meaning": "волос, волокно" },
+    { "cyr": "т", "anbur": "𐍢", "name": "тай",   "basis": "stefan", "meaning": "оказывается" },
+    { "cyr": "у", "anbur": "𐍣", "name": "у",     "basis": "stefan" },
+    { "cyr": "ф", "anbur": "𐍫", "name": "эф",    "basis": "late" },
+    { "cyr": "х", "anbur": "𐍬", "name": "ха",    "basis": "late" },
+    { "cyr": "ц", "anbur": "𐍭", "name": "цю",    "basis": "late" },
+    { "cyr": "ч", "anbur": "𐍤", "name": "чэры",  "basis": "stefan", "meaning": "рыба" },
+    { "cyr": "ш", "anbur": "𐍥", "name": "шой",   "basis": "stefan", "meaning": "труп; ешь (глина)" },
+    { "cyr": "щ", "anbur": "𐍦", "name": "щой",   "basis": "late" },
+    { "cyr": "ъ", "anbur": "𐍯", "name": "ер",    "basis": "late" },
+    { "cyr": "ы", "anbur": "𐍧", "name": "ыры",   "basis": "stefan" },
+    { "cyr": "ь", "anbur": "𐍰", "name": "ери",   "basis": "late" },
+    { "cyr": "э", "anbur": "𐍔", "name": "э",     "basis": "stefan" },
+    { "cyr": "ю", "anbur": "𐍳", "name": "ю",     "basis": "late" },
+    { "cyr": "я", "anbur": "𐍴", "name": "я",     "basis": "late" }
+  ]
+}

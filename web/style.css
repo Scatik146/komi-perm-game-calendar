@@ -141,3 +141,8 @@ main {
   border-top: 1px solid var(--line); color: var(--soft); font-size: 0.85rem;
 }
 .foot p { margin: 0 0 0.5rem; max-width: 70ch; }
+
+.part-anbur { margin: 0.2rem 0 0; font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.2; color: var(--soft); }
+.rubezhi .a { font-size: 1.05rem; color: var(--soft); font-weight: 400; }
+.bar .nav { flex: 1 1 auto; }
+.nav a { color: var(--soft); }
