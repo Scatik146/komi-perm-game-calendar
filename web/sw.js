@@ -1,5 +1,5 @@
 // Офлайн-кэш: сайт работает без сети после первого открытия.
-const CACHE = 'shondi-v3';
+const CACHE = 'shondi-v4';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
   'anbur.html', 'anbur.css', 'anbur.js', 'fonts/NotoSansOldPermic-Regular.ttf',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
@@ -19,11 +19,17 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// сначала сеть (чтобы обновления доходили), при её отсутствии — кэш
+// Сначала сеть, причём с проверкой свежести у сервера (cache: 'no-cache'):
+// GitHub Pages разрешает браузеру 10 минут держать файлы, и без этого
+// обновления сайта доходили с опозданием. При отсутствии сети — кэш.
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  const sameOrigin = new URL(e.request.url).origin === location.origin;
+  const fresh = sameOrigin
+    ? fetch(e.request.url, { cache: 'no-cache', credentials: 'same-origin' })
+    : fetch(e.request);
   e.respondWith(
-    fetch(e.request)
+    fresh
       .then((res) => {
         if (res.ok && new URL(e.request.url).origin === location.origin) {
           const copy = res.clone();
