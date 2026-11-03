@@ -1,0 +1,32 @@
+{
+  "_comment": "Точки календаря. Координаты в градусах (с.ш., в.д.). precision: center — административный центр; approx — приблизительно, уточнить. tz — часовой пояс IANA для гражданского времени.",
+  "places": [
+    { "id": "gainy",      "name": "Гайны",       "district": "Гайнский",      "totem": { "ru": "Белка",     "kp": "Ур" },       "lat": 60.30, "lon": 54.32, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "kosa",       "name": "Коса",        "district": "Косинский",     "totem": { "ru": "Медведь",   "kp": "Ош" },       "lat": 59.94, "lon": 54.99, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "kochevo",    "name": "Кочёво",      "district": "Кочёвский",     "totem": { "ru": "Заяц",      "kp": "Кӧч" },      "lat": 59.60, "lon": 54.31, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "yusva",      "name": "Юсьва",       "district": "Юсьвинский",    "totem": { "ru": "Лебедь",    "kp": "Юсь" },      "lat": 58.98, "lon": 54.96, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "kudymkar",   "name": "Кудымкар",    "district": "Кудымкарский",  "totem": { "ru": "Горностай", "kp": "Чужмӧр" },   "lat": 59.01, "lon": 54.66, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "yurla",      "name": "Юрла",        "district": "Юрлинский",     "totem": { "ru": "Щука",      "kp": "Сир" },      "lat": 59.33, "lon": 54.32, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "cherdyn",    "name": "Чердынь",     "district": "Чердынский",    "totem": { "ru": "Лось",      "kp": "Вӧрмӧс" },   "lat": 60.40, "lon": 56.48, "tz": "Asia/Yekaterinburg", "kind": "district", "precision": "center" },
+    { "id": "koygorodok", "name": "Койгородок",  "district": "Койгородский",  "totem": { "ru": "Глухарь",   "kp": "Дозмӧр" },   "lat": 59.99, "lon": 50.83, "tz": "Europe/Moscow",      "kind": "district", "precision": "center" },
+
+    { "id": "perm",         "name": "Пермь",        "lat": 58.01, "lon": 56.25, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "berezniki",    "name": "Березники",    "lat": 59.41, "lon": 56.80, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "solikamsk",    "name": "Соликамск",    "lat": 59.63, "lon": 56.77, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "chaykovsky",   "name": "Чайковский",   "lat": 56.77, "lon": 54.15, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "kungur",       "name": "Кунгур",       "lat": 57.43, "lon": 56.96, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "lysva",        "name": "Лысьва",       "lat": 58.10, "lon": 57.80, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "krasnokamsk",  "name": "Краснокамск",  "lat": 58.08, "lon": 55.75, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "chusovoy",     "name": "Чусовой",      "lat": 58.29, "lon": 57.81, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "dobryanka",    "name": "Добрянка",     "lat": 58.46, "lon": 56.42, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "gubakha",      "name": "Губаха",       "lat": 58.84, "lon": 57.55, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "vereshchagino","name": "Верещагино",   "lat": 58.08, "lon": 54.66, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+    { "id": "osa",          "name": "Оса",          "lat": 57.29, "lon": 55.47, "tz": "Asia/Yekaterinburg", "kind": "city", "precision": "approx" },
+
+    { "id": "izyur",         "name": "Изъюр (Кудымкарское городище)", "note": "VII–XVII вв., ломоватовская и родановская культуры", "lat": 59.02, "lon": 54.65, "tz": "Asia/Yekaterinburg", "kind": "gorodishche", "precision": "approx" },
+    { "id": "anyushkar",      "name": "Анюшкар (Кыласово)",            "note": "X–XV вв., булгарская фактория, мусульманский могильник", "lat": 58.62, "lon": 56.30, "tz": "Asia/Yekaterinburg", "kind": "gorodishche", "precision": "approx" },
+    { "id": "rozhdestvenskoe","name": "Рождественское (Афкула)",       "note": "X–XIV вв., булгарский торговый центр; здесь определяли время молитв", "lat": 58.43, "lon": 55.33, "tz": "Asia/Yekaterinburg", "kind": "gorodishche", "precision": "approx" },
+    { "id": "iskor",          "name": "Искор",                         "note": "Чердынский край; в июне ~11 дней без ночи по −6°", "lat": 60.65, "lon": 56.70, "tz": "Asia/Yekaterinburg", "kind": "gorodishche", "precision": "approx" },
+    { "id": "glyadenovo",     "name": "Гляденово",                     "note": "святилище IV в. до н. э. — конец I тыс. н. э.", "lat": 57.92, "lon": 56.10, "tz": "Asia/Yekaterinburg", "kind": "gorodishche", "precision": "approx" }
+  ]
+}

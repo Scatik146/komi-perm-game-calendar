@@ -1,0 +1,143 @@
+/* Шрифты PT Serif / PT Sans (ParaType, OFL) — созданы для языков народов России,
+   поддерживают ӧ и і. Файлы кладёт в fonts/ сборка (scripts/build-site.sh). */
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: local("PT Serif"), url("fonts/pt-serif-cyrillic-ext-400-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: local("PT Serif"), url("fonts/pt-serif-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: local("PT Serif"), url("fonts/pt-serif-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: local("PT Serif Bold"), url("fonts/pt-serif-cyrillic-ext-700-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: local("PT Serif Bold"), url("fonts/pt-serif-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: local("PT Serif Bold"), url("fonts/pt-serif-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: local("PT Sans"), url("fonts/pt-sans-cyrillic-ext-400-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: local("PT Sans"), url("fonts/pt-sans-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: local("PT Sans"), url("fonts/pt-sans-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0400-045F, U+0460-052F; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
+
+/* Цвета четвертей на циферблате — постоянные */
+:root {
+  --q-oy: #2c3f58;     /* ночь — ельник под звёздами */
+  --q-asyv: #b2302a;   /* утро — красная нить коми-пермяцкой вышивки */
+  --q-lun: #d6b85c;    /* день — спелая рожь */
+  --q-ryt: #8a5a2b;    /* вечер — бронза пермского звериного стиля */
+  --sun: #f0b43c;
+
+  --serif: "PT Serif", Georgia, "DejaVu Serif", serif;
+  --sans: "PT Sans", "Segoe UI", "DejaVu Sans", sans-serif;
+}
+
+/* Фон страницы — небо текущей четверти суток */
+body[data-quarter="oy"]   { --bg: #1d2b3a; --ink: #e4e8e1; --soft: #9fb0bf; --line: #34485e; --accent: #f0b43c; }
+body[data-quarter="asyv"] { --bg: #ecdcd2; --ink: #2b2221; --soft: #6f5b55; --line: #d4bdb0; --accent: #b2302a; }
+body[data-quarter="lun"]  { --bg: #e8ece2; --ink: #1f3a33; --soft: #5a6f66; --line: #c9d2c4; --accent: #8a5a2b; }
+body[data-quarter="ryt"]  { --bg: #4a3326; --ink: #f2e4cf; --soft: #c9ad8c; --line: #6a4b38; --accent: #f0b43c; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--sans);
+  transition: background-color 2s ease, color 2s ease;
+}
+@media (prefers-reduced-motion: reduce) { body { transition: none; } }
+
+a { color: inherit; text-underline-offset: 0.18em; }
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 3px;
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Верхняя строка */
+.bar {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  max-width: 68rem; margin: 0 auto; padding: 1.25rem 1rem 0;
+}
+.title { margin: 0; font: 700 1.75rem/1 var(--serif); letter-spacing: 0.01em; }
+.where { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+select, button {
+  font: inherit; color: var(--ink); background: transparent;
+  border: 1px solid var(--line); border-radius: 0.4rem; padding: 0.4rem 0.7rem;
+}
+select { max-width: 16rem; }
+select option { color: #1f3a33; background: #fff; }
+button { cursor: pointer; }
+button:hover, select:hover { border-color: var(--soft); }
+
+/* Основная часть */
+main {
+  display: grid; gap: 1.5rem 3rem;
+  max-width: 68rem; margin: 0 auto; padding: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 52rem) {
+  main { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; padding-top: 2rem; }
+}
+
+.dial-wrap { position: relative; width: 100%; max-width: 34rem; margin: 0 auto; }
+#dial { display: block; width: 100%; height: auto; overflow: visible; }
+.now { margin: 0 0 0.75rem; }
+.part-kp { margin: 0; font: 700 clamp(2.4rem, 9vw, 3.6rem)/1.05 var(--serif); overflow-wrap: anywhere; }
+.part-ru { margin: 0.35rem 0 0; font: 400 1.15rem/1.4 var(--serif); }
+.sub-share { margin: 0.15rem 0 0; color: var(--soft); font-size: 0.9rem; }
+
+/* Круг суток: день — светлые оттенки, ночь — тёмные */
+.wedge { stroke: none; }
+.p-V    { fill: #f0d38f; }  /* асыв — утро */
+.p-VI   { fill: #f5e2a6; }  /* луншӧрланяс — к полудню */
+.p-VII  { fill: #faefc8; }  /* лун — день */
+.p-VIII { fill: #e5b874; }  /* рытладор — предвечерье */
+.p-I    { fill: #4b4f6a; }  /* пемдандор — сумерки */
+.p-II   { fill: #1b2436; }  /* ой — ночь */
+.p-III  { fill: #222d44; }  /* асъяой — предрассветная пора */
+.p-IV   { fill: #5d5a76; }  /* югдандор — рассвет */
+.rim { fill: none; stroke: #8a5a2b; stroke-width: 3; }
+.edge { stroke: rgba(255, 255, 255, 0.35); stroke-width: 1; }
+.edge.horizon { stroke: #8a5a2b; stroke-width: 2.5; }
+.sub { stroke: rgba(120, 110, 100, 0.55); stroke-width: 1; }
+.rnum { fill: var(--ink); font: 700 12px var(--serif); text-anchor: middle; dominant-baseline: middle; }
+.rnum.current { fill: var(--accent); font-size: 14px; }
+.moon-arc { fill: none; stroke: #c7cdd6; stroke-width: 4; stroke-linecap: round; opacity: 0.9; }
+.moon-dark { fill: #3a4252; stroke: #c7cdd6; stroke-width: 1; }
+.moon-lit { fill: #eef1f5; }
+.moon { margin: 0 0 1.5rem; }
+.moon p { margin: 0; }
+.shadow { fill: rgba(16, 20, 26, 0.78); stroke: rgba(255, 255, 255, 0.75); stroke-width: 1; stroke-linejoin: round; }
+.gnomon { fill: #8a5a2b; stroke: rgba(255, 255, 255, 0.75); stroke-width: 1; }
+
+/* Справа */
+.info { max-width: 34rem; width: 100%; margin: 0 auto; }
+.quarter { margin: 0; color: var(--soft); }
+.next { margin: 0.25rem 0 1.5rem; color: var(--soft); }
+.next strong { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.clocks { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0 0 1.75rem; }
+.clocks dt { color: var(--soft); font-size: 0.9rem; }
+.clocks dd { margin: 0; }
+.clocks dd:nth-of-type(1) { font: 700 clamp(2rem, 7vw, 2.75rem)/1.1 var(--sans); font-variant-numeric: tabular-nums; }
+.small { color: var(--soft); font-size: 0.85rem; }
+
+.list-title { margin: 0 0 0.5rem; font: 700 1.05rem/1.3 var(--serif); }
+.rubezhi { list-style: none; margin: 0 0 1.5rem; padding: 0; border-top: 1px solid var(--line); }
+.rubezhi li {
+  display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 0.25rem 0.75rem; align-items: baseline;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--line);
+}
+.rubezhi .id { font: 700 0.95rem var(--serif); color: var(--soft); }
+.rubezhi .kp { font: 700 1.05rem/1.3 var(--serif); }
+.rubezhi .ru { display: block; color: var(--soft); font-size: 0.85rem; font-family: var(--sans); font-weight: 400; }
+.rubezhi .t { font-variant-numeric: tabular-nums; }
+.rubezhi li.past .kp, .rubezhi li.past .t { opacity: 0.55; }
+.rubezhi li.current .id, .rubezhi li.current .kp { color: var(--accent); }
+.rubezhi li.merged .t::after { content: " слит с полночью"; color: var(--soft); font-size: 0.8rem; }
+
+.dialect { display: flex; gap: 1.25rem; color: var(--soft); font-size: 0.9rem; }
+.dialect input { accent-color: var(--accent); }
+.status { min-height: 1.5em; color: var(--soft); font-size: 0.9rem; }
+
+.foot {
+  max-width: 68rem; margin: 2rem auto 0; padding: 1rem 1rem 2rem;
+  border-top: 1px solid var(--line); color: var(--soft); font-size: 0.85rem;
+}
+.foot p { margin: 0 0 0.5rem; max-width: 70ch; }

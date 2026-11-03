@@ -1,0 +1,11 @@
+{
+  "name": "komi-perm-game-calendar",
+  "version": "0.1.0",
+  "description": "Коми-пермяцкий игровой календарь: солнечные часы и деление суток",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Scatik146",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}

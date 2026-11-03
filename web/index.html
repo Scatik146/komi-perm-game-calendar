@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Шонді — солнечные часы</title>
+  <meta name="description" content="Солнечные часы коми-пермяцкого игрового календаря: восемь рубежей суток по Солнцу для городов и сёл Прикамья.">
+  <meta name="theme-color" content="#1d2b3a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body data-quarter="lun">
+  <header class="bar">
+    <h1 class="title">Шонді</h1>
+    <div class="where">
+      <label for="place" class="sr">Место</label>
+      <select id="place"></select>
+      <button id="locate" type="button">Моё место</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="dial-wrap" aria-label="Солнечный циферблат">
+      <svg id="dial" viewBox="-200 -200 400 400" role="img" aria-labelledby="dial-desc">
+        <desc id="dial-desc">Круг суток: начало суток — закат — сверху, дальше по часовой стрелке. Светлое поле — день от восхода до заката, тёмное — ночь. Оттенки внутри — восемь частей суток, по краю — более мелкие доли. Стрелка-тень указывает на текущую часть.</desc>
+      </svg>
+    </section>
+
+    <section class="info">
+      <div class="now" aria-live="polite">
+        <p id="part-kp" class="part-kp"></p>
+        <p id="part-ru" class="part-ru"></p>
+        <p id="sub" class="sub-share"></p>
+      </div>
+      <p id="quarter" class="quarter"></p>
+      <p class="next"><span id="next-label"></span> <strong id="next-in"></strong></p>
+
+      <dl class="clocks">
+        <div><dt>Часы</dt><dd id="civil"></dd><dd id="civil-tz" class="small"></dd></div>
+        <div><dt>По Солнцу</dt><dd id="solar"></dd><dd class="small">истинное местное время</dd></div>
+      </dl>
+
+      <div class="moon">
+        <p id="moon"></p>
+        <p id="moon-times" class="small"></p>
+      </div>
+
+      <h2 class="list-title">Рубежи этих суток</h2>
+      <ol id="rubezhi" class="rubezhi"></ol>
+
+      <div class="dialect" role="radiogroup" aria-label="Форма слов">
+        <label><input type="radio" name="dialect" value="kp" checked> литературная</label>
+        <label><input type="radio" name="dialect" value="inv"> иньвенская</label>
+      </div>
+      <p id="status" class="status" role="status"></p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Сутки начинаются с заката. Восемь рубежей сводят вместе староверский суточный круг, время намаза и коми-пермяцкие названия частей дня. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/sutki.md">Как устроено деление суток</a></p>
+    <p>Слова — по «Коми-пермяцко-русскому словарю» Р. М. Баталовой и А. С. Кривощековой-Гантман (1985).</p>
+    <p>© 2026 Scatik146. Код открыт по лицензии Apache 2.0, тексты — CC BY 4.0. <a href="https://github.com/Scatik146/komi-perm-game-calendar">Исходники на GitHub</a></p>
+  </footer>
+</body>
+</html>

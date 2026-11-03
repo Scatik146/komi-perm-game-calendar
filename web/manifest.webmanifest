@@ -1,0 +1,14 @@
+{
+  "name": "Шонді — солнечные часы",
+  "short_name": "Шонді",
+  "description": "Солнечные часы коми-пермяцкого игрового календаря",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e8ece2",
+  "theme_color": "#1d2b3a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
