@@ -9,7 +9,6 @@
 
 .anbur { font-family: "Anbur", var(--serif); font-feature-settings: normal; }
 
-.nav a { color: var(--soft); }
 
 .gen {
   display: grid; gap: 1.5rem 3rem;
