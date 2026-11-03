@@ -113,12 +113,12 @@ function buildTable() {
 
 async function fontDataUrl() {
   try {
-    const res = await fetch('fonts/noto-sans-old-permic.woff2');
+    const res = await fetch('fonts/NotoSansOldPermic-Regular.ttf');
     if (!res.ok) return null;
     const buf = new Uint8Array(await res.arrayBuffer());
     let bin = '';
     for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-    return `data:font/woff2;base64,${btoa(bin)}`;
+    return `data:font/ttf;base64,${btoa(bin)}`;
   } catch { return null; }
 }
 
@@ -163,7 +163,7 @@ async function saveSvg() {
   const h = ls.length * size * 1.35 + size;
   const w = Math.max(...ls.map((l) => [...l].length), 1) * size * 0.75 + size;
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const face = font ? `@font-face{font-family:"Anbur";src:url(${font}) format("woff2");}` : '';
+  const face = font ? `@font-face{font-family:"Anbur";src:url(${font}) format("truetype");}` : '';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(w)}" height="${Math.ceil(h)}" viewBox="0 0 ${Math.ceil(w)} ${Math.ceil(h)}">`
     + `<style>${face}text{font-family:"Anbur","Noto Sans Old Permic";font-size:${size}px;fill:#2b2221}</style>`
     + ls.map((l, i) => `<text x="${size / 2}" y="${size * 1.1 + i * size * 1.35}">${esc(l)}</text>`).join('')
