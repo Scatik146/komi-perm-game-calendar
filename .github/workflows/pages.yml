@@ -11,9 +11,11 @@ permissions:
   pages: write
   id-token: write
 
+# Проверки PR и публикация сайта — в разных очередях: проверка PR больше не отменяет
+# публикацию из main. Публикации идут по очереди и не отменяют друг друга.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
