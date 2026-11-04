@@ -79,15 +79,16 @@ test('знаки: коды шрифта Pasy и запись даты', () => {
   assert.equal(digitsToSigns('3-3-5-6, 90'), '---, 90');
 });
 
-test('пасы: в числе n — n черт, в каждом месяце — восемь резов, коды не повторяются', () => {
+test('пасы: в числе n — n борозд, в каждом месяце — восемь резов, коды не повторяются', () => {
   const data = JSON.parse(readFileSync(new URL('../data/pasy.json', import.meta.url)));
   const cps = new Set();
   for (const s of data.signs) {
     assert.ok(!cps.has(s.cp), `код ${s.cp.toString(16)} повторяется`);
     cps.add(s.cp);
-    if (s.kind === 'number') {
-      assert.equal(s.lines.length, s.value);
-      assert.equal(s.pits.length, 8 - s.value);
+    if (s.kind === 'number') {          // черта поперёк ряда — 2, короткая вертикальная — 1
+      const sum = s.lines.reduce((a, l) => a + (l.p[0][1] === l.p[1][1] ? 2 : 1), 0);
+      assert.equal(sum, s.value);
+      assert.equal(s.pits.length, 0);
     }
     if (s.kind === 'month') {
       let cuts = 0;
