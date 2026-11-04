@@ -82,9 +82,9 @@ function hijri(k) {
   }
 }
 
-/** Русская запись даты: «Сир · неделя Чаль · день шестой». */
+/** Русская запись даты: «Месяц Щуки, шестая неделя, шестой день». */
 function ruDate(d) {
-  return `${month(d.month).kp}, неделя ${week(d.week).kp}, день ${num(d.day).ru}`;
+  return `${month(d.month).ru}, ${week(d.week).ord} неделя, ${num(d.day).ru} день`;
 }
 
 function ruYear(d) {
@@ -93,7 +93,7 @@ function ruYear(d) {
   const eraName = e ? `эра ${e.ru}` : `эра ${d.era}`;
   const c = K.circles[d.circle - 1];
   const o = K.octaves[d.octave - 1];
-  return `Год ${d.yearNumber}: ${eraName}, круг ${c.ru} (${c.kp}), ${o.ru} октава (${o.kp}), год ${num(d.year).ru} (${num(d.year).kp})`;
+  return `Год ${d.yearNumber}: ${eraName}, круг ${c.ru} (${c.kp}), ${o.ru} октава (${o.kp}), ${num(d.year).ru} год (${num(d.year).kp})`;
 }
 
 const kpDate = (d) => `${month(d.month).kp} · ${week(d.week).kp} · ${num(d.day).kp}`;
@@ -122,9 +122,9 @@ function renderToday() {
   const m = month(d.month);
   const next = month(d.month % 8 + 1);
   const left = d.monthLength - d.dayOfMonth;
-  $('c-month').textContent = `${m.kp} — защитник ${m.animal}; ${m.season} (${K.seasons[m.season]}). `
+  $('c-month').textContent = `${m.ru} (${m.kp}) — защитник ${m.animal}; ${m.season} (${K.seasons[m.season]}). `
     + `В месяце ${d.monthLength} ${plural(d.monthLength, 'день', 'дня', 'дней')}, сегодня ${d.dayOfMonth}-й`
-    + (left ? `, до месяца ${next.kp} — ${left} ${plural(left, 'день', 'дня', 'дней')}.` : `, завтра — месяц ${next.kp}.`)
+    + (left ? `, до ${next.ru.replace('Месяц', 'месяца')} — ${left} ${plural(left, 'день', 'дня', 'дней')}.` : `, завтра начинается ${next.ru}.`)
     + ` Событие месяца — ${m.event}.`;
   const t = civil({ hour: '2-digit', minute: '2-digit' });
   const startDay = civil({ day: 'numeric', month: 'long' });
