@@ -185,7 +185,10 @@ def build_font(path):
             pen.closePath()
         g = pen.glyph()
         glyphs[s['id']] = g
-        metrics[s['id']] = (900, LSB)
+        # левый отступ в hmtx должен совпадать с левым краем контура, иначе браузер
+        # сдвигает знак влево (так «1» оказывалась в левой колонке)
+        xmin = min(x for c in contours(s) for x, _ in c)
+        metrics[s['id']] = (900, xmin)
     fb.setupGlyf(glyphs)
     fb.setupHorizontalMetrics(metrics)
     fb.setupHorizontalHeader(ascent=800, descent=-200)
