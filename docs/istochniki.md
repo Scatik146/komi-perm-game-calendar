@@ -1,0 +1,187 @@
+# Источники: всё, что найдено при разработке календаря
+
+Сводный список источников «Солнечной восьмёрки» (Шонді кыкьямыс) — ничего не теряем.
+Для каждого источника: что из него взято и насколько ему можно доверять.
+
+Пометки надёжности: **[Н]** — научное издание (монография, словарь, рецензируемая статья,
+энциклопедия); **[П]** — научно-популярное или справочное; **[В]** — вторичное или
+непроверенное (студенческие работы, популярные сайты) — только как подсказка, где искать.
+
+## 1. Словари и язык
+
+- **[Н]** Баталова Р. М., Кривощекова-Гантман А. С. Коми-пермяцко-русский словарь. М.: Русский
+  язык, 1985. — Главный источник слов. Просмотренные страницы — metodika-slov.md.
+- **[Н]** Лыткин В. И. Древнепермский язык. Чтение текстов, грамматика, словарь. М., 1952. —
+  Древнепермские слова, азбука Стефана, грамматика (стр. 88–101, 122–147, 169–170).
+- **[Н]** Коми-русский словарь. Сыктывкар: ИЯЛИ Коми НЦ УрО РАН, 2013 — статья *чунь*
+  (названия пальцев): https://komi.academic.ru/28645/%D1%87%D1%83%D0%BD%D1%8C
+- **[Н]** Лыткин В. И., Гуляев Е. С. Краткий этимологический словарь коми языка (КЭСКЯ) —
+  через Викисловарь: прапермское *\*pɔ̈l* «большой палец».
+- **[П]** Викисловарь, прапермские реконструкции:
+  - *\*ku̇kjamis* «восемь» (= «два» + «недостающее до десяти»):
+    https://kaikki.org/dictionary/All%20languages%20combined/meaning/k/ku/ku%CC%87kjamis.html
+  - *\*ɔ̇kmis* «девять»:
+    https://wiki.neonvagabond.xyz/content/wiktionary_en_all_nopic_2024-05/A/Reconstruction%3AProto-Permic/%C9%94%CC%87kmis
+  - *\*ɔ̇tik* «один»:
+    https://kaweah.freedombox.rocks/kiwix/wiktionary_en_all_maxi_2023-04/Reconstruction%3AProto-Permic/%C9%94%CC%87tik
+  - *\*kwať* «шесть»:
+    https://kaweah.freedombox.rocks/kiwix/wiktionary_en_all_maxi_2023-04/Reconstruction%3AProto-Permic/kwa%C5%A5
+  - *\*pɔ̈l* «большой палец»:
+    https://wiki.neonvagabond.xyz/content/wiktionary_en_all_nopic_2024-05/A/Reconstruction%3AProto-Permic/p%C9%94%CC%88l
+  - удм. *вож* «зелёный; незрелый; молодой»:
+    https://kaikki.org/dictionary/Udmurt/meaning/в/во/вож.html
+  - праугорское *\*säptɜ* «семь»:
+    https://wiki.neonvagabond.xyz/content/wiktionary_en_all_nopic_2024-05/A/Reconstruction%3AProto-Ugric/s%C3%A4pt%C9%9C
+  - мансийское *сāт* «неделя»: https://www.wiktionary.com/wiki/%D1%81%D0%B0%CC%84%D1%82
+- **[П]** Proto-Uralic Homeland (VII): Kinship & Numerals — уральские числительные,
+  вычитательные 8 и 9, гипотеза субстрата: https://indo-european.eu/2020/11/proto-uralic-homeland-vii-kinship-numerals/
+- **[Н]** Рогов Н. А. Опыт грамматики пермяцкого языка. СПб., 1860; Пермяцко-русский
+  и русско-пермяцкий словарь. СПб., 1869 — по статье в Вестнике Пермского университета:
+  https://press.psu.ru/index.php/philology/article/download/1622/1193/3501
+- **[Н]** Никонов В. В. От Троицы до Стречалуна: хрононимы коми-пермяцкого языка //
+  Вестник ПФИЦ. 2025. № 1: https://journal.permsc.ru/index.php/pscj/en/article/view/3060
+
+## 2. Счёт, числа, пальцы
+
+- **[Н]** Fałowski A. The East Slavonic *sorok* '40' revisited // Studia Etymologica
+  Cracoviensia. 2011. Vol. 16/1 — *сорок* из удмуртского, от связки куньих шкурок:
+  https://ejournals.eu/en/journal/studia-etymologica-cracoviensia/article/the-east-slavonic-sorok-40-revisited
+- **[П]** Казаченко Б. Тридевятое царство, тридесятое государство, или как считали наши
+  предки // Наука и жизнь. 2007. № 10 — счёт по суставам «по восемь», сорок на пальцах:
+  https://www.nkj.ru/archive/articles/11814/
+- **[Н]** Previtali P., Rinaldi L., Girelli L. Nature or Nurture in Finger Counting //
+  Frontiers in Psychology. 2011. 2:363 — с какой руки считают в разных культурах; финские
+  дети (Räsänen, Koponen, 2010): https://www.frontiersin.org/articles/10.3389/fpsyg.2011.00363/full
+- **[Н] найти** Грибова Л. С. Лыдпасы — счётная графика коми // Традиции и новации в народной
+  культуре коми. Сыктывкар, 1983. С. 79 — **ключевой источник для символов чисел**.
+
+## 3. Цвета
+
+- **[Н]** Рябина Е. С. Основные цветообозначения в пермских языках. Тарту, 2011.
+- **[Н]** Рябина Е. С. Основные цветообозначения в коми-пермяцком языке // Ежегодник
+  финно-угорских исследований: https://journals.udsu.ru/finno-ugric/article/download/2470/2448
+- **[Н]** Рябина Е. С. Основные цветообозначения в современном удмуртском языке //
+  Linguistica Uralica. 2011. Vol. XLVII, № 3. P. 199–223: https://ceeol.com/search/article-detail?id=142713
+- **[Н]** Berlin B., Kay P. Basic Color Terms. Berkeley, 1969.
+- **[Н] найти** Uusküla M. Basic colour terms in Finno-Ugric and Slavonic languages. Tartu, 2008;
+  Ракин А. Н. Лексика цветообозначения в пермских языках. Тарту, 1990 (по ссылкам Рябиной).
+- **[Н]** Panina T. «Red Growth, Yellow Growth, White Growth…»: Chromatic Beliefs in Udmurt
+  Folk Medicine and Healing Charms // Incantatio. 2017. № 5: https://ojs.folklore.ee/incantatio/article/view/51
+- **[П]** Цвета на коми языке — KP.RU: https://www.komi.kp.ru/daily/26928.7/3978186/
+- **[П]** Лебедева С. — об удмуртском костюме (АиФ-Удмуртия): https://udm.aif.ru/society/people/1377256
+- **[В]** Удмуртский костюм: оберег и знак отличия — nazaccent.ru: https://nazaccent.ru/school_content/3134/
+- **[П]** Ткань памяти. Как народные костюмы рассказывают о жизни коми-пермяков —
+  АиФ-Пермь (по О. Шейерман, 2025): https://perm.aif.ru/culture/tkan-pamyati-kak-narodnye-kostyumy-rasskazyvayut-o-zhizni-komi-permyakov
+- **[Н]** Jonauskaite D. et al. Universal Patterns in Color-Emotion Associations //
+  Psychological Science. 2020 — межкультурные цветовые ассоциации (по разбору психолога).
+
+## 4. Мифология, духи, обряды
+
+- **[Н]** Лимеров П. Ф. Дуалистические сюжеты о сотворении земли в коми традиции // Sator 17.
+  Тарту, 2016: https://www.folklore.ee/rl/pubte/ee/sator/sator17/01.pdf
+- **[Н]** Лимеров П. Ф. Дуалистические легенды в фольклорной традиции коми // Sator 24:
+  https://folklore.ee/sator/wp-content/uploads/2024/04/Sator_24_07.pdf
+- **[Н]** Конаков Н. Д. Омӧль // Мифология коми (ИЯЛИ Коми НЦ): https://ethnokomi.ru/folk/myth/291.htm
+- **[Н]** Конаков Н. Д. Календарная символика уральского язычества (бинарный зооморфный код).
+  Сыктывкар, 1990: https://ethnokomi.ru/folk/komi/229.htm — **только как параллель,
+  календарь Конакова не заимствуем**.
+- **[Н]** Материалы по коми-пермяцкой демонологии / авт.-сост. А. В. Кротова-Гарина и др.
+  Пермь: ПГНИУ, 2020: https://elis.psu.ru/ebooks/download/source/619684/Materialy_po_komi-permyackoy_demonologii.pdf?isApp=1
+- **[Н]** Голева Т. Г. Мифологические персонажи в системе мировоззрения коми-пермяков.
+  Дисс. … канд. ист. наук. Екатеринбург, 2008 (книга — 2011):
+  https://www.dissercat.com/content/mifologicheskie-personazhi-v-sisteme-mirovozzreniya-komi-permyakov
+- **[Н]** Голева Т. Г. Жертвенный обряд коми-пермяков в селе Большая Коча // Вестник ПФИЦ.
+  2020. № 3. С. 85–96: https://cyberleninka.ru/article/n/zhertvennyy-obryad-komi-permyakov-v-sele-bolshaya-kocha
+- **[Н]** Голева Т. Г., Черных А. В. «Стояние на воде» — «Ваын сулавны» — в календарной
+  традиции коми-пермяков // Проблемы истории, филологии, культуры. 2009. № 1:
+  https://cyberleninka.ru/article/n/stoyanie-na-vode-vayn-sulavny-v-kalendarnoy-traditsii-komi-permyakov
+- **[Н]** Традиционный погребально-поминальный обряд коми-пермяков (дисс.):
+  https://www.dissercat.com/content/traditsionnyi-pogrebalno-pominalnyi-obryad-komi-permyakov
+- **[П]** Коми-пермяцкий праздник «Стрӧча» (Троица) — паспорт объекта нематериального
+  наследия Пермского края (Ю. С. Чернышева, Е. М. Чудинова): https://domgubernia.ru/strocha/
+- **[П]** Голубкова О., Голева Т., Панюков А. Мифы коми. М.: МИФ, 2025 (фрагмент):
+  https://www.mann-ivanov-ferber.ru/assets/media/files-3/mify-komi/Mifi_Komi_read_stamped.pdf
+- **[П]** Кудым-Ош — dic.academic.ru (по Ожеговой, 1984; Петрухину, 2005): https://dic.academic.ru/dic.nsf/ruwiki/1311648
+- **[Н]** Березкин Ю. Е. Тематическая классификация фольклорно-мифологических мотивов —
+  Большая Медведица как лось у манси и хантов: https://www.ruthenia.ru/folklore/berezkin/b42t.html
+- **[П]** Num-Torum — Wikipedia (семь сыновей): https://en.wikipedia.org/wiki/Num-Torum
+- **[В]** Лонг о мифологии народа Коми — dtf.ru (пересказ по Мошеву и «Коми му»):
+  https://dtf.ru/2290044-long-o-mifologii-naroda-komi
+- **[Н] найти** Конаков Н. Д. Мифология коми. 1999; Конаков Н. Д. Традиционное мировоззрение
+  народов коми. 1996 (коми-пермяцкий миф о яйце, по Лимерову); Напольских В. В. Древнейшие
+  этапы происхождения народов уральской языковой семьи. М., 1991 (мифы о ныряющей птице).
+
+## 5. История, археология, эры
+
+- **[Н]** Ломоватовская культура — Уральская историческая энциклопедия:
+  http://www.ural.ru/spec/ency/encyclopaedia-11-1171-lomovatovskaya-kultura.html
+- **[Н]** Крыласова Н. Б. Ассортимент украшений… родановской археологической культуры //
+  Археология евразийских степей. 2022. № 5: https://evrazstep.ru/index.php/aes/article/view/835
+- **[Н] найти** Оборин В. А. Коми-пермяки в IX–XV вв.: Родановская культура. 1957;
+  Талицкий М. В. — выделение родановской культуры.
+- **[П]** Вымская культура — энциклопедическая статья: https://dic.academic.ru/dic.nsf/ruwiki/976428
+- **[Н]** Белавин А. М., Крыласова Н. Б. Основные итоги изучения Рождественского
+  археологического комплекса (город Афкула) // Научный Татарстан. 2009. № 2 (istoriya.md).
+- **[Н]** Крыласова Н. Б. Городище Анюшкар — задачи и перспективы новых исследований //
+  Вестник ПФИЦ. 2025. № 4 (istoriya.md).
+- **[Н]** Ибн Фадлан (922); ал-Омари (1331) — по istoriya.md.
+- **[П]** Цыпин В., прот. Переселение венгров в центр Европы: https://pravoslavie.ru/173982.html
+- **[Н]** Уйгуры — Большая российская энциклопедия: https://bigenc.ru/c/uigury-cdfb56
+- **[П]** Стефан Пермский — https://dic.academic.ru/dic.nsf/ruwiki/60279
+- **[П]** Биармия — https://znanierussia.ru/articles/%D0%91%D0%B8%D0%B0%D1%80%D0%BC%D0%B8%D1%8F
+- **[Н]** Хелимский Е. А. Рецензия на книгу В. В. Напольских // Этнографическое обозрение.
+  1992. № 3: https://eo.iea.ras.ru/wp-content/uploads/1992/03/eoarchive_1992_3_153_khelimskiy.pdf
+- **[П]** Bulgar calendar; Nominalia of the Bulgarian Khans — Wikipedia:
+  https://en.wikipedia.org/wiki/Bulgar_calendar
+
+## 6. Торговля Прикамья
+
+- **[Н]** Чичко Т. В. Восточная торевтика в системе культурных связей и военно-политической
+  истории населения Прикамья и Приуралья в раннем средневековье. Дисс., 2016:
+  https://www.dissercat.com/content/vostochnaya-torevtika-v-sisteme-kulturnykh-svyazei-i-voenno-politicheskoi-istorii-naseleniya
+- **[Н] найти** Лещенко В. Ю. Серебро Закамское. 1974; Даркевич В. П. Художественный металл
+  Востока VIII–XIII вв. М., 1976; Маршак Б. И. Согдийское серебро. М., 1971.
+- **[П]** Восточное серебро в Прикамье — parmaday.ru: https://parmaday.ru/chastichki-parmy/vostochnoe-serebro-v-prikamye.html
+
+## 7. Астрономия
+
+- **[Н]** NASA JPL. Great Comets — 1P/Halley, 837 г.: https://ssd.jpl.nasa.gov/sb/great_comets.html
+- **[Н]** Meeus J. Astronomical Algorithms — положение Солнца (ядро `engine/sun.js`).
+- **[Н]** Espenak F., Meeus J. — полиномы ΔT (Five Millennium Canon of Solar Eclipses).
+- **[П]** Календарь метеорных потоков IMO — радианты и даты (расчёт видимости, sistema.md 13.1).
+
+## 8. Климат
+
+- **[Н]** Климатические нормы Кудымкара — JMA (Японское метеорологическое агентство),
+  станция 28116: https://www.data.jma.go.jp/cpd/monitor/nrmlist/NrmMonth.php?stn=28116
+- **[П]** Гайны — climatebase.ru по Wikipedia: https://en.wikipedia.org/wiki/Gayny,_Perm_Krai
+
+## 9. Народные календари и знания о времени
+
+- **[Н] найти** Савваитов П. И. О зырянских деревянных календарях и о пермской азбуке,
+  изобретённой св. Стефаном. М., 1873.
+- **[Н] найти** Сидоров А. С., Лыткин В. И. Древнекоми названия месяцев // Советское
+  финно-угроведение. 1966. № 2. С. 123–129.
+- **[Н] найти** Туркин А. И. Важ коми тӧлысь нимъяс // Войвыв кодзув. 1983. № 10. С. 52–54.
+- **[Н] найти** Туркин А. И. Мый йылісь висьталӧны кодзув нимъяс // Войвыв кодзув. 1974.
+  № 34. С. 60 — названия звёзд.
+- **[Н] найти** Сравнительный словарь коми-зырянских диалектов. Сыктывкар, 1961.
+- **[Н] найти** Черных А. В. Народы Пермского края. Культура и этнография. Пермь: Пушка, 2007.
+- **[Н] найти** Климов В. В., Чагин Г. Н. Круглый год праздников, обрядов и обычаев
+  коми-пермяков. Кудымкар, 2005.
+- **[П]** Названия коми месяцев — Коми daily: https://m.vk.ru/@komi_daily-nazvaniya-komi-mesyacev
+- **[П]** Месяцы — ЦБС Ижмы: https://cbsezhva.ru/ru/kraevedenie/uchim-komi-yazyk/mesyatsy.php
+- **[П]** Промысловый календарь — kortcbs.ru (по Конакову, 2001): https://www.kortcbs.ru/page/detyam.sem_chudes_zemli_krt_ayki.promyslovyy_kalendar/
+- **[В]** Вилесова В., Конев А. (рук. Попова Л. И.). Пространственные, временные и другие
+  метрологические категории в народных знаниях коми-пермяков. Юсьва: Юсьвинский
+  агротехнический техникум, 2014 — студенческая работа; полевые материалы (Кудымкарский
+  район, 2003). Используем как указатель: факты проверяем по её литературе (выше —
+  Грибова, Сидоров и Лыткин, Туркин, Черных, Голева, Климов и Чагин, Савваитов).
+
+## 10. Оценки цветов октав
+
+Три независимых разбора (4 ноября 2026): возрастная психология (Эриксон, Выготский,
+Эльконин, Левинсон, Арнетт; Jonauskaite et al., 2020; Palmer, Schloss, 2010; Teller,
+Adams; Skelton et al., 2017), цветовая символика и цветотерапия, астрологическая
+традиция (Птолемей, «Тетрабиблос», IV.10; цикл Венеры). Цветотерапия и астрология
+научного подтверждения не имеют и используются как языки символов.
