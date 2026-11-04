@@ -20,3 +20,7 @@ Copyright 2026 Scatik146 (https://github.com/Scatik146)
 
 Шрифты: PT Serif, PT Sans (ParaType) и Noto Sans Old Permic (The Noto Project
 Authors) — лицензия SIL Open Font License 1.1.
+
+Знаки-пасы «Солнечной восьмёрки» (числа, восьмёрки, пасы месяцев) и шрифт Pasy
+(web/fonts/Pasy.ttf) — авторская разработка Scatik146, лицензия Apache License 2.0.
+Пасы месяцев нарисованы автором; числа и восьмёрки — по его замыслу (docs/pasy.md).

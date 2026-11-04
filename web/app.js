@@ -1,6 +1,10 @@
 import {
   stateAt, apparentSolarTime, subdivisionsOf, subdivisionAt, moonEvents, moonPhase, makeTransliterator,
+  SUTKI_ORDER, numberSign,
 } from './engine/index.js';
+
+/** Знак-пас рубежа: рубежи считаются от заката — I = 1 … VIII = 8. */
+const pasOf = (id) => numberSign(SUTKI_ORDER.indexOf(id) + 1);
 
 const $ = (id) => document.getElementById(id);
 const SVG = 'http://www.w3.org/2000/svg';
@@ -231,8 +235,11 @@ function drawDial() {
     const horizon = g.ids.includes('I') || g.ids.includes('V');
     el('line', { x1: 0, y1: 0, x2: f(x2), y2: f(y2), class: horizon ? 'edge horizon' : 'edge' }, marks);
     const [tx, ty] = point(g.h, R_LABEL);
-    const label = g.ids.length > 1 ? `${g.ids[0]}–${g.ids[g.ids.length - 1]}` : g.ids[0];
-    el('text', { x: f(tx), y: f(ty), class: 'rnum', 'data-ids': g.ids.join(' ') }, marks).textContent = label;
+    const label = g.ids.length > 1 ? `${pasOf(g.ids[0])}–${pasOf(g.ids[g.ids.length - 1])}` : pasOf(g.ids[0]);
+    const roman = g.ids.length > 1 ? `${g.ids[0]}–${g.ids[g.ids.length - 1]}` : g.ids[0];
+    const tx2 = el('text', { x: f(tx), y: f(ty), class: 'rnum pas', 'data-ids': g.ids.join(' ') }, marks);
+    tx2.textContent = label;
+    el('title', {}, tx2).textContent = `Рубеж ${roman}`;
   }
 
   // Луна: когда она над горизонтом в эти сутки, и её фаза в момент кульминации
@@ -297,7 +304,7 @@ function renderText() {
   document.body.dataset.quarter = state.quarter;
   $('quarter').textContent = `Четверть ${word(q)} — ${q.ru}, сторона света — ${q.direction}.`;
   $('next-label').textContent = `Следующий рубеж — ${word(nextR)} (${nextR.ru.toLowerCase()}), через`;
-  document.title = `${word(part)} — Шонді`;
+  document.title = `${word(part)} — Солнечные часы`;
 
   const fmt = civilFormat(place.tz, false);
   renderMoon(fmt);
@@ -309,8 +316,9 @@ function renderText() {
     if (r.t <= state.now) li.classList.add('past');
     if (r === state.current || (r.id === state.current.id && r.t === state.current.t)) li.classList.add('current');
     if (r.merged) li.classList.add('merged');
-    li.innerHTML = '<span class="id"></span><span class="kp"><span class="w"></span> <span class="a anbur" aria-hidden="true"></span><span class="ru"></span></span><span class="t"></span>';
-    li.querySelector('.id').textContent = r.id;
+    li.innerHTML = '<span class="id"><span class="pas" aria-hidden="true"></span> <span class="rom"></span></span><span class="kp"><span class="w"></span> <span class="a anbur" aria-hidden="true"></span><span class="ru"></span></span><span class="t"></span>';
+    li.querySelector('.id .pas').textContent = pasOf(r.id);
+    li.querySelector('.id .rom').textContent = r.id;
     li.querySelector('.w').textContent = word(info);
     li.querySelector('.a').textContent = anbur(word(info));
     li.querySelector('.ru').textContent = `${info.ru}: ${info.oldBelievers.toLowerCase()}, ${info.muslims.toLowerCase()}`;

@@ -1,4 +1,8 @@
 import { makeTransliterator } from './engine/anbur.js';
+import {
+  numberSign, eightSign, monthSign, dateSigns, dateDigits, digitsToSigns,
+} from './engine/pasy.js';
+import { calendarAt } from './engine/kalendar.js';
 
 const $ = (id) => document.getElementById(id);
 const store = {
@@ -17,10 +21,18 @@ const BASIS = { stefan: 'стефановская', late: 'поздняя', conv
 let table = null;
 let tr = null;
 let lang = store.get('anbur-lang') === 'ru' ? 'ru' : 'kp';
+let digitMode = store.get('anbur-digits') !== 'off';
+let K = null;   // названия календаря: data/kalendar.json
+
+/** Текст анбуром; цифры 1–8 — знаками-пасами, если включено. */
+function write(text) {
+  const out = tr(text, lang);
+  return digitMode ? digitsToSigns(out) : out;
+}
 
 function render() {
   const text = $('src').value;
-  const out = tr(text, lang);
+  const out = write(text);
   $('out').textContent = out || ' ';
   $('out-src').textContent = text;
   store.set('anbur-text', text);
@@ -109,11 +121,58 @@ function buildTable() {
   }
 }
 
+/* ---------- знаки-пасы ---------- */
+
+function pasKey(sign, caption, aria) {
+  const b = key(caption, { cls: 'pas-key', aria, onPress: () => insert(sign) });
+  const g = document.createElement('span');
+  g.className = 'k-pas pas';
+  g.textContent = sign;
+  g.setAttribute('aria-hidden', 'true');
+  b.prepend(g);
+  return b;
+}
+
+function buildPasKeyboard() {
+  const kbd = $('pas-kbd');
+  kbd.replaceChildren();
+  const rows = [
+    K.numbers.map((x) => pasKey(numberSign(x.n), String(x.n), `Число ${x.n}, ${x.kp}`)),
+    K.weeks.map((x) => pasKey(eightSign(x.n), String(x.value), `Восьмёрка ${x.value}, неделя ${x.kp}`)),
+    K.months.map((x) => pasKey(monthSign(x.n), x.kp, `Месяц ${x.kp}`)),
+  ];
+  for (const keys of rows) {
+    const r = document.createElement('div');
+    r.className = 'kbd-row';
+    r.append(...keys);
+    kbd.append(r);
+  }
+}
+
+function fillDateForm() {
+  const opt = (sel, items) => items.forEach(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; sel.append(o); });
+  opt($('d-month'), K.months.map((x) => [x.n, `${x.n} — ${x.kp}`]));
+  opt($('d-week'), K.weeks.map((x) => [x.n, `${x.n} — ${x.kp} (${x.value})`]));
+  opt($('d-day'), K.numbers.map((x) => [x.n, `${x.n} — ${x.kp}`]));
+  const today = () => {
+    const kud = { lat: 59.01, lon: 54.66 };
+    const d = calendarAt(Date.now(), kud);
+    $('d-month').value = d.month; $('d-week').value = d.week; $('d-day').value = d.day;
+  };
+  today();
+  $('d-today').addEventListener('click', today);
+  $('d-insert').addEventListener('click', () => {
+    const d = { month: +$('d-month').value, week: +$('d-week').value, day: +$('d-day').value };
+    const mode = document.querySelector('input[name="dmode"]:checked').value;
+    insert(mode === 'sets' ? dateSigns(d) : dateDigits(d));
+  });
+}
+
 /* ---------- сохранение ---------- */
 
-async function fontDataUrl() {
+async function fontDataUrl(file = 'fonts/NotoSansOldPermic-Regular.ttf') {
   try {
-    const res = await fetch('fonts/NotoSansOldPermic-Regular.ttf');
+    const res = await fetch(file);
     if (!res.ok) return null;
     const buf = new Uint8Array(await res.arrayBuffer());
     let bin = '';
@@ -123,7 +182,7 @@ async function fontDataUrl() {
 }
 
 function lines() {
-  return tr($('src').value, lang).split('\n');
+  return write($('src').value).split('\n');
 }
 
 function download(name, blob) {
@@ -137,19 +196,20 @@ function download(name, blob) {
 
 async function savePng() {
   await document.fonts.load('64px "Anbur"', '𐍐');
+  await document.fonts.load('64px "Pasy"', numberSign(1));
   const size = 96;
   const pad = size * 0.6;
   const ls = lines();
   const c = document.createElement('canvas');
   const ctx = c.getContext('2d');
-  ctx.font = `${size}px "Anbur"`;
+  ctx.font = `${size}px "Anbur", "Pasy"`;
   const w = Math.max(...ls.map((l) => ctx.measureText(l).width), size);
   c.width = Math.ceil(w + pad * 2);
   c.height = Math.ceil(ls.length * size * 1.35 + pad * 2);
   ctx.fillStyle = '#f4ead8';
   ctx.fillRect(0, 0, c.width, c.height);
   ctx.fillStyle = '#2b2221';
-  ctx.font = `${size}px "Anbur"`;
+  ctx.font = `${size}px "Anbur", "Pasy"`;
   ctx.textBaseline = 'top';
   ls.forEach((l, i) => ctx.fillText(l, pad, pad + i * size * 1.35));
   c.toBlob((b) => b && download('anbur.png', b), 'image/png');
@@ -158,14 +218,16 @@ async function savePng() {
 
 async function saveSvg() {
   const font = await fontDataUrl();
+  const pas = await fontDataUrl('fonts/Pasy.ttf');
   const size = 72;
   const ls = lines();
   const h = ls.length * size * 1.35 + size;
   const w = Math.max(...ls.map((l) => [...l].length), 1) * size * 0.75 + size;
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const face = font ? `@font-face{font-family:"Anbur";src:url(${font}) format("truetype");}` : '';
+  const face = (font ? `@font-face{font-family:"Anbur";src:url(${font}) format("truetype");}` : '')
+    + (pas ? `@font-face{font-family:"Pasy";src:url(${pas}) format("truetype");}` : '');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(w)}" height="${Math.ceil(h)}" viewBox="0 0 ${Math.ceil(w)} ${Math.ceil(h)}">`
-    + `<style>${face}text{font-family:"Anbur","Noto Sans Old Permic";font-size:${size}px;fill:#2b2221}</style>`
+    + `<style>${face}text{font-family:"Anbur","Pasy","Noto Sans Old Permic";font-size:${size}px;fill:#2b2221}</style>`
     + ls.map((l, i) => `<text x="${size / 2}" y="${size * 1.1 + i * size * 1.35}">${esc(l)}</text>`).join('')
     + '</svg>';
   download('anbur.svg', new Blob([svg], { type: 'image/svg+xml' }));
@@ -174,8 +236,8 @@ async function saveSvg() {
 
 async function copy() {
   try {
-    await navigator.clipboard.writeText(tr($('src').value, lang));
-    $('msg').textContent = 'Надпись скопирована. Чтобы её увидеть в другом месте, там нужен шрифт с анбуром, например Noto Sans Old Permic.';
+    await navigator.clipboard.writeText(write($('src').value));
+    $('msg').textContent = 'Надпись скопирована. Чтобы её увидеть в другом месте, там нужен шрифт с анбуром, например Noto Sans Old Permic, а для знаков-пасов — шрифт Pasy с этого сайта.';
   } catch {
     $('msg').textContent = 'Не удалось скопировать. Выделите надпись и скопируйте вручную.';
   }
@@ -183,7 +245,10 @@ async function copy() {
 
 async function start() {
   try {
-    table = await fetch('data/anbur.json').then((r) => r.json());
+    [table, K] = await Promise.all([
+      fetch('data/anbur.json').then((r) => r.json()),
+      fetch('data/kalendar.json').then((r) => r.json()),
+    ]);
   } catch {
     $('msg').textContent = 'Не удалось загрузить таблицу букв. Обновите страницу.';
     return;
@@ -201,6 +266,14 @@ async function start() {
     });
   });
   $('src').addEventListener('input', render);
+  $('digits').checked = digitMode;
+  $('digits').addEventListener('change', () => {
+    digitMode = $('digits').checked;
+    store.set('anbur-digits', digitMode ? 'on' : 'off');
+    render();
+  });
+  buildPasKeyboard();
+  fillDateForm();
   $('copy').addEventListener('click', copy);
   $('png').addEventListener('click', savePng);
   $('svg').addEventListener('click', saveSvg);

@@ -21,6 +21,11 @@
         <span class="tab-kp">Шонді</span>
         <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇</span>
       </a>
+      <a class="tab" href="kalendar.html">
+        <span class="tab-ru">Календарь</span>
+        <span class="tab-kp">Шонді кыкьямыс</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇ 𐍚𐍧𐍚𐍰𐍴𐍜𐍧𐍡</span>
+      </a>
       <a class="tab" href="anbur.html" aria-current="page">
         <span class="tab-ru">Пишем анбуром</span>
         <span class="tab-kp">Анбурӧн гижам</span>
@@ -49,6 +54,24 @@
       <label for="src" class="sr">Текст кириллицей</label>
       <textarea id="src" rows="3" spellcheck="false" autocomplete="off">Луншӧр</textarea>
       <div id="kbd" class="kbd" aria-label="Экранная клавиатура"></div>
+
+      <h2 class="list-title pas-title">Числа и даты знаками-пасами</h2>
+      <label class="pas-toggle"><input type="checkbox" id="digits" checked> Цифры 1–8 писать знаками (поразрядно, как в восьмеричной записи; 0 и 9 остаются цифрами)</label>
+      <div id="pas-kbd" class="kbd pas-kbd" aria-label="Знаки-пасы"></div>
+      <form id="date-form" class="date-form" onsubmit="return false">
+        <label for="d-month">Месяц</label><select id="d-month"></select>
+        <label for="d-week">Неделя</label><select id="d-week"></select>
+        <label for="d-day">День</label><select id="d-day"></select>
+        <fieldset class="date-mode">
+          <legend class="sr">Как записать дату</legend>
+          <label><input type="radio" name="dmode" value="sets" checked> тремя наборами: пас месяца, восьмёрка, день</label>
+          <label><input type="radio" name="dmode" value="digits"> поразрядно: месяц, неделя, день числами</label>
+        </fieldset>
+        <div class="actions">
+          <button type="button" id="d-today">Сегодня</button>
+          <button type="button" id="d-insert">Вставить дату</button>
+        </div>
+      </form>
     </section>
 
     <section class="letters">
@@ -59,8 +82,10 @@
   </main>
 
   <footer class="foot">
+    <p><strong>Игровая реконструкция.</strong> Не воспроизводит и не заменяет реальные календари, существовавшие в крае, округе и местах проживания коми-пермяков; основана на коми-пермяцком языке, культуре и особенностях пермских языков.</p>
     <p>В коми-пермяцком тексте буква о пишется буквой вой — её название значит «год» и «ночь», а ӧ — буквой о, как писал её сам Стефан. В русском тексте о пишется буквой о, как в старых русских надписях анбуром.</p>
     <p>По книге: Лыткин В. И. Древнепермский язык. М., 1952. Шрифт — Noto Sans Old Permic (OFL).</p>
+    <p>Своих цифр у анбура не было: числа писали буквами с титлом, как в кириллице. Знаки-пасы — выдумка «Солнечной восьмёрки»: числа 1–8 — борозды пальцев левой руки, восьмёрки-недели — правая ладонь, месяцы — восемь резов в ромбе. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/pasy.md">Как устроены знаки</a></p>
     <p>© 2026 Scatik146. Код — Apache 2.0, тексты — CC BY 4.0. <a href="https://github.com/Scatik146/komi-perm-game-calendar">Исходники на GitHub</a></p>
   </footer>
 </body>

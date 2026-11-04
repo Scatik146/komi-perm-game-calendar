@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Календарь — Солнечная восьмёрка</title>
+  <meta name="description" content="Какой сегодня день по «Солнечной восьмёрке» — игровому календарю для книги и настольной игры, — и перевод дат в григорианский календарь и хиджру. Игровая реконструкция, а не исторический календарь.">
+  <meta name="theme-color" content="#1d2b3a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="anbur.css">
+  <script type="module" src="kalendar.js"></script>
+</head>
+<body data-quarter="lun" class="kal-page">
+  <header class="bar">
+    <h1 class="sr">Календарь «Солнечная восьмёрка»</h1>
+    <nav class="tabs" aria-label="Разделы">
+      <a class="tab" href="./">
+        <span class="tab-ru">Солнечные часы</span>
+        <span class="tab-kp">Шонді</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇</span>
+      </a>
+      <a class="tab" href="kalendar.html" aria-current="page">
+        <span class="tab-ru">Календарь</span>
+        <span class="tab-kp">Шонді кыкьямыс</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇ 𐍚𐍧𐍚𐍰𐍴𐍜𐍧𐍡</span>
+      </a>
+      <a class="tab" href="anbur.html">
+        <span class="tab-ru">Пишем анбуром</span>
+        <span class="tab-kp">Анбурӧн гижам</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍐𐍝𐍑𐍣𐍠𐍩𐍝 𐍒𐍙𐍕𐍐𐍜</span>
+      </a>
+    </nav>
+    <div class="where">
+      <label for="place" class="sr">Место</label>
+      <select id="place"></select>
+    </div>
+  </header>
+
+  <main class="kal">
+    <section class="kal-today" aria-labelledby="t-title">
+      <h2 id="t-title" class="list-title">Сегодня по «Солнечной восьмёрке»</h2>
+      <p id="c-ru" class="kal-ru" aria-live="polite"></p>
+      <p id="c-year" class="kal-year"></p>
+      <p id="c-kp" class="kal-kp" lang="koi"></p>
+      <p id="c-anb" class="kal-anb anbur" aria-hidden="true"></p>
+      <p id="c-pas" class="pas kal-pas" role="img"></p>
+      <p id="c-num" class="small"></p>
+      <p id="c-month" class="kal-month"></p>
+      <p id="c-sutki" class="small"></p>
+    </section>
+
+    <section class="kal-other" aria-labelledby="o-title">
+      <h2 id="o-title" class="list-title">В других календарях</h2>
+      <dl class="kal-dl">
+        <div><dt>По григорианскому календарю</dt><dd id="g-today"></dd></div>
+        <div><dt>По хиджре</dt><dd id="h-today"></dd></div>
+      </dl>
+      <p id="c-note" class="small"></p>
+      <p class="small">Хиджра считается по расчётному календарю Умм аль-Кура. Мусульманские сутки,
+        как и сутки «Солнечной восьмёрки», начинаются на закате (магриб), поэтому вечером дата по хиджре
+        меняется вместе с нашей. Начало месяца по наблюдению молодой Луны в России может отличаться на день.</p>
+    </section>
+
+    <section class="kal-conv" aria-labelledby="c-title">
+      <h2 id="c-title" class="list-title">Перевод дат</h2>
+      <div class="conv">
+        <form class="conv-form" onsubmit="return false">
+          <label for="g-in">Григорианская дата</label>
+          <input id="g-in" type="date" min="0325-01-01" max="4000-12-31">
+        </form>
+        <div id="g-out" class="conv-out" aria-live="polite"></div>
+      </div>
+      <div class="conv">
+        <form class="conv-form conv-ours" onsubmit="return false">
+          <label for="o-year">Год (1190 — 2025/26)</label>
+          <input id="o-year" type="number" min="-511" max="4096" step="1">
+          <label for="o-month">Месяц</label>
+          <select id="o-month"></select>
+          <label for="o-week">Неделя</label>
+          <select id="o-week"></select>
+          <label for="o-day">День</label>
+          <select id="o-day"></select>
+        </form>
+        <div id="o-out" class="conv-out" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><strong>Игровая реконструкция.</strong> Не воспроизводит и не заменяет реальные календари, существовавшие в крае, округе и местах проживания коми-пермяков; основана на коми-пермяцком языке, культуре и особенностях пермских языков.</p>
+    <p>Знаки-пасы: числа — борозды пальцев левой руки, восьмёрки-недели — правая ладонь, месяцы — восемь резов в ромбе. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/pasy.md">Как устроены знаки</a> · <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/kalendar.md">Решения календаря</a></p>
+    <p>Слова, отмеченные в документах «сверить», ещё проверяются по «Коми-пермяцко-русскому словарю» Р. М. Баталовой и А. С. Кривощековой-Гантман (1985).</p>
+    <p>© 2026 Scatik146. Код открыт по лицензии Apache 2.0, тексты — CC BY 4.0. <a href="https://github.com/Scatik146/komi-perm-game-calendar">Исходники на GitHub</a></p>
+  </footer>
+</body>
+</html>
