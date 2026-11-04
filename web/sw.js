@@ -1,10 +1,11 @@
 // Офлайн-кэш: сайт работает без сети после первого открытия.
-const CACHE = 'shondi-v4';
+const CACHE = 'shondi-v5';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
-  'anbur.html', 'anbur.css', 'anbur.js', 'fonts/NotoSansOldPermic-Regular.ttf',
-  'engine/index.js', 'engine/sun.js', 'engine/sutki.js', 'engine/moon.js', 'engine/anbur.js',
-  'data/places.json', 'data/names.json', 'data/anbur.json',
+  'anbur.html', 'anbur.css', 'anbur.js', 'fonts/NotoSansOldPermic-Regular.ttf', 'fonts/Pasy.ttf',
+  'kalendar.html', 'kalendar.js',
+  'engine/index.js', 'engine/sun.js', 'engine/sutki.js', 'engine/moon.js', 'engine/anbur.js', 'engine/kalendar.js', 'engine/pasy.js',
+  'data/places.json', 'data/names.json', 'data/anbur.json', 'data/kalendar.json', 'data/pasy.json',
 ];
 
 self.addEventListener('install', (e) => {

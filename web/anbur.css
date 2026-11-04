@@ -7,7 +7,19 @@
   unicode-range: U+10350-1037F, U+0300-036F, U+0483, U+20DB, U+25CC;
 }
 
-.anbur { font-family: "Anbur", var(--serif); font-feature-settings: normal; }
+/* Знаки-пасы «Солнечной восьмёрки»: числа 1–8, восьмёрки, месяцы (область частного использования).
+   Шрифт собирает scripts/build-pasy.py; описание — docs/pasy.md. */
+@font-face {
+  font-family: "Pasy";
+  font-display: block;
+  src: url("fonts/Pasy.ttf") format("truetype");
+  unicode-range: U+E000-E0FF;
+}
+
+.anbur { font-family: "Anbur", "Pasy", var(--serif); font-feature-settings: normal; }
+.pas { font-family: "Pasy", var(--serif); line-height: 1; }
+.pas-month { font-size: 1.5em; vertical-align: -0.2em; }
+.pas-gap { display: inline-block; width: 0.6em; }
 
 
 .gen {
@@ -72,3 +84,15 @@ textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; 
 .letter-table .b { font-size: 0.75rem; color: var(--soft); }
 .letter-table li.late { border-style: dashed; }
 .letter-table li.convention { border-style: dotted; }
+
+/* Знаки-пасы в генераторе */
+.pas-title { margin-top: 1.5rem; }
+.pas-toggle { display: block; margin: 0 0 0.6rem; color: var(--soft); font-size: 0.9rem; }
+.pas-toggle input { accent-color: var(--accent); }
+.pas-key { display: inline-flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+.pas-key .k-pas { font-size: 2.4rem; line-height: 1; }
+.pas-key .k-cyr { font-size: 0.75rem; color: var(--soft); }
+.date-form { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 0.75rem; align-items: center; margin-top: 1rem; }
+.date-form .date-mode, .date-form .actions { grid-column: 1 / -1; }
+.date-mode { border: 0; padding: 0; margin: 0.25rem 0; display: grid; gap: 0.25rem; color: var(--soft); font-size: 0.9rem; }
+.date-mode input { accent-color: var(--accent); }
