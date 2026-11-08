@@ -1,8 +1,12 @@
 import { makeTransliterator } from './engine/anbur.js';
 import {
-  numberSign, eightSign, monthSign, dateSigns, dateDigits, digitsToSigns,
+  numberSign, eightSign, monthSign, printDigit, printEight, printMonth,
+  dateSigns, dateDigits, yearSigns, octalDigits, octalSigns, oldParts, oldSigns, moneyParts, textNumbers,
 } from './engine/pasy.js';
-import { calendarAt } from './engine/kalendar.js';
+import {
+  calendarAt, dateOfDay, yearStart, monthLengths, isoOfDay,
+} from './engine/kalendar.js';
+import { DAY_MS } from './engine/sun.js';
 
 const $ = (id) => document.getElementById(id);
 const store = {
@@ -21,13 +25,15 @@ const BASIS = { stefan: 'стефановская', late: 'поздняя', conv
 let table = null;
 let tr = null;
 let lang = store.get('anbur-lang') === 'ru' ? 'ru' : 'kp';
-let digitMode = store.get('anbur-digits') !== 'off';
+const NUM_MODES = ['keep', 'signs', 'octal'];
+let numMode = store.get('anbur-numtext');
+if (!NUM_MODES.includes(numMode)) numMode = store.get('anbur-digits') === 'off' ? 'keep' : 'signs';
+let pstyle = store.get('anbur-pstyle') === 'parade' ? 'parade' : 'print';
 let K = null;   // названия календаря: data/kalendar.json
 
-/** Текст анбуром; цифры 1–8 — знаками-пасами, если включено. */
+/** Текст анбуром; цифры — по выбранному правилу (знаками как есть или переводом в новый счёт). */
 function write(text) {
-  const out = tr(text, lang);
-  return digitMode ? digitsToSigns(out) : out;
+  return textNumbers(tr(text, lang), numMode);
 }
 
 function render() {
@@ -133,13 +139,22 @@ function pasKey(sign, caption, aria) {
   return b;
 }
 
+const SIGN = {
+  print: { day: printDigit, week: printEight, month: printMonth },
+  parade: { day: numberSign, week: eightSign, month: monthSign },
+};
+
 function buildPasKeyboard() {
   const kbd = $('pas-kbd');
   kbd.replaceChildren();
+  const s = SIGN[pstyle];
+  const digits = pstyle === 'print'
+    ? [pasKey(printDigit(0), '0', 'Ноль, новый счёт'), ...K.numbers.map((x) => pasKey(s.day(x.n), String(x.n), `${x.n}, ${x.kp}`))]
+    : K.numbers.map((x) => pasKey(s.day(x.n), String(x.n), `${x.n}, ${x.kp}`));
   const rows = [
-    K.numbers.map((x) => pasKey(numberSign(x.n), String(x.n), `Число ${x.n}, ${x.kp}`)),
-    K.weeks.map((x) => pasKey(eightSign(x.n), String(x.value), `Восьмёрка ${x.value}, неделя ${x.kp}`)),
-    K.months.map((x) => pasKey(monthSign(x.n), x.kp, `Месяц ${x.kp}`)),
+    digits,
+    K.weeks.map((x) => pasKey(s.week(x.n), String(x.value), `Восьмёрка ${x.value}, неделя ${x.kp}`)),
+    K.months.map((x) => pasKey(s.month(x.n), `${x.kp}\n${57 * x.n}`, `Месяц ${x.kp}, число ${57 * x.n}`)),
   ];
   for (const keys of rows) {
     const r = document.createElement('div');
@@ -149,23 +164,169 @@ function buildPasKeyboard() {
   }
 }
 
+const opt = (sel, items) => items.forEach(([v, t]) => {
+  const o = document.createElement('option'); o.value = v; o.textContent = t; sel.append(o);
+});
+
+function plural(n, one, few, many) {
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+
+/* ---------- режим «Дата» ---------- */
+
+let year = null;   // номер года для выбранной даты
+
+function setDateFromDay(k) {
+  const d = dateOfDay(k);
+  year = d.yearNumber;
+  $('d-month').value = d.month; $('d-week').value = d.week; $('d-day').value = d.day;
+  $('d-greg').value = isoOfDay(k).padStart(10, '0');
+  showDate();
+}
+
+/** Выбранная дата; null, если такого дня в месяце нет. */
+function pickedDate() {
+  const d = { month: +$('d-month').value, week: +$('d-week').value, day: +$('d-day').value };
+  const dom = (d.week - 1) * 8 + d.day;
+  const len = monthLengths(year)[d.month - 1];
+  return { ...d, dom, len, ok: dom <= len };
+}
+
+function dateText(d) {
+  const mode = document.querySelector('input[name="dmode"]:checked').value;
+  let s = mode === 'sets' ? dateSigns(d, pstyle) : dateDigits(d, pstyle);
+  if ($('d-year').checked) s += ` ${yearSigns(dateOfDay(yearStart(year)), pstyle)}`;
+  return s;
+}
+
+function showDate() {
+  const d = pickedDate();
+  const m = K.months[d.month - 1];
+  if (!d.ok) {
+    $('d-ru').textContent = `В месяце ${m.kp} (${m.ru}) в этом году ${d.len} ${plural(d.len, 'день', 'дня', 'дней')} — такого дня нет.`;
+    $('d-signs').textContent = '';
+    $('d-insert').disabled = true;
+    $('d-greg').value = '';
+    return;
+  }
+  $('d-insert').disabled = false;
+  const y = dateOfDay(yearStart(year));
+  const yr = $('d-year').checked ? `; год ${year} — ${y.era}·${y.circle}·${y.octave}·${y.year}` : '';
+  $('d-ru').textContent = `${m.ru}, ${K.weeks[d.week - 1].ord} неделя, ${K.numbers[d.day - 1].ru} день `
+    + `(${m.kp} · ${K.weeks[d.week - 1].kp} · ${K.numbers[d.day - 1].kp})${yr}`;
+  $('d-signs').textContent = dateText(d);
+  const k = yearStart(year) + monthLengths(year).slice(0, d.month - 1).reduce((a, b) => a + b, 0) + d.dom - 1;
+  $('d-greg').value = isoOfDay(k).padStart(10, '0');
+}
+
 function fillDateForm() {
-  const opt = (sel, items) => items.forEach(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; sel.append(o); });
-  opt($('d-month'), K.months.map((x) => [x.n, `${x.n} — ${x.kp}`]));
+  opt($('d-month'), K.months.map((x) => [x.n, `${x.n} — ${x.kp}, ${x.animal}`]));
   opt($('d-week'), K.weeks.map((x) => [x.n, `${x.n} — ${x.kp} (${x.value})`]));
   opt($('d-day'), K.numbers.map((x) => [x.n, `${x.n} — ${x.kp}`]));
   const today = () => {
     const kud = { lat: 59.01, lon: 54.66 };
-    const d = calendarAt(Date.now(), kud);
-    $('d-month').value = d.month; $('d-week').value = d.week; $('d-day').value = d.day;
+    setDateFromDay(calendarAt(Date.now(), kud).dayNumber);
   };
   today();
   $('d-today').addEventListener('click', today);
-  $('d-insert').addEventListener('click', () => {
-    const d = { month: +$('d-month').value, week: +$('d-week').value, day: +$('d-day').value };
-    const mode = document.querySelector('input[name="dmode"]:checked').value;
-    insert(mode === 'sets' ? dateSigns(d) : dateDigits(d));
+  $('d-greg').addEventListener('change', () => {
+    const v = $('d-greg').value;
+    if (!v) return;
+    const [y, m, dd] = v.split('-').map(Number);
+    const t = new Date(0);
+    t.setUTCFullYear(y, m - 1, dd);
+    setDateFromDay(Math.floor(t.getTime() / DAY_MS));
   });
+  for (const id of ['d-month', 'd-week', 'd-day', 'd-year']) $(id).addEventListener('change', showDate);
+  document.querySelectorAll('input[name="dmode"]').forEach((r) => r.addEventListener('change', showDate));
+  $('d-insert').addEventListener('click', () => { if (pickedDate().ok) insert(dateText(pickedDate())); });
+}
+
+/* ---------- режим «Новый счёт» ---------- */
+
+function readInt(id, min, max) {
+  const v = Number($(id).value);
+  return Number.isInteger(v) && v >= min && v <= max ? v : null;
+}
+
+function showNew() {
+  const n = readInt('n-in', 0, 16777215);
+  if (n === null) { $('n-ru').textContent = 'Введите целое число от 0.'; $('n-signs').textContent = ''; return; }
+  const ds = octalDigits(n);
+  const terms = ds.map((d, i) => {
+    const p = 8 ** (ds.length - 1 - i);
+    return p === 1 ? `${d}` : `${d} · ${p}`;
+  });
+  $('n-ru').textContent = `${n} = ${terms.join(' + ')} — по восьми: ${ds.join('')}`;
+  $('n-signs').textContent = octalSigns(n);
+}
+
+/* ---------- режим «Старый счёт, деньги» ---------- */
+
+function oldWords(v) {
+  const p = oldParts(v);
+  const parts = [];
+  if (p.month) parts.push(`${K.months[p.month - 1].kp} (${57 * p.month})`);
+  if (p.week) parts.push(`${K.weeks[p.week - 1].kp} (${8 * p.week})`);
+  if (p.day) parts.push(`${p.day}`);
+  return parts.join(' + ');
+}
+
+function moneyText(total) {
+  const { big, small } = moneyParts(total);
+  if (!big) return oldSigns(small, pstyle);
+  return `${oldSigns(big, pstyle)} ·${small ? ` ${oldSigns(small, pstyle)}` : ''}`;
+}
+
+function showOld() {
+  const n = readInt('o-in', 1, 512 * 512 + 511);
+  if (n === null) { $('o-ru').textContent = 'Введите сумму от 1 до 262 655 мелких монет.'; $('o-signs').textContent = ''; return; }
+  const { big, small } = moneyParts(n);
+  const coins = (c, kind) => `${c} ${kind === 'big' ? plural(c, 'крупная', 'крупные', 'крупных') : plural(c, 'мелкая', 'мелкие', 'мелких')}`;
+  const eq = (v) => (oldWords(v) === String(v) ? '' : ` = ${oldWords(v)}`);
+  let ru;
+  if (!big) ru = `${coins(small, 'small')}${eq(small)}`;
+  else {
+    ru = `${n} ${plural(n, 'мелкая', 'мелкие', 'мелких')} = ${coins(big, 'big')}${small ? ` и ${coins(small, 'small')}` : ''}. `
+      + `До точки — крупные${eq(big) ? `: ${big}${eq(big)}` : ''}${small ? `; после точки — мелкие: ${small}${eq(small)}` : ''}.`;
+  }
+  $('o-ru').textContent = ru;
+  $('o-signs').textContent = moneyText(n);
+}
+
+/* ---------- вкладки ---------- */
+
+const TABS = { date: 'm-date', new: 'm-new', old: 'm-old' };
+
+function openTab(name) {
+  for (const [t, panel] of Object.entries(TABS)) {
+    $(`tab-${t}`).setAttribute('aria-selected', String(t === name));
+    $(panel).hidden = t !== name;
+  }
+  store.set('anbur-tab', name);
+}
+
+function fillModes() {
+  fillDateForm();
+  $('n-in').addEventListener('input', showNew);
+  $('n-insert').addEventListener('click', () => { const n = readInt('n-in', 0, 16777215); if (n !== null) insert(octalSigns(n)); });
+  $('o-in').addEventListener('input', showOld);
+  $('o-insert').addEventListener('click', () => { const n = readInt('o-in', 1, 512 * 512 + 511); if (n !== null) insert(moneyText(n)); });
+  for (const t of Object.keys(TABS)) $(`tab-${t}`).addEventListener('click', () => openTab(t));
+  openTab(TABS[store.get('anbur-tab')] ? store.get('anbur-tab') : 'date');
+  showNew();
+  showOld();
+}
+
+function setStyle(s) {
+  pstyle = s;
+  store.set('anbur-pstyle', s);
+  buildPasKeyboard();
+  showDate();
+  showOld();
 }
 
 /* ---------- сохранение ---------- */
@@ -196,7 +357,7 @@ function download(name, blob) {
 
 async function savePng() {
   await document.fonts.load('64px "Anbur"', '𐍐');
-  await document.fonts.load('64px "Pasy"', numberSign(1));
+  await document.fonts.load('64px "Pasy"', numberSign(1) + printDigit(1));
   const size = 96;
   const pad = size * 0.6;
   const ls = lines();
@@ -266,14 +427,18 @@ async function start() {
     });
   });
   $('src').addEventListener('input', render);
-  $('digits').checked = digitMode;
-  $('digits').addEventListener('change', () => {
-    digitMode = $('digits').checked;
-    store.set('anbur-digits', digitMode ? 'on' : 'off');
+  $('numtext').value = numMode;
+  $('numtext').addEventListener('change', () => {
+    numMode = $('numtext').value;
+    store.set('anbur-numtext', numMode);
     render();
   });
+  document.querySelectorAll('input[name="pstyle"]').forEach((r) => {
+    r.checked = r.value === pstyle;
+    r.addEventListener('change', () => setStyle(r.value));
+  });
   buildPasKeyboard();
-  fillDateForm();
+  fillModes();
   $('copy').addEventListener('click', copy);
   $('png').addEventListener('click', savePng);
   $('svg').addEventListener('click', saveSvg);

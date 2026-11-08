@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   oldParts, oldValue, oldSigns, octalDigits, octalSigns, moneyParts, dateSigns,
-  printDigit, printEight, printMonth, monthSign, OLD_MAX,
+  printDigit, printEight, printMonth, monthSign, OLD_MAX, textNumbers,
 } from '../engine/index.js';
 
 const pasy = JSON.parse(readFileSync(new URL('../data/pasy.json', import.meta.url)));
@@ -36,6 +36,12 @@ test('новый счёт: восьмеричный, с нулём', () => {
   assert.deepEqual(octalDigits(0), [0]);
   assert.deepEqual(octalDigits(512), [1, 0, 0, 0]);
   assert.equal(octalSigns(8), printDigit(1) + printDigit(0));
+});
+
+test('числа в тексте: знаками как есть или переводом в восьмеричный счёт', () => {
+  assert.equal(textNumbers('цена 94', 'keep'), 'цена 94');
+  assert.equal(textNumbers('7-0-5, 9', 'signs'), `${printDigit(7)}-${printDigit(0)}-${printDigit(5)}, 9`);
+  assert.equal(textNumbers('453 и 8', 'octal'), `${octalSigns(453)} и ${printDigit(1)}${printDigit(0)}`);
 });
 
 test('деньги: крупная монета — 512 мелких', () => {

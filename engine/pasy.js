@@ -60,6 +60,17 @@ export function octalDigits(n) {
 /** Число в новом счёте печатными цифрами: 453 → знаки 7, 0, 5. */
 export const octalSigns = (n) => octalDigits(n).map(printDigit).join('');
 
+/**
+ * Числа в тексте. mode: 'keep' — не трогать; 'signs' — цифры 0–8 заменить печатными знаками
+ * (текст уже записан по восьми, 9 остаётся); 'octal' — каждое десятичное число перевести
+ * в новый счёт (453 → 705) и записать печатными знаками.
+ */
+export function textNumbers(text, mode = 'keep') {
+  if (mode === 'signs') return text.replace(/[0-8]/g, (d) => printDigit(Number(d)));
+  if (mode === 'octal') return text.replace(/\d+/g, (s) => octalSigns(Number(s)));
+  return text;
+}
+
 // ---------- старый счёт: месяц + неделя + день ----------
 
 export const OLD_MAX = 512;

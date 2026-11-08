@@ -25,6 +25,7 @@
 .gen {
   display: grid; gap: 1.5rem 3rem;
   max-width: 68rem; margin: 0 auto; padding: 1rem;
+  grid-template-columns: minmax(0, 1fr);
 }
 @media (min-width: 60rem) {
   .gen { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
@@ -96,3 +97,27 @@ textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; 
 .date-form .date-mode, .date-form .actions { grid-column: 1 / -1; }
 .date-mode { border: 0; padding: 0; margin: 0.25rem 0; display: grid; gap: 0.25rem; color: var(--soft); font-size: 0.9rem; }
 .date-mode input { accent-color: var(--accent); }
+
+/* Числа и даты: печатные или парадные знаки, три режима */
+.pas-style { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin-bottom: 0.6rem; color: var(--soft); font-size: 0.9rem; }
+.pas-style input { accent-color: var(--accent); }
+.pas-toggle select { margin-left: 0.4rem; max-width: 100%; }
+.modes { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 1.25rem; border-bottom: 1px solid var(--line); }
+.modes [role="tab"] {
+  border: 1px solid var(--line); border-bottom: 0; border-radius: 0.4rem 0.4rem 0 0;
+  background: transparent; padding: 0.4rem 0.8rem; font-weight: 700; color: var(--soft);
+}
+.modes [aria-selected="true"] { background: rgba(255, 255, 255, 0.7); color: var(--ink); }
+.mode { padding: 0.75rem 0 0; }
+.mode .small { margin-top: 0; }
+.mode-grid { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.4rem 0.75rem; align-items: center; }
+.mode-grid input, .mode-grid select { min-width: 0; font: inherit; }
+.preview {
+  margin: 0.75rem 0; padding: 0.6rem 0.8rem; min-height: 4.5rem;
+  border: 1px dashed var(--line); border-radius: 0.5rem; background: rgba(255, 255, 255, 0.35);
+}
+.pv-ru { margin: 0; font: 400 1rem/1.4 var(--serif); }
+.pv-signs { margin: 0.3rem 0 0; font-size: 2.6rem; line-height: 1.3; min-height: 1.3em; overflow-wrap: anywhere; }
+.pas-key .k-cyr { white-space: pre-line; text-align: center; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 30rem) { .pas-key .k-cyr { font-size: 0.6rem; } }
+textarea, .out-src { font-family: "Pasy", var(--serif); }
