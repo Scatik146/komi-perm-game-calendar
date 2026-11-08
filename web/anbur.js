@@ -195,10 +195,12 @@ function pickedDate() {
   return { ...d, dom, len, ok: dom <= len };
 }
 
+/** Дата для текста: обычная (печатные знаки) или парадная (резы в ромбе). */
 function dateText(d) {
   const mode = document.querySelector('input[name="dmode"]:checked').value;
-  let s = mode === 'sets' ? dateSigns(d, pstyle) : dateDigits(d, pstyle);
-  if ($('d-year').checked) s += ` ${yearSigns(dateOfDay(yearStart(year)), pstyle)}`;
+  const st = document.querySelector('input[name="dstyle"]:checked').value;
+  let s = mode === 'sets' ? dateSigns(d, st) : dateDigits(d, st);
+  if ($('d-year').checked) s += ` ${yearSigns(dateOfDay(yearStart(year)), st)}`;
   return s;
 }
 
@@ -309,6 +311,12 @@ function fillDateForm() {
   $('d-plank-svg').addEventListener('click', () => savePlank('svg'));
   $('d-plank-png').addEventListener('click', () => savePlank('png'));
   document.querySelectorAll('input[name="dmode"]').forEach((r) => r.addEventListener('change', showDate));
+  const ds = store.get('anbur-dstyle') === 'parade' ? 'parade' : 'print';
+  document.querySelectorAll('input[name="dstyle"]').forEach((r) => {
+    r.checked = r.value === ds;
+    r.addEventListener('change', () => { store.set('anbur-dstyle', r.value); showDate(); });
+  });
+  showDate();
   $('d-insert').addEventListener('click', () => { if (pickedDate().ok) insert(dateText(pickedDate())); });
 }
 

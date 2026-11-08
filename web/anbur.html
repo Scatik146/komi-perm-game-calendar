@@ -84,6 +84,11 @@
           <label for="d-day">День</label><select id="d-day"></select>
         </div>
         <fieldset class="date-mode">
+          <legend class="sr">Какая дата</legend>
+          <label><input type="radio" name="dstyle" value="print" checked> обычная дата — печатными знаками, в строку с буквами</label>
+          <label><input type="radio" name="dstyle" value="parade"> парадная дата — резами в ромбе (надписи, памятные даты)</label>
+        </fieldset>
+        <fieldset class="date-mode">
           <legend class="sr">Как записать дату</legend>
           <label><input type="radio" name="dmode" value="sets" checked> тремя знаками: месяц, неделя, день</label>
           <label><input type="radio" name="dmode" value="digits"> числами по местам: 7·6·6</label>
