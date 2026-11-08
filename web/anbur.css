@@ -44,7 +44,9 @@
 .out-src { margin: 0.5rem 0 1rem; color: var(--soft); font: 400 1.1rem/1.4 var(--serif); white-space: pre-wrap; }
 .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
-.lang { display: flex; gap: 1.25rem; margin-bottom: 0.75rem; color: var(--soft); }
+.lang { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin-bottom: 0.5rem; color: var(--soft); }
+.lang small { font-size: 0.7rem; color: var(--soft); border: 1px solid var(--line); border-radius: 0.3rem; padding: 0 0.25rem; }
+.lang-note { margin: 0 0 0.6rem; }
 .lang input { accent-color: var(--accent); }
 
 textarea {
@@ -67,6 +69,7 @@ textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; 
 .key .k-cyr { font: 700 1rem/1 var(--serif); }
 .key .k-anb { font-size: 1.15rem; color: var(--q-ryt); margin-top: 0.15rem; }
 .key.extra { background: #f3e7cf; }
+.key.loan { opacity: 0.6; border-style: dashed; }
 .key.wide { flex: 3 1 0; max-width: none; }
 .key.mid { flex: 1.6 1 0; max-width: 5rem; }
 .key:active { transform: translateY(1px); }
@@ -79,10 +82,11 @@ textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; 
   display: grid; grid-template-columns: 2.6rem 1fr; gap: 0 0.5rem; align-items: center;
   padding: 0.45rem 0.6rem; border: 1px solid var(--line); border-radius: 0.4rem;
 }
-.letter-table .g { grid-row: span 3; font-size: 2rem; text-align: center; }
+.letter-table .g { grid-row: span 4; font-size: 2rem; text-align: center; }
 .letter-table .c { font: 700 1rem/1.2 var(--serif); }
 .letter-table .n { font-size: 0.85rem; }
 .letter-table .b { font-size: 0.75rem; color: var(--soft); }
+.letter-table .w { grid-column: 2; font-size: 0.72rem; color: var(--soft); }
 .letter-table li.late { border-style: dashed; }
 .letter-table li.convention { border-style: dotted; }
 

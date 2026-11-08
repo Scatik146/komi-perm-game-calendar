@@ -1,4 +1,4 @@
-import { makeTransliterator } from './engine/anbur.js';
+import { makeTransliterator, letterMap, LANGS } from './engine/anbur.js';
 import {
   numberSign, eightSign, monthSign, printDigit, printEight, printMonth,
   dateSigns, dateDigits, yearSigns, octalDigits, octalSigns, oldParts, oldSigns, moneyParts, COINS, MONEY_MAX, textNumbers,
@@ -20,12 +20,25 @@ const ROWS = [
   ['ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э'],
   ['я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', 'ё'],
 ];
-const EXTRA = ['ӧ', 'і', 'дж', 'дз'];
+// Особые буквы каждого языка — верхний ряд клавиатуры
+const EXTRA = {
+  kp: ['ӧ', 'і', 'дж', 'дз'],
+  ru: [],
+  bg: ['ӑ', 'ӗ', 'ӳ', 'ў', 'дж', 'дз'],
+  ug: ['ӧ', 'ӳ', 'ў', 'ӈ'],
+};
 const BASIS = { stefan: 'стефановская', late: 'поздняя', convention: 'условная' };
+const LANG_NAME = { kp: 'коми-перм.', ru: 'рус.', bg: 'булг.', ug: 'угор.' };
+const LANG_NOTE = {
+  kp: '',
+  ru: 'В русском тексте о пишется буквой о (омегой), как в старых русских надписях анбуром; дж и дз — двумя буквами.',
+  bg: 'Мир книги. Булгарский: ӑ — ан с точкой, ӗ — э с точкой, ӳ — у с двумя точками, ў (w) — у с точкой. Долгий гласный — удвоением (аа). Вместо е, ю, я пишут э, йэ, йу, йа.',
+  ug: 'Мир книги. Угорский (остяки Прикамья): ӧ = ö — о с двумя точками, ӳ = ü — у с двумя точками, ў (w) — у с точкой, ӈ — нэнӧ с тремя точками. Долгота гласных и согласных — удвоением. Вместо е, ю, я пишут э, йэ, йу, йа; дж, дз, ж, ч, в, ф, ц — только в чужих словах.',
+};
 
 let table = null;
 let tr = null;
-let lang = store.get('anbur-lang') === 'ru' ? 'ru' : 'kp';
+let lang = LANGS.includes(store.get('anbur-lang')) ? store.get('anbur-lang') : 'kp';
 const NUM_MODES = ['keep', 'signs', 'octal'];
 let numMode = store.get('anbur-numtext');
 if (!NUM_MODES.includes(numMode)) numMode = store.get('anbur-digits') === 'off' ? 'keep' : 'signs';
@@ -92,12 +105,19 @@ function key(label, { anb = '', cls = '', onPress, aria }) {
 function buildKeyboard() {
   const kbd = $('kbd');
   kbd.replaceChildren();
-  const rows = lang === 'kp' ? [EXTRA, ...ROWS] : ROWS;
+  const has = letterMap(table, lang);
+  const use = new Map(table.letters.map((l) => [l.cyr, l.use?.[lang]]));
+  const extra = EXTRA[lang] ?? [];
+  const rows = [extra, ...ROWS].map((row) => row.filter((ch) => has.has(ch))).filter((row) => row.length);
   rows.forEach((row) => {
     const r = document.createElement('div');
     r.className = 'kbd-row';
     for (const ch of row) {
-      r.append(key(ch, { anb: glyphFor(ch), cls: EXTRA.includes(ch) ? 'extra' : '', onPress: () => insert(ch) }));
+      const loan = use.get(ch) === 'loan';
+      const cls = [extra.includes(ch) ? 'extra' : '', loan ? 'loan' : ''].join(' ');
+      const b = key(ch, { anb: glyphFor(ch), cls, onPress: () => insert(ch), aria: loan ? `${ch}, в заимствованиях` : ch });
+      if (loan) b.title = 'Только в чужих словах';
+      r.append(b);
     }
     kbd.append(r);
   });
@@ -112,20 +132,51 @@ function buildKeyboard() {
   kbd.append(last);
 }
 
+/** Кто пишет буквой: «все» или список языков; заимствования — отдельно. */
+function whoUses(use = {}) {
+  const own = LANGS.filter((g) => use[g] === 'own');
+  const loan = LANGS.filter((g) => use[g] === 'loan');
+  const list = (gs) => gs.map((g) => LANG_NAME[g]).join(', ');
+  const parts = [own.length === LANGS.length ? 'все' : list(own)].filter(Boolean);
+  if (loan.length) parts.push(`в заимствованиях: ${list(loan)}`);
+  return parts.join('; ');
+}
+
+function tableItem(sign, cyr, name, basis, who, note) {
+  const li = document.createElement('li');
+  li.className = basis;
+  li.innerHTML = '<span class="g anbur"></span><span class="c"></span><span class="n"></span><span class="b"></span><span class="w"></span>';
+  li.querySelector('.g').textContent = sign;
+  li.querySelector('.c').textContent = cyr;
+  li.querySelector('.n').textContent = name;
+  li.querySelector('.b').textContent = BASIS[basis];
+  li.querySelector('.w').textContent = who;
+  if (note) li.title = note;
+  return li;
+}
+
 function buildTable() {
   const ol = $('table');
   ol.replaceChildren();
+  const signs = new Set(table.letters.map((l) => l.anbur));
   for (const l of table.letters) {
-    const li = document.createElement('li');
-    li.className = l.basis;
-    li.innerHTML = '<span class="g anbur"></span><span class="c"></span><span class="n"></span><span class="b"></span>';
-    li.querySelector('.g').textContent = l.anbur;
-    li.querySelector('.c').textContent = l.cyr;
-    li.querySelector('.n').textContent = l.meaning ? `${l.name} — ${l.meaning}` : l.name;
-    li.querySelector('.b').textContent = BASIS[l.basis] + (l.cyr === 'о' ? '; в русском — о' : '');
-    if (l.note) li.title = l.note;
-    ol.append(li);
+    const name = l.meaning ? `${l.name} — ${l.meaning}` : l.name;
+    const use = { ...l.use };
+    // знак, который у буквы в другом языке, — своей строкой (угорское ӧ = ö)
+    for (const [g, sign] of Object.entries(l.by ?? {})) {
+      if (signs.has(sign)) continue;
+      delete use[g];
+      ol.append(tableItem(sign, `${l.cyr} (${LANG_NAME[g]})`, 'о с двумя точками', 'convention', whoUses({ [g]: l.use[g] }), l.note));
+      signs.add(sign);
+    }
+    const who = whoUses(use) + (l.by?.ru ? '; в русском о — омега' : '');
+    ol.append(tableItem(l.anbur, l.cyr, name, l.basis, who, l.note));
   }
+}
+
+function showLangNote() {
+  $('lang-note').textContent = LANG_NOTE[lang];
+  $('lang-note').hidden = !LANG_NOTE[lang];
 }
 
 /* ---------- знаки-пасы ---------- */
@@ -474,6 +525,7 @@ async function start() {
     r.addEventListener('change', () => {
       lang = r.value;
       store.set('anbur-lang', lang);
+      showLangNote();
       buildKeyboard();
       render();
     });
@@ -494,6 +546,7 @@ async function start() {
   $('copy').addEventListener('click', copy);
   $('png').addEventListener('click', savePng);
   $('svg').addEventListener('click', saveSvg);
+  showLangNote();
   buildKeyboard();
   buildTable();
   render();

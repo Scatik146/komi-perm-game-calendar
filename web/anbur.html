@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Анбур — надписи древнепермским письмом</title>
-  <meta name="description" content="Генератор надписей анбуром — древнепермским письмом Стефана Пермского — с экранной клавиатурой для коми-пермяцкого и русского языков.">
+  <meta name="description" content="Генератор надписей анбуром — древнепермским письмом Стефана Пермского — с экранной клавиатурой для коми-пермяцкого и русского языков, а в мире книги — булгарского и угорского (остяки Прикамья).">
   <meta name="theme-color" content="#1d2b3a">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -50,7 +50,10 @@
       <div class="lang" role="radiogroup" aria-label="Язык текста">
         <label><input type="radio" name="lang" value="kp" checked> коми-пермяцкий</label>
         <label><input type="radio" name="lang" value="ru"> русский</label>
+        <label><input type="radio" name="lang" value="bg"> булгарский <small>мир книги</small></label>
+        <label><input type="radio" name="lang" value="ug"> угорский — остяки Прикамья <small>мир книги</small></label>
       </div>
+      <p id="lang-note" class="small lang-note"></p>
       <label for="src" class="sr">Текст кириллицей</label>
       <textarea id="src" rows="3" spellcheck="false" autocomplete="off">Луншӧр</textarea>
       <div id="kbd" class="kbd" aria-label="Экранная клавиатура"></div>
@@ -136,7 +139,8 @@
 
     <section class="letters">
       <h2 class="list-title">Буквы</h2>
-      <p class="small">Названия букв — по реконструкции В. И. Лыткина. «Стефановская» — буква азбуки Стефана Пермского (XIV в.), «поздняя» — добавлена в XVI–XVII вв., «условная» — наше решение для современных букв, которых в старом письме не было.</p>
+      <p class="small">Названия букв — по реконструкции В. И. Лыткина. «Стефановская» — буква азбуки Стефана Пермского (XIV в.), «поздняя» — добавлена в XVI–XVII вв., «условная» — наше решение для букв, которых в старом письме не было. Азбука одна на все языки: у каждого знака одно значение. Под буквой — кто ею пишет; «в заимствованиях» — только в чужих словах.</p>
+      <p class="small">Новые буквы — только точками. Одна точка — новый звук на старой основе, как в арабской графике, где точки различают буквы одного начертания. Две точки — по образцу й (подпись епископа Филофея, 1474). Три точки — ŋ, как в тюркской арабице. Булгарский и угорский наборы — <b>мир книги</b>.</p>
       <ol id="table" class="letter-table"></ol>
     </section>
   </main>
