@@ -14,7 +14,7 @@
     Дни 1–8 U+E001–E008, недели 8…48 U+E011–E016, месяцы Ур…Кӧч U+E021–E028.
   * печатный — для строки анбура: высота и толщина линии как у букв (шрифт Noto Sans Old Permic:
     высота 638, толщина 89 из 1000). Ноль U+E030, цифры 1–8 U+E031–E038, недели U+E041–E046,
-    месяцы U+E051–E058.
+    месяцы U+E051–E058. Цифры пропорциональные; табличные (одной ширины) — по OpenType tnum.
 """
 import json
 import math
@@ -154,6 +154,7 @@ def print_week(k):
 # Элемент штриха: (x, y) — точка; (cx, cy, r, s) — окружность, s = +1 — обход по часовой, −1 — против.
 # Прямые — касательные между окружностями, дуги — по окружностям. Концы за верхом или строкой
 # срезаются по линии. Утверждено автором 8 ноября 2026 (Сир — вариант «г»).
+# Порядок штрихов и направление от первой точки к последней — это и есть порядок росчерков пером.
 PRINT_MONTHS = {
     'Ур': [[(151.0, -70), (307.3, 319, 95, 1), (151.0, 708)], [(-79.0, -70), (325.5, 507.9)]],
     'Ош': [[(50, 708), (265, 171.5, 215, 1), (372, 498.5, 107, 1), (265, 420)]],
@@ -162,7 +163,7 @@ PRINT_MONTHS = {
     'Чужмӧр': [[(40, 340), (165, 157.5, 125, 1), (415, 480.5, 125, -1), (540, 330)]],
     'Юсь': [[(495.2, -70), (275, 490.5, 115, -1), (390, 470)], [(287.6, 303.6), (135, 210, 110, -1), (25, 400)]],
     'Сир': [[(60, 230), (170, 142.5, 110, 1), (300, 475.5, 130, 1), (560, 380)]],
-    'Кӧч': [[(219.6, 708), (60, 480), (238.8, -70)], [(105.9, 306.5), (243.5, 235.6, 110, -1), (173.9, 97.3)]],
+    'Кӧч': [[(238.8, -70), (60, 480), (219.6, 708)], [(105.9, 306.5), (243.5, 235.6, 110, -1), (173.9, 97.3)]],
 }
 
 
@@ -260,7 +261,7 @@ def month_outline(strokes):
                 polys.append(poly)
     x0 = min(x for p in polys for x, _ in p)
     polys = [[(x - x0, y) for x, y in p] for p in polys]
-    return polys, max(x for p in polys for x, _ in p)
+    return polys, max(x for p in polys for x, _ in p), x0
 
 
 # =====================================================================================
@@ -292,9 +293,10 @@ for k, (sid, kp, ru) in enumerate(WEEKS, 1):
     signs.append({'id': f'pw{k}', 'set': 'print', 'kind': 'eight', 'value': 8 * k, 'index': k, 'kp': kp,
                   'cp': 0xE040 + k, 'outline': polys, 'width': w})
 for m, (sid, kp, _) in enumerate(MONTH_LATTICE, 1):
-    polys, w = month_outline(PRINT_MONTHS[kp])
+    polys, w, x0 = month_outline(PRINT_MONTHS[kp])
     signs.append({'id': f'pm{m}', 'set': 'print', 'kind': 'month', 'value': m, 'number': 57 * m, 'kp': kp,
-                  'slug': sid, 'cp': 0xE050 + m, 'outline': polys, 'width': w, 'strokes': PRINT_MONTHS[kp]})
+                  'slug': sid, 'cp': 0xE050 + m, 'outline': polys, 'width': w, 'strokes': PRINT_MONTHS[kp],
+                  'shift': round(-x0, 1)})
 
 
 # =====================================================================================
@@ -368,7 +370,9 @@ def build_font(path):
     from fontTools.fontBuilder import FontBuilder
     from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-    names = ['.notdef', 'space'] + [s['id'] for s in signs]
+    digits = [s for s in signs if s['set'] == 'print' and s['kind'] == 'digit']
+    tab_w = max(s['width'] for s in digits)          # табличные цифры: одна ширина, знак по центру
+    names = ['.notdef', 'space'] + [s['id'] for s in signs] + [f"{s['id']}.tnum" for s in digits]
     fb = FontBuilder(UPM, isTTF=True)
     fb.setupGlyphOrder(names)
     cmap = {0x20: 'space'}
@@ -395,6 +399,17 @@ def build_font(path):
         xmin = min(x for c in cs for x, _ in c)
         adv = 900 if s['set'] == 'parade' else round(s['width'] + 2 * SIDE)
         metrics[s['id']] = (adv, xmin)
+    for s in digits:
+        dx = round((tab_w - s['width']) / 2)
+        pen = TTGlyphPen(None)
+        cs = contours(s)
+        for c in cs:
+            pen.moveTo((c[0][0] + dx, c[0][1]))
+            for x, y in c[1:]:
+                pen.lineTo((x + dx, y))
+            pen.closePath()
+        glyphs[f"{s['id']}.tnum"] = pen.glyph()
+        metrics[f"{s['id']}.tnum"] = (round(tab_w + 2 * SIDE), min(x for c in cs for x, _ in c) + dx)
     fb.setupGlyf(glyphs)
     for name in names:   # перекрывающиеся контуры — флаг для растеризаторов
         g = fb.font['glyf'][name]
@@ -402,6 +417,9 @@ def build_font(path):
             g.flags[0] |= 0x40
     fb.setupHorizontalMetrics(metrics)
     fb.setupHorizontalHeader(ascent=800, descent=-200)
+    # tnum — табличные цифры для столбцов (CSS: font-variant-numeric: tabular-nums)
+    fb.addOpenTypeFeatures('languagesystem DFLT dflt;\nfeature tnum {\n'
+                           + ''.join(f"  sub {s['id']} by {s['id']}.tnum;\n" for s in digits) + '} tnum;\n')
     fb.setupNameTable({
         'familyName': 'Pasy', 'styleName': 'Regular',
         'copyright': '© 2026 Scatik146. Знаки-пасы «Солнечной восьмёрки».',
@@ -435,7 +453,7 @@ if __name__ == '__main__':
         '_comment': 'Знаки-пасы «Солнечной восьмёрки». Описание — docs/pasy.md; файл собирает scripts/build-pasy.py. '
                     'set: parade — резы в ромбе (поле 100×100, y вниз; lines — резы, p — точки ломаной, cap — конец '
                     'реза; lattice — узлы ромба 4×4); print — печатные знаки для строки анбура (единицы шрифта из 1000, '
-                    'y вниз: верх строки 0, строка 638; outline — залитые многоугольники, width — ширина без отступов). '
+                    'y вниз: верх строки 0, строка 638; outline — залитые многоугольники, width — ширина без отступов; у месяцев strokes — линии пера, shift — сдвиг x линий к контуру). '
                     'cp — код в шрифте Pasy (область частного использования).',
         'stroke': SW,
         'print': {'cap': CAP, 'stem': STEM, 'top': TOP, 'side': SIDE},

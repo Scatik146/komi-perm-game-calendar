@@ -64,3 +64,8 @@ test('в шрифте есть все знаки, коды не повторяю
     for (const p of s.outline) for (const [, y] of p) assert.ok(y >= -88 && y <= 650, `${s.id}: ${y}`);
   }
 });
+
+test('в шрифте Pasy есть табличные цифры (tnum)', () => {
+  const font = readFileSync(new URL('../web/fonts/Pasy.ttf', import.meta.url));
+  assert.ok(font.includes(Buffer.from('GSUB')) && font.includes(Buffer.from('tnum')));
+});
