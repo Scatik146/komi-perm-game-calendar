@@ -317,6 +317,22 @@ function moneyText(total, preview = false) {
   return COINS.filter((c) => p[c.id]).map((c) => `${oldSigns(p[c.id], pstyle)} ${word(c)}`).join(' ');
 }
 
+/** Монеты → сумма в урах (уров и ручей можно ввести сколько угодно — пересчитается). */
+function fromCoins() {
+  const v = (id) => { const x = Number($(id).value || 0); return Number.isInteger(x) && x >= 0 ? x : NaN; };
+  const total = 512 * v('o-niz') + 64 * v('o-ruch') + v('o-ur');
+  $('o-in').value = Number.isFinite(total) ? String(total) : '';
+  showOld();
+}
+
+/** Сумма в урах → монеты. */
+function fillCoins() {
+  const n = readInt('o-in', 1, MONEY_MAX);
+  if (n === null) return;
+  const p = moneyParts(n);
+  $('o-niz').value = p.niz; $('o-ruch').value = p.ruch; $('o-ur').value = p.ur;
+}
+
 function showOld() {
   const n = readInt('o-in', 1, MONEY_MAX);
   if (n === null) { $('o-ru').textContent = `Введите сумму от 1 до ${MONEY_MAX.toLocaleString('ru')} уров.`; $('o-signs').textContent = ''; return; }
@@ -344,7 +360,9 @@ function fillModes() {
   fillDateForm();
   $('n-in').addEventListener('input', showNew);
   $('n-insert').addEventListener('click', () => { const n = readInt('n-in', 0, 16777215); if (n !== null) insert(octalSigns(n)); });
-  $('o-in').addEventListener('input', showOld);
+  $('o-in').addEventListener('input', () => { fillCoins(); showOld(); });
+  for (const id of ['o-niz', 'o-ruch', 'o-ur']) $(id).addEventListener('input', fromCoins);
+  fillCoins();
   $('o-insert').addEventListener('click', () => { const n = readInt('o-in', 1, MONEY_MAX); if (n !== null) insert(moneyText(n)); });
   for (const t of Object.keys(TABS)) $(`tab-${t}`).addEventListener('click', () => openTab(t));
   openTab(TABS[store.get('anbur-tab')] ? store.get('anbur-tab') : 'date');
