@@ -1,7 +1,7 @@
 import { makeTransliterator } from './engine/anbur.js';
 import {
   numberSign, eightSign, monthSign, printDigit, printEight, printMonth,
-  dateSigns, dateDigits, yearSigns, octalDigits, octalSigns, oldParts, oldSigns, moneyParts, textNumbers,
+  dateSigns, dateDigits, yearSigns, octalDigits, octalSigns, oldParts, oldSigns, moneyParts, COINS, MONEY_MAX, textNumbers,
 } from './engine/pasy.js';
 import {
   calendarAt, dateOfDay, yearStart, monthLengths, isoOfDay,
@@ -350,26 +350,28 @@ function oldWords(v) {
   return parts.join(' + ');
 }
 
-function moneyText(total) {
-  const { big, small } = moneyParts(total);
-  if (!big) return oldSigns(small, pstyle);
-  return `${oldSigns(big, pstyle)} ·${small ? ` ${oldSigns(small, pstyle)}` : ''}`;
+const RU_COIN = {
+  niz: ['низь', 'низи', 'низей'],
+  ruch: ['руч', 'руча', 'ручей'],
+  ur: ['ур', 'ура', 'уров'],
+};
+
+/** Сумма для текста: каждая часть — старым числом и названием монеты анбуром (пустые части пропускаются). */
+function moneyText(total, preview = false) {
+  const p = moneyParts(total);
+  const word = (c) => (preview ? tr(c.kp, lang) : c.kp);   // в поле ввода — кириллицей, анбуром станет в надписи
+  return COINS.filter((c) => p[c.id]).map((c) => `${oldSigns(p[c.id], pstyle)} ${word(c)}`).join(' ');
 }
 
 function showOld() {
-  const n = readInt('o-in', 1, 512 * 512 + 511);
-  if (n === null) { $('o-ru').textContent = 'Введите сумму от 1 до 262 655 мелких монет.'; $('o-signs').textContent = ''; return; }
-  const { big, small } = moneyParts(n);
-  const coins = (c, kind) => `${c} ${kind === 'big' ? plural(c, 'крупная', 'крупные', 'крупных') : plural(c, 'мелкая', 'мелкие', 'мелких')}`;
-  const eq = (v) => (oldWords(v) === String(v) ? '' : ` = ${oldWords(v)}`);
-  let ru;
-  if (!big) ru = `${coins(small, 'small')}${eq(small)}`;
-  else {
-    ru = `${n} ${plural(n, 'мелкая', 'мелкие', 'мелких')} = ${coins(big, 'big')}${small ? ` и ${coins(small, 'small')}` : ''}. `
-      + `До точки — крупные${eq(big) ? `: ${big}${eq(big)}` : ''}${small ? `; после точки — мелкие: ${small}${eq(small)}` : ''}.`;
-  }
-  $('o-ru').textContent = ru;
-  $('o-signs').textContent = moneyText(n);
+  const n = readInt('o-in', 1, MONEY_MAX);
+  if (n === null) { $('o-ru').textContent = `Введите сумму от 1 до ${MONEY_MAX.toLocaleString('ru')} уров.`; $('o-signs').textContent = ''; return; }
+  const p = moneyParts(n);
+  const say = (v, id) => `${v} ${plural(v, ...RU_COIN[id])}`;
+  const eq = (v) => (oldWords(v) === String(v) ? '' : ` (${oldWords(v)})`);
+  const parts = COINS.filter((c) => p[c.id]).map((c) => `${say(p[c.id], c.id)}${eq(p[c.id])}`);
+  $('o-ru').textContent = `${say(n, 'ur')} = ${parts.join(', ')}`;
+  $('o-signs').textContent = moneyText(n, true);
 }
 
 /* ---------- вкладки ---------- */
@@ -389,7 +391,7 @@ function fillModes() {
   $('n-in').addEventListener('input', showNew);
   $('n-insert').addEventListener('click', () => { const n = readInt('n-in', 0, 16777215); if (n !== null) insert(octalSigns(n)); });
   $('o-in').addEventListener('input', showOld);
-  $('o-insert').addEventListener('click', () => { const n = readInt('o-in', 1, 512 * 512 + 511); if (n !== null) insert(moneyText(n)); });
+  $('o-insert').addEventListener('click', () => { const n = readInt('o-in', 1, MONEY_MAX); if (n !== null) insert(moneyText(n)); });
   for (const t of Object.keys(TABS)) $(`tab-${t}`).addEventListener('click', () => openTab(t));
   openTab(TABS[store.get('anbur-tab')] ? store.get('anbur-tab') : 'date');
   showNew();

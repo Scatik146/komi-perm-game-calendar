@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   oldParts, oldValue, oldSigns, octalDigits, octalSigns, moneyParts, dateSigns,
-  printDigit, printEight, printMonth, monthSign, OLD_MAX, textNumbers,
+  printDigit, printEight, printMonth, monthSign, OLD_MAX, textNumbers, MONEY_MAX,
 } from '../engine/index.js';
 
 const pasy = JSON.parse(readFileSync(new URL('../data/pasy.json', import.meta.url)));
@@ -44,10 +44,17 @@ test('числа в тексте: знаками как есть или пере
   assert.equal(textNumbers('453 и 8', 'octal'), `${octalSigns(453)} и ${printDigit(1)}${printDigit(0)}`);
 });
 
-test('деньги: крупная монета — 512 мелких', () => {
-  assert.deepEqual(moneyParts(94), { big: 0, small: 94 });
-  assert.deepEqual(moneyParts(512), { big: 1, small: 0 });
-  assert.deepEqual(moneyParts(1000), { big: 1, small: 488 });
+test('деньги: ур, руч = 64 ура, низь = 512 уров', () => {
+  assert.deepEqual(moneyParts(40), { niz: 0, ruch: 0, ur: 40 });
+  assert.deepEqual(moneyParts(94), { niz: 0, ruch: 1, ur: 30 });
+  assert.deepEqual(moneyParts(512), { niz: 1, ruch: 0, ur: 0 });
+  assert.deepEqual(moneyParts(1000), { niz: 1, ruch: 7, ur: 40 });
+  assert.deepEqual(moneyParts(MONEY_MAX), { niz: 512, ruch: 7, ur: 63 });
+  assert.throws(() => moneyParts(MONEY_MAX + 1));
+  for (let t = 1; t <= 5000; t++) {
+    const { niz, ruch, ur } = moneyParts(t);
+    assert.equal(512 * niz + 64 * ruch + ur, t);
+  }
 });
 
 test('печатная дата: месяц, неделя, день', () => {

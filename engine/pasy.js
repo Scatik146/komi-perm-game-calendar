@@ -7,7 +7,7 @@
 // Два счёта:
 //   новый — восьмеричный позиционный, цифры 0–7 (знак 8 есть только в дате);
 //   старый — без разрядов и без нуля: число = месяц (57·k) + неделя (8·k) + день (1–8), до 512.
-//   Старым счётом пишут деньги: крупная монета — 512 мелких.
+//   Старым счётом пишут деньги: ур (белка), руч (лиса) = 64 ура, низь (соболь) = 512 уров.
 
 /** Число 1–8 (день, год, октава, круг, эра; часть суток) → парадный знак. */
 export const numberSign = (n) => String.fromCodePoint(0xE000 + n);
@@ -95,12 +95,21 @@ export function oldSigns(v, set = 'print') {
   return (month ? s.month(month) : '') + (week ? s.week(week) : '') + (day ? s.day(day) : '');
 }
 
-// ---------- деньги: старый счёт, две монеты ----------
+// ---------- деньги: старый счёт, три монеты ----------
 
-/** Сумма в мелких монетах → {big, small}: крупная монета — 512 мелких; каждая часть — старым счётом. */
+/** Монеты мира книги: ур (белка) — мелкая, руч (лиса) = 64 ура, низь (соболь) = 8 ручей = 512 уров. */
+export const COINS = [
+  { id: 'niz', kp: 'низь', ru: 'соболь', value: 512 },
+  { id: 'ruch', kp: 'руч', ru: 'лиса', value: 64 },
+  { id: 'ur', kp: 'ур', ru: 'белка', value: 1 },
+];
+export const MONEY_MAX = 512 * 512 + 511;
+
+/** Сумма в урах → {niz, ruch, ur}: низь до 512, руч 0–7, ур 0–63; каждая часть пишется старым счётом. */
 export function moneyParts(total) {
-  if (!Number.isInteger(total) || total < 1) throw new RangeError('нужна сумма ≥ 1');
-  const big = Math.floor(total / OLD_MAX);
-  if (big > OLD_MAX) throw new RangeError('больше 512 крупных монет старым счётом не пишут');
-  return { big, small: total - OLD_MAX * big };
+  if (!Number.isInteger(total) || total < 1) throw new RangeError('нужна сумма ≥ 1 ура');
+  if (total > MONEY_MAX) throw new RangeError('больше 512 низей старым счётом не пишут');
+  const niz = Math.floor(total / 512);
+  const r = total - 512 * niz;
+  return { niz, ruch: Math.floor(r / 64), ur: r % 64 };
 }
