@@ -45,8 +45,19 @@
       <p id="c-year" class="kal-year"></p>
       <p id="c-kp" class="kal-kp" lang="koi"></p>
       <p id="c-anb" class="kal-anb anbur" aria-hidden="true"></p>
+      <p class="kal-label">Обычная запись — печатными знаками: месяц · неделя · день, год</p>
+      <p id="c-print" class="anbur kal-print" role="img"></p>
+      <p class="kal-label">Парадная запись — резами: месяц · неделя · день, год</p>
       <p id="c-pas" class="pas kal-pas" role="img"></p>
       <p id="c-num" class="small"></p>
+      <details class="kal-plank-box">
+        <summary>Дата резами на плашке</summary>
+        <div id="c-plank" class="kal-plank"></div>
+        <div class="actions">
+          <button type="button" id="c-plank-png">Скачать плашку (PNG)</button>
+          <button type="button" id="c-plank-svg">Скачать плашку (SVG)</button>
+        </div>
+      </details>
       <p id="c-month" class="kal-month"></p>
       <p id="c-sutki" class="small"></p>
     </section>
@@ -90,7 +101,7 @@
 
   <footer class="foot">
     <p><strong>Игровая реконструкция.</strong> Не воспроизводит и не заменяет реальные календари, существовавшие в крае, округе и местах проживания коми-пермяков; основана на коми-пермяцком языке, культуре и особенностях пермских языков.</p>
-    <p>Знаки-пасы: числа — пальцы левой руки снизу вверх (черта — 2, короткая черта — 1), восьмёрки-недели — правая ладонь, месяцы — восемь резов в ромбе. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/pasy.md">Как устроены знаки</a> · <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/kalendar.md">Решения календаря</a></p>
+    <p>Знаки-пасы (мир книги): дни — пальцы левой руки (длинный рез — две борозды, короткий — одна), восьмёрки-недели — правая ладонь, месяцы — восемь резов в ромбе. Парадные знаки режут на плашках; печатные — для строки анбура. Дата всегда пишется тремя знаками: месяц, неделя, день; год — по местам: эра, круг, октава, год. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/pasy.md">Как устроены знаки</a> · <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/kalendar.md">Решения календаря</a></p>
     <p>Слова, отмеченные в документах «сверить», ещё проверяются по «Коми-пермяцко-русскому словарю» Р. М. Баталовой и А. С. Кривощековой-Гантман (1985).</p>
     <p>Сайт считает посещения через Cloudflare Web Analytics — без cookie и без личных данных; выбранное место и местоположение никуда не отправляются.</p>
     <p>© 2026 Scatik146. Код открыт по лицензии Apache 2.0, тексты — CC BY 4.0. <a href="https://github.com/Scatik146/komi-perm-game-calendar">Исходники на GitHub</a></p>

@@ -85,12 +85,11 @@ test('пасы: в числе n — n борозд, в каждом месяце
   for (const s of data.signs) {
     assert.ok(!cps.has(s.cp), `код ${s.cp.toString(16)} повторяется`);
     cps.add(s.cp);
-    if (s.kind === 'number') {          // черта поперёк ряда — 2, короткая вертикальная — 1
-      const sum = s.lines.reduce((a, l) => a + (l.p[0][1] === l.p[1][1] ? 2 : 1), 0);
+    if (s.kind === 'number') {          // палец — длинный рез поперёк (2 борозды), одна борозда — короткий рез вдоль
+      const sum = s.lattice.reduce((a, [p, q]) => a + (p[0] === q[0] ? 2 : 1), 0);
       assert.equal(sum, s.value);
-      assert.equal(s.pits.length, 0);
     }
-    if (s.kind === 'month') {
+    if (s.kind === 'month' && s.set === 'parade') {
       let cuts = 0;
       for (const p of s.lattice) {
         const dirs = p.slice(1).map((q, i) => `${Math.sign(q[0] - p[i][0])},${Math.sign(q[1] - p[i][1])}`);
@@ -99,8 +98,10 @@ test('пасы: в числе n — n борозд, в каждом месяце
       assert.equal(cuts, 8, `месяц ${s.kp}`);
     }
   }
-  assert.equal(data.signs.filter((s) => s.kind === 'number').length, 8);
-  assert.equal(data.signs.filter((s) => s.kind === 'eight').length, 6);
-  assert.equal(data.signs.filter((s) => s.kind === 'month').length, 8);
+  const parade = data.signs.filter((s) => s.set === 'parade');
+  assert.equal(parade.filter((s) => s.kind === 'number').length, 8);
+  assert.equal(parade.filter((s) => s.kind === 'eight').length, 6);
+  assert.equal(parade.filter((s) => s.kind === 'month').length, 8);
+  assert.equal(data.signs.filter((s) => s.set === 'print').length, 9 + 6 + 8);
   assert.ok(existsSync(new URL('../web/fonts/Pasy.ttf', import.meta.url)));
 });

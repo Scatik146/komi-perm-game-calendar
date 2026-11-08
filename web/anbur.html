@@ -55,22 +55,76 @@
       <textarea id="src" rows="3" spellcheck="false" autocomplete="off">Луншӧр</textarea>
       <div id="kbd" class="kbd" aria-label="Экранная клавиатура"></div>
 
-      <h2 class="list-title pas-title">Числа и даты знаками-пасами</h2>
-      <label class="pas-toggle"><input type="checkbox" id="digits" checked> Цифры 1–8 писать знаками (поразрядно, как в восьмеричной записи; 0 и 9 остаются цифрами)</label>
+      <h2 class="list-title pas-title">Числа и даты знаками</h2>
+      <div class="pas-style" role="radiogroup" aria-label="Какими знаками">
+        <label><input type="radio" name="pstyle" value="print" checked> печатные — в строку с буквами</label>
+        <label><input type="radio" name="pstyle" value="parade"> парадные — резы в ромбе</label>
+      </div>
+      <label class="pas-toggle" for="numtext">Цифры в набранном тексте
+        <select id="numtext">
+          <option value="keep">не трогать</option>
+          <option value="signs">писать знаками как есть (текст уже по восьми)</option>
+          <option value="octal">переводить из десятичных в новый счёт</option>
+        </select>
+      </label>
       <div id="pas-kbd" class="kbd pas-kbd" aria-label="Знаки-пасы"></div>
-      <form id="date-form" class="date-form" onsubmit="return false">
-        <label for="d-month">Месяц</label><select id="d-month"></select>
-        <label for="d-week">Неделя</label><select id="d-week"></select>
-        <label for="d-day">День</label><select id="d-day"></select>
+
+      <div class="modes" role="tablist" aria-label="Что вставить">
+        <button type="button" role="tab" id="tab-date" aria-controls="m-date" aria-selected="true">Дата</button>
+        <button type="button" role="tab" id="tab-new" aria-controls="m-new" aria-selected="false">Новый счёт</button>
+        <button type="button" role="tab" id="tab-old" aria-controls="m-old" aria-selected="false">Старый счёт, деньги</button>
+      </div>
+
+      <form id="m-date" class="mode" role="tabpanel" aria-labelledby="tab-date" onsubmit="return false">
+        <p class="small">Дата всегда пишется тремя знаками: месяц · неделя · день. Год — по местам: эра · круг · октава · год.</p>
+        <div class="mode-grid">
+          <label for="d-greg">По григорианскому</label><input id="d-greg" type="date" min="0837-01-01" max="4000-12-31">
+          <label for="d-month">Месяц</label><select id="d-month"></select>
+          <label for="d-week">Неделя</label><select id="d-week"></select>
+          <label for="d-day">День</label><select id="d-day"></select>
+        </div>
+        <fieldset class="date-mode">
+          <legend class="sr">Какая дата</legend>
+          <label><input type="radio" name="dstyle" value="print" checked> обычная дата — печатными знаками, в строку с буквами</label>
+          <label><input type="radio" name="dstyle" value="parade"> парадная дата — резами в ромбе (надписи, памятные даты)</label>
+        </fieldset>
         <fieldset class="date-mode">
           <legend class="sr">Как записать дату</legend>
-          <label><input type="radio" name="dmode" value="sets" checked> тремя наборами: пас месяца, восьмёрка, день</label>
-          <label><input type="radio" name="dmode" value="digits"> поразрядно: месяц, неделя, день числами</label>
+          <label><input type="radio" name="dmode" value="sets" checked> тремя знаками: месяц, неделя, день</label>
+          <label><input type="radio" name="dmode" value="digits"> числами по местам: 7·6·6</label>
+          <label><input type="checkbox" id="d-year"> с годом</label>
         </fieldset>
+        <div class="preview"><p id="d-ru" class="pv-ru"></p><p id="d-signs" class="anbur pv-signs" aria-hidden="true"></p></div>
         <div class="actions">
           <button type="button" id="d-today">Сегодня</button>
           <button type="button" id="d-insert">Вставить дату</button>
         </div>
+        <h3 class="plank-title">Дата резами — на плашке</h3>
+        <p class="small">Парадная запись: каждый знак — прямые резы ножом в ромбе, вписанном в круг. Так дату режут на плашках, календарях и памятных вещах.</p>
+        <label class="pas-toggle"><input type="checkbox" id="d-guides"> показать разметку — круг и ромб</label>
+        <div id="d-plank" class="plank"></div>
+        <div class="actions">
+          <button type="button" id="d-plank-png">Скачать плашку (PNG)</button>
+          <button type="button" id="d-plank-svg">Скачать плашку (SVG)</button>
+        </div>
+      </form>
+
+      <form id="m-new" class="mode" role="tabpanel" aria-labelledby="tab-new" hidden onsubmit="return false">
+        <p class="small">Счёт по восьми, по разрядам, с нулём: единицы, восьмёрки, шестьдесят четвёрки, пятьсот двенадцатые. Так пишут количества в книгах и расчётах.</p>
+        <div class="mode-grid">
+          <label for="n-in">Число (обычное, десятичное)</label><input id="n-in" type="number" min="0" max="16777215" step="1" value="453" inputmode="numeric">
+        </div>
+        <div class="preview"><p id="n-ru" class="pv-ru"></p><p id="n-signs" class="anbur pv-signs" aria-hidden="true"></p></div>
+        <div class="actions"><button type="button" id="n-insert">Вставить число</button></div>
+      </form>
+
+      <form id="m-old" class="mode" role="tabpanel" aria-labelledby="tab-old" hidden onsubmit="return false">
+        <p class="small">Старый счёт — без разрядов и нуля: число складывают из знаков месяца (57, 114 … 456), недели (8 … 48) и дня (1–8), до 512. Он дожил в деньгах. Монеты: <b>ур</b> (белка) — мелкая, <b>руч</b> (лиса) — 64 ура, <b>низь</b> (соболь) — 8 ручей, 512 уров. Каждая часть суммы пишется старым числом и названием монеты.</p>
+        <div class="mode-grid">
+          <label for="o-in">Сумма в урах</label><input id="o-in" type="number" min="1" max="262655" step="1" value="94" inputmode="numeric">
+        </div>
+        <div class="preview"><p id="o-ru" class="pv-ru"></p><p id="o-signs" class="anbur pv-signs" aria-hidden="true"></p></div>
+        <div class="actions"><button type="button" id="o-insert">Вставить сумму</button></div>
       </form>
     </section>
 
@@ -85,7 +139,7 @@
     <p><strong>Игровая реконструкция.</strong> Не воспроизводит и не заменяет реальные календари, существовавшие в крае, округе и местах проживания коми-пермяков; основана на коми-пермяцком языке, культуре и особенностях пермских языков.</p>
     <p>В коми-пермяцком тексте буква о пишется буквой вой — её название значит «год» и «ночь», а ӧ — буквой о, как писал её сам Стефан. В русском тексте о пишется буквой о, как в старых русских надписях анбуром.</p>
     <p>По книге: Лыткин В. И. Древнепермский язык. М., 1952. Шрифт — Noto Sans Old Permic (OFL).</p>
-    <p>Своих цифр у анбура не было: числа писали буквами с титлом, как в кириллице. Знаки-пасы — выдумка «Солнечной восьмёрки»: числа 1–8 — борозды пальцев левой руки, восьмёрки-недели — правая ладонь, месяцы — восемь резов в ромбе. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/pasy.md">Как устроены знаки</a></p>
+    <p>Своих цифр у анбура не было: числа писали буквами с титлом, как в кириллице. Знаки-пасы — выдумка «Солнечной восьмёрки» (мир книги): дни 1–8 — борозды пальцев левой руки, восьмёрки-недели — правая ладонь, месяцы — восемь резов в ромбе. Парадные знаки режут на плашках, печатные подстроились под буквы анбура. Старый счёт складывает число из знаков месяца, недели и дня и дожил в деньгах; новый — восьмеричный, с нулём. <a href="https://github.com/Scatik146/komi-perm-game-calendar/blob/main/docs/pasy.md">Как устроены знаки</a></p>
     <p>Сайт считает посещения через Cloudflare Web Analytics — без cookie и без личных данных; выбранное место и местоположение никуда не отправляются.</p>
     <p>© 2026 Scatik146. Код — Apache 2.0, тексты — CC BY 4.0. <a href="https://github.com/Scatik146/komi-perm-game-calendar">Исходники на GitHub</a></p>
   </footer>
