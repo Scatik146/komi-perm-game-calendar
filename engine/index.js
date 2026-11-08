@@ -5,3 +5,4 @@ export * from './moon.js';
 export * from './anbur.js';
 export * from './kalendar.js';
 export * from './pasy.js';
+export * from './hijri.js';

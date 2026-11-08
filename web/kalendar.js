@@ -1,6 +1,6 @@
 import {
   calendarAt, dateOfDay, yearStart, monthLengths, DAY_MS,
-  makeTransliterator, numberSign, eightSign, monthSign, dateSigns, yearSigns,
+  makeTransliterator, numberSign, eightSign, monthSign, dateSigns, yearSigns, hijriText,
 } from './engine/index.js';
 import { paradeSigns, plankRows, plankSvg, saveSvg } from './plashka.js';
 
@@ -73,17 +73,9 @@ const gregorian = (k) => new Intl.DateTimeFormat('ru-RU', {
   timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
 }).format(dayOfUTC(k));
 
-/** Дата по хиджре для дневной даты k: мусульманские сутки, как и наши, начинаются на закате. */
-function hijri(k) {
-  try {
-    const s = new Intl.DateTimeFormat('ru-RU-u-ca-islamic-umalqura', {
-      timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric',
-    }).format(dayOfUTC(k));
-    return s.replace(/\s*г\.\s*AH$/, ' г. хиджры').replace(/AH$/, 'хиджры');
-  } catch {
-    return 'браузер не умеет считать даты по хиджре';
-  }
-}
+/** Дата по хиджре для дневной даты k: мусульманские сутки, как и наши, начинаются на закате.
+ *  Месяцы — своими названиями (engine/hijri.js): на Android Intl подставлял григорианские. */
+const hijri = (k) => hijriText(k);
 
 /** Русская запись даты: «Месяц Щуки, шестая неделя, шестой день». */
 function ruDate(d) {
