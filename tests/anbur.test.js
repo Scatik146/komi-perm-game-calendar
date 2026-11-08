@@ -72,6 +72,7 @@ test('долгота — удвоением, и при вводе, и в анб�
 
 test('новые буквы — только точками', () => {
   assert.equal(tr('ӑ', 'bg'), '𐍐̇');
+  assert.equal(tr('ӗ', 'bg'), '𐍔̇');
   assert.equal(tr('ӳ', 'bg'), '𐍣̈');
   assert.equal(tr('ӳ', 'ug'), '𐍣̈');
   assert.equal(tr('ў', 'ug'), '𐍣̇');
