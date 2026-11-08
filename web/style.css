@@ -194,3 +194,10 @@ main {
 .conv-kp .anbur { font-weight: 400; margin-left: 0.5rem; }
 .conv-pas { font-size: 2.8rem; letter-spacing: 0.08em; margin: 0.4rem 0 !important; }
 .recon { max-width: 68rem; margin: 0 auto; padding: 0.4rem 1rem 0; color: var(--soft); font-size: 0.85rem; }
+.kal-label { color: var(--soft); font-size: 0.85rem; margin: 0.75rem 0 0 !important; }
+.kal-print { font-size: clamp(2rem, 6vw, 2.6rem); line-height: 1.3; margin: 0.1rem 0 0.25rem !important; }
+.kal-pas { margin-top: 0.1rem !important; }
+.conv-print { font-size: 2rem; line-height: 1.3; margin: 0.4rem 0 0 !important; }
+.kal-plank-box { margin: 0.5rem 0 0.75rem; }
+.kal-plank-box summary { cursor: pointer; color: var(--soft); }
+.kal-plank svg { display: block; max-width: min(100%, 26rem); height: auto; margin: 0.5rem 0; }

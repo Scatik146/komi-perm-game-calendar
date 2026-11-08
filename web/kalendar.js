@@ -1,7 +1,8 @@
 import {
   calendarAt, dateOfDay, yearStart, monthLengths, DAY_MS,
-  makeTransliterator, numberSign, eightSign, monthSign,
+  makeTransliterator, numberSign, eightSign, monthSign, dateSigns, yearSigns,
 } from './engine/index.js';
+import { paradeSigns, plankRows, plankSvg, saveSvg } from './plashka.js';
 
 const $ = (id) => document.getElementById(id);
 const store = {
@@ -13,6 +14,8 @@ let places = [];
 let place = null;
 let K = null;          // названия: data/kalendar.json
 let anbur = (s) => s;
+let PASY = null;       // парадные знаки для плашки: data/pasy.json
+let todayDate = null;
 
 const num = (n) => K.numbers[n - 1];
 const week = (w) => K.weeks[w - 1];
@@ -97,13 +100,31 @@ function ruYear(d) {
 }
 
 const kpDate = (d) => `${month(d.month).kp} · ${week(d.week).kp} · ${num(d.day).kp}`;
-const digits = (d) => `${d.era < 1 ? '—' : d.era}·${d.circle}·${d.octave}·${d.year} · ${d.month}·${d.week}·${d.day}`;
+const digits = (d) => `${d.month}·${d.week}·${d.day} · ${d.era < 1 ? '—' : d.era}·${d.circle}·${d.octave}·${d.year}`;
+
+/** Обычная запись: печатные знаки в строку с буквами — дата, затем год по местам. */
+function printText(d) {
+  return dateSigns(d, 'print') + (d.era >= 1 ? ` ${yearSigns(d, 'print')}` : '');
+}
+
+function plank(d) {
+  return plankSvg(PASY, plankRows(d, { year: d }));
+}
+
+function download(name, blob) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.append(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
 
 function signsHtml(d) {
   const year = (d.era >= 1 ? [d.era] : []).concat([d.circle, d.octave, d.year]).map(numberSign).join('');
-  return `<span class="pas-year">${year}</span>`
-    + `<span class="pas-gap"></span><span class="pas-month">${monthSign(d.month)}</span>`
-    + `<span class="pas-date">${eightSign(d.week)}${numberSign(d.day)}</span>`;
+  return `<span class="pas-month">${monthSign(d.month)}</span>`
+    + `<span class="pas-date">${eightSign(d.week)}${numberSign(d.day)}</span>`
+    + `<span class="pas-gap"></span><span class="pas-year">${year}</span>`;
 }
 
 /* ---------- сегодня ---------- */
@@ -115,7 +136,11 @@ function renderToday() {
   $('c-year').textContent = ruYear(d);
   $('c-kp').textContent = kpDate(d);
   $('c-anb').textContent = anbur(kpDate(d).toLowerCase());
+  $('c-print').textContent = printText(d);
+  $('c-print').setAttribute('aria-label', `Печатными знаками: ${digits(d)}`);
   $('c-pas').innerHTML = signsHtml(d);
+  if (!todayDate || todayDate.dayNumber !== d.dayNumber) $('c-plank').innerHTML = plank(d);
+  todayDate = d;
   $('c-pas').setAttribute('aria-label', `Знаками: ${digits(d)}`);
   $('c-num').textContent = `Числом: ${digits(d)}`;
 
@@ -163,7 +188,8 @@ function describe(k) {
   return `<p class="conv-ru">${ruDate(d)}</p>`
     + `<p class="conv-year">${ruYear(d)}</p>`
     + `<p class="conv-kp">${kpDate(d)} <span class="anbur">${anbur(kpDate(d).toLowerCase())}</span></p>`
-    + `<p class="pas conv-pas" aria-label="Знаками: ${digits(d)}">${signsHtml(d)}</p>`
+    + `<p class="anbur conv-print" aria-label="Печатными знаками: ${digits(d)}">${printText(d)}</p>`
+    + `<p class="pas conv-pas" aria-label="Резами: ${digits(d)}">${signsHtml(d)}</p>`
     + `<p class="small">Числом: ${digits(d)}. По григорианскому: ${gregorian(k)}; по хиджре: ${hijri(k)}.</p>`
     + '<p class="small">Дата — дневная часть суток; сами сутки начались накануне на закате.</p>';
 }
@@ -215,13 +241,15 @@ function fillOurForm() {
 
 async function start() {
   try {
-    const [p, k, a] = await Promise.all([
+    const [p, k, a, ps] = await Promise.all([
       fetch('data/places.json').then((r) => r.json()),
       fetch('data/kalendar.json').then((r) => r.json()),
       fetch('data/anbur.json').then((r) => r.json()),
+      fetch('data/pasy.json').then((r) => r.json()),
     ]);
     places = p.places;
     K = k;
+    PASY = paradeSigns(ps);
     anbur = makeTransliterator(a);
   } catch {
     $('c-ru').textContent = 'Не удалось загрузить данные календаря. Обновите страницу.';
@@ -229,6 +257,12 @@ async function start() {
   }
   fillPlaces();
   renderToday();
+  for (const kind of ['png', 'svg']) {
+    $(`c-plank-${kind}`).addEventListener('click', () => {
+      const d = todayDate;
+      saveSvg(plank(d), `plashka-${d.month}-${d.week}-${d.day}`, kind, download);
+    });
+  }
   fillOurForm();
   convertFromGregorian();
   convertFromOurs();

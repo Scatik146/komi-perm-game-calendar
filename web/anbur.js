@@ -7,6 +7,7 @@ import {
   calendarAt, dateOfDay, yearStart, monthLengths, isoOfDay,
 } from './engine/kalendar.js';
 import { DAY_MS } from './engine/sun.js';
+import { paradeSigns, plankRows, plankSvg, saveSvg as savePicture } from './plashka.js';
 
 const $ = (id) => document.getElementById(id);
 const store = {
@@ -206,65 +207,18 @@ function dateText(d) {
 
 /* ---------- дата резами: плашка ---------- */
 
-let PASY = null;   // знаки: data/pasy.json (резы в ромбе)
-
-/** Резы одного парадного знака в клетке 100×100 со сдвигом (x, y); разметка — круг и ромб 4×4. */
-function cellSvg(id, x, y, guides) {
-  const s = PASY[id];
-  let g = '';
-  if (guides) {
-    const R = 44, C = 50;
-    const pt = (u, v) => [C + R * (u - v) / 4, C - R + R * (u + v) / 4];
-    g += `<circle cx="50" cy="50" r="47" class="pl-mark"/>`;
-    for (let i = 0; i <= 4; i++) {
-      const [a, b] = [pt(i, 0), pt(i, 4)];
-      const [c, e] = [pt(0, i), pt(4, i)];
-      g += `<path class="pl-mark" d="M${a}L${b}M${c}L${e}"/>`;
-    }
-  }
-  const cuts = s.lines.map((l) => `M${l.p.map((q) => q.join(' ')).join('L')}`).join('');
-  return `<g transform="translate(${x} ${y})">${g}<path class="pl-cut" d="${cuts}"/><path class="pl-groove" d="${cuts}"/></g>`;
-}
+let PASY = null;   // парадные знаки: data/pasy.json (резы в ромбе)
 
 /** Плашка: дата тремя знаками (или числами по местам), ниже — год, если выбран. */
-function plankSvg(d) {
-  const mode = document.querySelector('input[name="dmode"]:checked').value;
-  const guides = $('d-guides').checked;
-  const rows = [mode === 'sets' ? [`m${d.month}`, `w${d.week}`, `n${d.day}`] : [d.month, d.week, d.day].map((n) => `n${n}`)];
-  if ($('d-year').checked) {
-    const y = dateOfDay(yearStart(year));
-    rows.push([y.era, y.circle, y.octave, y.year].map((n) => `n${n}`));
-  }
-  const cell = 100, gap = 18, pad = 28;
-  const w = Math.max(...rows.map((r) => r.length)) * (cell + gap) - gap + pad * 2;
-  const h = rows.length * (cell + gap) - gap + pad * 2;
-  let body = '';
-  rows.forEach((r, j) => {
-    const x0 = (w - (r.length * (cell + gap) - gap)) / 2;
-    r.forEach((id, i) => { body += cellSvg(id, x0 + i * (cell + gap), pad + j * (cell + gap), guides); });
-  });
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w * 2}" height="${h * 2}" role="img" aria-label="Дата резами на плашке">`
-    + '<style>.pl-cut{fill:none;stroke:#4b2e1a;stroke-width:6;stroke-linecap:square;stroke-linejoin:miter}'
-    + '.pl-groove{fill:none;stroke:#86552f;stroke-width:1.6;stroke-linecap:square}'
-    + '.pl-mark{fill:none;stroke:#b08a5e;stroke-width:0.6}</style>'
-    + `<rect x="2" y="2" width="${w - 4}" height="${h - 4}" rx="10" fill="#dcbf8f" stroke="#8b5e34" stroke-width="4"/>`
-    + `${body}</svg>`;
+function plankFor(d) {
+  const digits = document.querySelector('input[name="dmode"]:checked').value !== 'sets';
+  const rows = plankRows(d, { digits, year: $('d-year').checked ? dateOfDay(yearStart(year)) : null });
+  return plankSvg(PASY, rows, { guides: $('d-guides').checked });
 }
 
 function savePlank(kind) {
   const d = pickedDate();
-  if (!d.ok) return;
-  const svg = plankSvg(d);
-  const name = `plashka-${d.month}-${d.week}-${d.day}`;
-  if (kind === 'svg') { download(`${name}.svg`, new Blob([svg], { type: 'image/svg+xml' })); return; }
-  const img = new Image();
-  img.onload = () => {
-    const c = document.createElement('canvas');
-    c.width = img.width * 2; c.height = img.height * 2;
-    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-    c.toBlob((b) => b && download(`${name}.png`, b), 'image/png');
-  };
-  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  if (d.ok) savePicture(plankFor(d), `plashka-${d.month}-${d.week}-${d.day}`, kind, download);
 }
 
 function showDate() {
@@ -284,7 +238,7 @@ function showDate() {
   $('d-ru').textContent = `${m.ru}, ${K.weeks[d.week - 1].ord} неделя, ${K.numbers[d.day - 1].ru} день `
     + `(${m.kp} · ${K.weeks[d.week - 1].kp} · ${K.numbers[d.day - 1].kp})${yr}`;
   $('d-signs').textContent = dateText(d);
-  $('d-plank').innerHTML = plankSvg(d);
+  $('d-plank').innerHTML = plankFor(d);
   const k = yearStart(year) + monthLengths(year).slice(0, d.month - 1).reduce((a, b) => a + b, 0) + d.dom - 1;
   $('d-greg').value = isoOfDay(k).padStart(10, '0');
 }
@@ -489,7 +443,7 @@ async function start() {
       fetch('data/kalendar.json').then((r) => r.json()),
       fetch('data/pasy.json').then((r) => r.json()),
     ]);
-    PASY = Object.fromEntries(pasy.signs.filter((s) => s.set === 'parade').map((s) => [s.id, s]));
+    PASY = paradeSigns(pasy);
   } catch {
     $('msg').textContent = 'Не удалось загрузить таблицу букв. Обновите страницу.';
     return;
