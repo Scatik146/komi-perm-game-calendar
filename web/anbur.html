@@ -123,6 +123,12 @@
         <div class="mode-grid">
           <label for="o-in">Сумма в урах</label><input id="o-in" type="number" min="1" max="262655" step="1" value="94" inputmode="numeric">
         </div>
+        <p class="small">Или по монетам — сумма в урах посчитается сама:</p>
+        <div class="coins">
+          <label>низь <input id="o-niz" type="number" min="0" max="512" step="1" value="0" inputmode="numeric"></label>
+          <label>руч <input id="o-ruch" type="number" min="0" step="1" value="1" inputmode="numeric"></label>
+          <label>ур <input id="o-ur" type="number" min="0" step="1" value="30" inputmode="numeric"></label>
+        </div>
         <div class="preview"><p id="o-ru" class="pv-ru"></p><p id="o-signs" class="anbur pv-signs" aria-hidden="true"></p></div>
         <div class="actions"><button type="button" id="o-insert">Вставить сумму</button></div>
       </form>
