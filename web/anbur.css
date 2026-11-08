@@ -121,3 +121,6 @@ textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; 
 .pas-key .k-cyr { white-space: pre-line; text-align: center; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 30rem) { .pas-key .k-cyr { font-size: 0.6rem; } }
 textarea, .out-src { font-family: "Pasy", var(--serif); }
+.plank-title { font: 700 1rem/1.3 var(--serif); margin: 1.25rem 0 0.25rem; }
+.plank { margin: 0.5rem 0 0.75rem; }
+.plank svg { display: block; max-width: 100%; height: auto; }
