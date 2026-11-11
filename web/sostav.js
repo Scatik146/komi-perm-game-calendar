@@ -164,7 +164,8 @@ function collectEvents(k0, k1) {
   const komi = state.cal === 'komi';
   if (state.orth) faith.push(...orthodoxEvents(k0, k1 + 1).filter((e) => !komi || e.kp).map((e) => (komi ? { ...e, ru: e.kp } : e)));
   if (state.musl) faith.push(...muslimEvents(k0, k1 + 1));
-  if (state.jew) faith.push(...jewishEvents(k0, k1 + 1), ...shabbatEvents(k0, k1 + 1));
+  // шаббат отмечаем только в чистом иудейском календаре: на общих листах он перегружает сетку
+  if (state.jew) faith.push(...jewishEvents(k0, k1 + 1), ...(state.cal === 'jew' ? shabbatEvents(k0, k1 + 1) : []));
   const list = faith.filter((e) => e.k <= k1 && !e.minor);
   if (state.astro || state.moon) {
     for (const e of astroEvents(k0, k1, place, { phases: state.moon })) {
