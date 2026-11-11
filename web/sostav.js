@@ -270,7 +270,8 @@ const FAITH = new Set(['orthodox', 'muslim', 'jewish']);
 
 function evHtml(e, withNote, inGrid = false) {
   const title = [e.ru, e.kp && e.kp !== e.ru ? e.kp : '', FAITH.has(e.kind) ? 'начинается на закате накануне' : '', e.note || ''].filter(Boolean).join(' · ');
-  const span = e.span && !e.cont ? ` <span class="note">до ${gShort(e.span[1])}</span>` : '';
+  // в сетке месяца срок праздника виден по полосе и пунктиру — подпись «до …» не нужна
+  const span = e.span && !e.cont && !inGrid ? ` <span class="note">до ${gShort(e.span[1])}</span>` : '';
   const note = withNote && e.note ? ` <span class="note">${esc(e.note)}</span>` : '';
   // как в календаре автора: праздник вынесен на часть суток назад — начинается на закате накануне
   const eve = e.minor ? ' minor' : '';
