@@ -180,21 +180,24 @@ const MOON_SVG = {
 };
 const moonIcon = (id) => `<svg class="moon-i" viewBox="0 0 12 12" aria-hidden="true" style="color:var(--c-moon)">${MOON_SVG[id] || ''}</svg>`;
 
-function evHtml(e, withNote) {
-  const title = [e.ru, e.kp && e.kp !== e.ru ? e.kp : '', e.night ? 'с вечера накануне' : '', e.note || ''].filter(Boolean).join(' · ');
+const FAITH = new Set(['orthodox', 'muslim', 'jewish']);
+
+function evHtml(e, withNote, inGrid = false) {
+  const title = [e.ru, e.kp && e.kp !== e.ru ? e.kp : '', FAITH.has(e.kind) ? 'начинается на закате накануне' : '', e.note || ''].filter(Boolean).join(' · ');
   const span = e.span && !e.cont ? ` <span class="note">до ${gShort(e.span[1])}</span>` : '';
   const note = withNote && e.note ? ` <span class="note">${esc(e.note)}</span>` : '';
-  const night = e.night ? '☾ ' : '';
-  return `<div class="ev ${e.kind}" title="${esc(title)}">${night}${labelHtml(e)}${span}${note}</div>`;
+  // как в календаре автора: праздник вынесен на часть суток назад — начинается на закате накануне
+  const eve = inGrid && FAITH.has(e.kind) ? ' eve' : '';
+  return `<div class="ev ${e.kind}${eve}" title="${esc(title)}">${labelHtml(e)}${span}${note}</div>`;
 }
 
-function cellExtras(evs, withNote) {
+function cellExtras(evs, withNote, inGrid = false) {
   const main = evs.filter((e) => !e.cont && e.kind !== 'moon');
   const whole = (e) => sheetRange && e.span && e.span[0] <= sheetRange.k0 && e.span[1] >= sheetRange.k1;
   const bands = [...new Set(evs.filter((e) => e.span && !whole(e)).map((e) => e.kind))];
   const moon = evs.find((e) => e.kind === 'moon');
   return {
-    html: main.map((e) => evHtml(e, withNote)).join(''),
+    html: main.map((e) => evHtml(e, withNote, inGrid)).join(''),
     bands: bands.length ? `<div class="bands">${bands.map((b) => `<i class="band ${b}"></i>`).join('')}</div>` : '',
     moon: moon ? `<span class="moon" title="${esc(moon.ru)} ${civilTime(moon.t)}">${moonIcon(moon.id)}</span>` : '',
     moonEv: moon,
@@ -229,10 +232,10 @@ function subDates(k, { musl, jew, jul }) {
 
 function dayCell(k, evMap, opts) {
   const evs = evMap.get(k) || [];
-  const x = cellExtras(evs, false);
+  const x = cellExtras(evs, false, true);
   const showMon = gDay(k) === 1 || opts.first;
   const g = `${gDay(k)}${showMon ? `<small>${RU(RU_MON_SHORT[gMonth(k)])}</small>` : ''}`;
-  const cls = ['cell', wdClass(k), k === opts.today ? 'today' : ''].join(' ');
+  const cls = ['cell', wdClass(k), k === opts.today ? 'today' : '', opts.rowStart ? 'row-start' : ''].join(' ');
   if (opts.compact) {
     return `<div class="${cls}" title="${esc(gText(k))}${evs.filter((e) => !e.cont && e.kind !== 'moon').map((e) => ' · ' + label(e)).join('')}">`
       + `<span class="g">${opts.mainNum ? opts.mainNum(k) : gDay(k)}</span>`
@@ -260,11 +263,11 @@ function gridHtml({ rows, heads, rtl, labelCol, evMap, opts }) {
   let first = true;
   for (const r of rows) {
     if (labelCol) h += `<div class="wl">${r.label}</div>`;
-    for (const k of r.days) {
-      if (k === null) { h += '<div class="cell empty"></div>'; continue; }
-      h += dayCell(k, evMap, { ...opts, first });
+    r.days.forEach((k, i) => {
+      if (k === null) { h += '<div class="cell empty"></div>'; return; }
+      h += dayCell(k, evMap, { ...opts, first, rowStart: i === 0 });
       first = false;
-    }
+    });
   }
   return h + '</div>';
 }
@@ -696,23 +699,27 @@ function daySheet(k) {
 /* ---------- подписи ---------- */
 
 function legendHtml() {
-  const it = [];
-  it.push('<span class="lg"><i class="sw" style="background:var(--wk-fri)"></i>пятница</span>');
-  it.push('<span class="lg"><i class="sw sat" style="background:var(--wk-sat)"></i>суббота</span>');
-  it.push('<span class="lg"><i class="sw sun" style="background:var(--wk-sun)"></i>воскресенье</span>');
-  if (state.orth) it.push('<b class="orthodox">православные праздники</b>');
-  if (state.musl) it.push('<b class="muslim">мусульманские</b>');
-  if (state.jew) it.push('<b class="jewish">иудейские</b>');
-  if (state.astro) it.push('<b class="astro">небесные события</b>', '<b class="eclipse">затмения</b>');
+  const line1 = [];
+  // плашки святых дней — только там, где день недели не написан словами (год «Солнечной восьмёрки»)
+  if (state.cal === 'v8' && state.view === 'year') {
+    line1.push('<span class="lg"><i class="sw" style="background:var(--wk-fri)"></i>пятница</span>');
+    line1.push('<span class="lg"><i class="sw sat" style="background:var(--wk-sat)"></i>суббота</span>');
+    line1.push('<span class="lg"><i class="sw sun" style="background:var(--wk-sun)"></i>воскресенье</span>');
+  }
+  // названия традиций — только если на листе их больше одной
+  const faiths = [state.orth && '<b class="orthodox">православные праздники</b>', state.musl && '<b class="muslim">мусульманские</b>', state.jew && '<b class="jewish">иудейские</b>'].filter(Boolean);
+  if (faiths.length > 1 || (faiths.length && state.astro)) line1.push(...faiths);
+  if (state.astro) line1.push('<b class="astro">небесные события</b>', '<b class="eclipse">затмения</b>');
   const subs = [];
   if (state.musl) subs.push('х — хиджра');
   if (state.jew) subs.push('е — еврейская дата');
   if (state.orth) subs.push('ст. — старый стиль');
-  if (subs.length && state.cal === 'v8') it.push(`<span>${subs.join(', ')}</span>`);
-  it.push('<span class="lg"><i class="lbar"></i>праздник на несколько дней</span>');
-  if (state.moon) it.push(`<span class="lg">${moonIcon('novolunie')} новолуние ${moonIcon('pervaya-chetvert')} первая четверть ${moonIcon('polnolunie')} полнолуние ${moonIcon('poslednyaya-chetvert')} последняя</span>`);
-  it.push('<span>☾ с вечера накануне: сутки начинаются на закате</span>');
-  return `<div class="legend">${it.join('')}</div>`;
+  if (subs.length && state.cal === 'v8') line1.push(`<span>${subs.join(', ')}</span>`);
+  line1.push('<span class="lg"><i class="lbar"></i>праздник на несколько дней</span>');
+  if (faiths.length || state.cal === 'v8') line1.push('<span class="lg"><i class="evemark"></i>сутки начинаются вечером, накануне указанной даты</span>');
+  const rows = [`<div class="legend">${line1.join('')}</div>`];
+  if (state.moon) rows.push(`<div class="legend legend-moon"><span class="lg">${moonIcon('novolunie')} новолуние</span><span class="lg">${moonIcon('pervaya-chetvert')} первая четверть</span><span class="lg">${moonIcon('polnolunie')} полнолуние</span><span class="lg">${moonIcon('poslednyaya-chetvert')} последняя четверть</span></div>`);
+  return rows.join('');
 }
 
 function footHtml(credits = '') {

@@ -100,6 +100,24 @@
 .cell .moon { position: absolute; right: 0.25rem; bottom: 0.2rem; line-height: 0; }
 .ev { font-size: 0.72rem; line-height: 1.15; font-weight: 700; }
 .ev .note { font-weight: 400; color: var(--psoft); }
+/* праздник начинается на закате накануне: знак заката на границе суток и вечерняя черта
+   уходит в предыдущий день (справа — для письма справа налево, слева — для православного) */
+.cell { overflow-x: visible; overflow-y: clip; }
+.ev.eve { position: relative; }
+.ev.eve::before, .ev.eve::after { content: ""; position: absolute; top: 0.42em; background: currentColor; }
+.ev.eve::before { height: 2px; width: 1.05rem; opacity: .55; }
+.ev.eve::after { width: 0.5rem; height: 0.25rem; border-radius: 0.25rem 0.25rem 0 0; top: calc(0.42em - 0.25rem + 2px); }
+.grid.rtl .ev.eve { text-align: right; padding-right: 0.15rem; }
+.grid:not(.rtl) .ev.eve { padding-left: 0.15rem; }
+.grid.rtl .ev.eve::before { right: -1.35rem; }
+.cell.row-start .ev.eve::before { display: none; }
+.grid.rtl .ev.eve::after { right: calc(-0.3rem - 0.25rem); }
+.grid:not(.rtl) .ev.eve::before { left: -1.35rem; }
+.grid:not(.rtl) .ev.eve::after { left: calc(-0.3rem - 0.25rem); }
+.legend .evemark { position: relative; display: inline-block; width: 1.2rem; height: 0.6rem; }
+.legend .evemark::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0.1rem; height: 2px; background: var(--psoft); opacity: .6; }
+.legend .evemark::after { content: ""; position: absolute; left: 0.35rem; bottom: calc(0.1rem + 2px); width: 0.5rem; height: 0.25rem; border-radius: 0.25rem 0.25rem 0 0; background: var(--psoft); }
+.legend-moon { margin-top: 0.15rem; }
 .sg { display: block; font-size: 1.6rem; line-height: 1.1; color: var(--pink); font-weight: 400; }
 .ym .sg { font-size: 0.75rem; line-height: 1; }
 .sg-line { font-size: 1.4rem; vertical-align: -0.2rem; }
@@ -198,7 +216,8 @@
   .sheet > .grid, .sheet > .week-grid { flex: 1 1 auto; min-height: 0; }
   .sheet > .grid { grid-template-rows: auto; grid-auto-rows: minmax(0, 1fr); }
   .sheet > .week-grid { grid-auto-rows: minmax(0, 1fr); }
-  .cell, .wday { min-height: 0; overflow: hidden; }
+  .wday { min-height: 0; overflow: hidden; }
+  .cell { min-height: 0; overflow-x: visible; overflow-y: clip; }
   .cell .ev { font-size: 0.66rem; line-height: 1.08; }
   .cell .ev .kpn { display: block; }
   .cell.today, .wday.today { outline: none; }
