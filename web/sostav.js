@@ -121,6 +121,8 @@ const KP = (s) => (state.script === 'ranb' || state.script === 'anb' ? A(s) : es
 const NAME = (ru, kp) => (anbOnly() ? (kp ? A(kp) : A(ru, 'ru')) : esc(ru));
 /** Свободный русский текст: в режиме «только анбуром» — русским набором анбура. */
 const RU = (s) => (state.script === 'anb' && TR ? A(s, 'ru') : esc(s));
+/** Коми-пермяцкое слово в режимах «только по-коми-пермяцки» и «только анбуром». */
+const W = (kp) => A(kp);
 /** Вторая строка с коми-пермяцким словом — если нужна. */
 const SEC = (kp) => (state.kp && !anbOnly() && kp ? KP(kp) : '');
 
@@ -145,7 +147,8 @@ function v8YearLine(n) {
   const yr = v8Num(d.year);
   const base = `${n}-й год: эра ${era ? era.ru : '—'}, круг ${circle.ru}, ${oct.ru} октава, год ${ORD_RU[d.year - 1]}`;
   const kp = `${circle.kp}, ${oct.kp}, ${yr.kp}`;
-  if (anbOnly()) return A(base, 'ru');
+  // без русской расшифровки: что есть по-коми-пермяцки — по-коми-пермяцки (эр — нет), цифры не трогаем
+  if (anbOnly()) return `${RU(`${n}, эра ${era ? era.ru : '—'}`)}, ${W(circle.kp)}, ${W(oct.kp)}, ${W(yr.kp)}`;
   return state.kp ? `${base} <span class="muted">(${KP(kp)})</span>` : base;
 }
 
@@ -495,7 +498,7 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
       <div class="mh-text">
         <h3 class="mh-name">${NAME(title, kpTitle)}</h3>
         ${SEC(kpTitle) ? `<p class="mh-kp">${SEC(kpTitle)}</p>` : ''}
-        <p class="mh-dates">${RU(`${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}.`)} <span class="mh-year">${v8YearLine(n)}, ${RU(x.season)}.</span></p>
+        <p class="mh-dates">${anbOnly() ? `${RU(`${fmtSpan(k0, k1)},`)} ${days} ${W('лун')}${sub ? `. ${RU(sub)}` : ''}.` : RU(`${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}.`)} <span class="mh-year">${v8YearLine(n)}, ${anbOnly() ? W(K.seasons[x.season]) : RU(x.season)}.</span></p>
         ${other.map((o) => `<p class="mh-meta">${RU(o)}</p>`).join('')}
       </div>
       ${signs ? `<div class="mh-signs">${signs}</div>` : ''}
@@ -826,24 +829,25 @@ function legendHtml() {
   const line1 = [];
   const line2 = [];
   if (state.cal === 'v8' && state.view === 'year') {
-    line1.push('<span class="lg"><i class="sw" style="background:var(--wk-fri)"></i>пятница</span>');
-    line1.push('<span class="lg"><i class="sw" style="background:var(--wk-sat)"></i>суббота</span>');
-    line1.push('<span class="lg"><i class="sw" style="background:var(--wk-sun)"></i>воскресенье</span>');
+    line1.push(`<span class="lg"><i class="sw" style="background:var(--wk-fri)"></i>${RU('пятница')}</span>`);
+    line1.push(`<span class="lg"><i class="sw" style="background:var(--wk-sat)"></i>${RU('суббота')}</span>`);
+    line1.push(`<span class="lg"><i class="sw" style="background:var(--wk-sun)"></i>${RU('воскресенье')}</span>`);
   }
-  const faiths = [state.orth && '<b class="orthodox">православные праздники</b>', state.musl && '<b class="muslim">мусульманские</b>', state.jew && '<b class="jewish">иудейские</b>'].filter(Boolean);
+  const faiths = [state.orth && `<b class="orthodox">${RU('православные праздники')}</b>`, state.musl && `<b class="muslim">${RU('мусульманские')}</b>`, state.jew && `<b class="jewish">${RU('иудейские')}</b>`].filter(Boolean);
   if (faiths.length > 1 || (faiths.length && state.astro)) line1.push(...faiths);
-  if (state.astro) line1.push('<b class="astro">небесные события</b>', '<b class="eclipse">затмения</b>');
-  if (state.moon) line1.push(`<span class="lg">${moonIcon('novolunie')} новолуние</span><span class="lg">${moonIcon('pervaya-chetvert')} первая четверть</span><span class="lg">${moonIcon('polnolunie')} полнолуние</span><span class="lg">${moonIcon('poslednyaya-chetvert')} последняя четверть</span>`);
-  if (faiths.length) line2.push('<span class="lg"><i class="segmark"></i>праздник — от заката до заката: сутки начинаются вечером, накануне указанной даты</span>');
-  else if (state.cal === 'v8') line2.push('<span>сутки начинаются вечером, накануне указанной даты</span>');
-  if (state.astro) line2.push('<span class="lg"><i class="lbar"></i>небесное событие на несколько дней</span>');
+  if (state.astro) line1.push(`<b class="astro">${RU('небесные события')}</b>`, `<b class="eclipse">${RU('затмения')}</b>`);
+  if (state.moon) line1.push(`<span class="lg">${moonIcon('novolunie')} ${RU('новолуние')}</span><span class="lg">${moonIcon('pervaya-chetvert')} ${RU('первая четверть')}</span><span class="lg">${moonIcon('polnolunie')} ${RU('полнолуние')}</span><span class="lg">${moonIcon('poslednyaya-chetvert')} ${RU('последняя четверть')}</span>`);
+  if (faiths.length) line2.push(`<span class="lg"><i class="segmark"></i>${RU('праздник — от заката до заката: сутки начинаются вечером, накануне указанной даты')}</span>`);
+  else if (state.cal === 'v8') line2.push(`<span>${RU('сутки начинаются вечером, накануне указанной даты')}</span>`);
+  if (state.astro) line2.push(`<span class="lg"><i class="lbar"></i>${RU('небесное событие на несколько дней')}</span>`);
   return [line1, line2].filter((l) => l.length).map((l) => `<div class="legend">${l.join('')}</div>`).join('');
 }
 
 function footHtml(credits = '') {
   // подвал одной строкой: что это, место, сайт и подписи гербов и снимков
   const where = place ? `${place.name || 'Моё место'} (${place.lat.toFixed(2)}°, ${place.lon.toFixed(2)}°)` : '';
-  return `<p class="sh-foot">«Солнечная восьмёрка» — игровая реконструкция для книги и настольной игры. ${esc(where)}. `
+  const name = anbOnly() ? `«${W('Шонді кыкьямыс')}» — ${RU('игровая реконструкция для книги и настольной игры')}` : '«Солнечная восьмёрка» — игровая реконструкция для книги и настольной игры';
+  return `<p class="sh-foot">${name}. ${RU(where)}. `
     + `scatik146.github.io/komi-perm-game-calendar${credits ? `. ${credits}` : ''}</p>`;
 }
 
@@ -891,6 +895,14 @@ function render() {
   const { cal, view } = state;
   const k = anchor;
   let html = '';
+  // решение автора: лист «Солнечной восьмёрки» по-русски не делаем — только по-коми-пермяцки или анбуром
+  document.body.classList.toggle('cal-v8', cal === 'v8');
+  if (cal === 'v8' && !['kpo', 'anb'].includes(state.script)) {
+    state.script = 'kpo';
+    state.kp = true;
+    const r = document.querySelector('input[name="script"][value="kpo"]');
+    if (r) r.checked = true;
+  }
   try { sheetRange = range(); } catch { sheetRange = null; }
   try {
     if (view === 'day') html = daySheet(k);

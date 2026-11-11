@@ -255,3 +255,4 @@
 .cell .evs { flex-shrink: 0; }
 
 .mh.mh-pure { grid-template-columns: minmax(0, 1fr); }
+.cal-v8 .not-v8 { display: none; }
