@@ -6,7 +6,7 @@
 import {
   DAY_MS, dateOfDay, yearStart, monthLengths, calendarDayAt, sunsetOf, rubezhiRange, QUARTER_OF_PART,
   orthodoxEvents, muslimEvents, jewishEvents, hijriOf, julianFromK, weekday,
-  numberSign, eightSign, printDigit, printEight, dateSigns,
+  makeTransliterator, numberSign, eightSign, printDigit, printEight, dateSigns,
   hebrewFromK, kFromHebrew, hebrewMonthDays, hebrewMonthsOfYear, hebrewMonthName, HIJRI_MONTHS_RU,
 } from './engine/index.js';
 import { astroEvents } from './engine/nebo.js';
@@ -22,6 +22,7 @@ const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 let K = null;        // data/kalendar.json
 let NAMES = null;    // data/names.json
 let PICS = null;     // data/kartinki.json (может отсутствовать)
+let TR = null;       // транслитерация в анбур (data/anbur.json)
 let places = [];
 let place = null;
 let anchor = null;   // номер дня, вокруг которого строится лист
@@ -38,7 +39,7 @@ const KIND_RU = { orthodox: 'православные', muslim: 'мусульм�
 /* ---------- состояние ---------- */
 
 const state = {
-  cal: 'v8', view: 'month', signs: 'words',
+  cal: 'v8', view: 'month', signs: 'words', script: 'ru',
   orth: false, musl: false, jew: false, astro: true, moon: true, kp: false, pics: true,
 };
 
@@ -53,7 +54,9 @@ function readControls() {
   state.cal = document.querySelector('input[name="cal"]:checked').value;
   state.view = document.querySelector('input[name="view"]:checked').value;
   state.signs = document.querySelector('input[name="signs"]:checked').value;
-  for (const id of ['orth', 'musl', 'jew', 'astro', 'moon', 'kp', 'pics']) state[id] = $(`l-${id}`).checked;
+  state.script = document.querySelector('input[name="script"]:checked').value;
+  state.kp = state.script !== 'ru';
+  for (const id of ['orth', 'musl', 'jew', 'astro', 'moon', 'pics']) state[id] = $(`l-${id}`).checked;
 }
 
 function saveState() {
@@ -69,7 +72,10 @@ function restoreState() {
   document.querySelector(`input[name="view"][value="${state.view}"]`).checked = true;
   const sg = document.querySelector(`input[name="signs"][value="${state.signs}"]`);
   if (sg) sg.checked = true;
-  for (const id of ['orth', 'musl', 'jew', 'astro', 'moon', 'kp', 'pics']) $(`l-${id}`).checked = !!state[id];
+  for (const id of ['orth', 'musl', 'jew', 'astro', 'moon', 'pics']) $(`l-${id}`).checked = !!state[id];
+  const sc = document.querySelector(`input[name="script"][value="${state.script}"]`);
+  if (sc) sc.checked = true;
+  state.kp = state.script !== 'ru';
 }
 
 /* ---------- даты ---------- */
@@ -102,6 +108,20 @@ function todayK() {
 
 /* ---------- названия «Солнечной восьмёрки» ---------- */
 
+/* ---------- надписи: русский, коми-пермяцкий, анбур ---------- */
+
+const anbOnly = () => state.script === 'anb' && TR;
+/** Надпись анбуром: коми-пермяцкое слово (kp) или русское (ru) — своим набором букв. */
+const A = (s, lang = 'kp') => (TR ? `<span class="anbur">${esc(TR(String(s), lang))}</span>` : esc(s));
+/** Вторая строка с коми-пермяцким словом: кириллицей или анбуром. */
+const KP = (s) => (state.script === 'ranb' || state.script === 'anb' ? A(s) : esc(s));
+/** Главная надпись: по-русски, а в режиме «только анбуром» — коми-пермяцкое слово анбуром (нет — русское). */
+const NAME = (ru, kp) => (anbOnly() ? (kp ? A(kp) : A(ru, 'ru')) : esc(ru));
+/** Свободный русский текст: в режиме «только анбуром» — русским набором анбура. */
+const RU = (s) => (anbOnly() ? A(s, 'ru') : esc(s));
+/** Вторая строка с коми-пермяцким словом — если нужна. */
+const SEC = (kp) => (state.kp && !anbOnly() && kp ? KP(kp) : '');
+
 /** Знак дня (1–8) и недели (1–6): печатный или парадный. */
 const daySign = (n) => (state.signs === 'print' ? printDigit(n) : numberSign(n));
 const weekSign = (w) => (state.signs === 'print' ? printEight(w) : eightSign(w));
@@ -123,7 +143,8 @@ function v8YearLine(n) {
   const yr = v8Num(d.year);
   const base = `${n}-й год: эра ${era ? era.ru : '—'}, круг ${circle.ru}, ${oct.ru} октава, год ${ORD_RU[d.year - 1]}`;
   const kp = `${circle.kp}, ${oct.kp}, ${yr.kp}`;
-  return state.kp ? `${base} <span class="muted">(${esc(kp)})</span>` : base;
+  if (anbOnly()) return A(base, 'ru');
+  return state.kp ? `${base} <span class="muted">(${KP(kp)})</span>` : base;
 }
 
 /* ---------- события ---------- */
@@ -148,7 +169,7 @@ function collectEvents(k0, k1) {
 
 const label = (e) => e.ru;
 /** Русское название первым; коми-пермяцкое — рядом, если включено. */
-const labelHtml = (e) => `${esc(e.ru)}${state.kp && e.kp && e.kp !== e.ru ? ` <span class="kpn">${esc(e.kp)}</span>` : ''}`;
+const labelHtml = (e) => (anbOnly() ? NAME(e.ru, e.kp) : `${esc(e.ru)}${state.kp && e.kp && e.kp !== e.ru ? ` <span class="kpn">${KP(e.kp)}</span>` : ''}`);
 let sheetRange = null; // границы текущего листа: полоса на весь лист не нужна
 
 const MOON_SVG = {
@@ -191,11 +212,11 @@ function subDates(k, { musl, jew, jul }) {
   const out = [];
   if (musl) {
     const h = hijriOf(k);
-    out.push(`<span class="h" title="По хиджре: ${esc(hijriLabel(h))}" style="color:var(--c-musl)"><i>х</i>${h.day}${h.day === 1 ? ' ' + nb(HIJRI_MONTHS_RU[h.month - 1]) : ''}</span>`);
+    out.push(`<span class="h" title="По хиджре: ${esc(hijriLabel(h))}" style="color:var(--c-musl)"><i>х</i>${h.day}${h.day === 1 ? ' ' + RU(nb(HIJRI_MONTHS_RU[h.month - 1])) : ''}</span>`);
   }
   if (jew) {
     const h = hebrewFromK(k);
-    out.push(`<span title="По еврейскому календарю: ${esc(hebrewLabel(h))}" style="color:var(--c-jew)"><i>е</i>${h.day}${h.day === 1 ? ' ' + hebrewMonthName(h.year, h.month) : ''}</span>`);
+    out.push(`<span title="По еврейскому календарю: ${esc(hebrewLabel(h))}" style="color:var(--c-jew)"><i>е</i>${h.day}${h.day === 1 ? ' ' + RU(hebrewMonthName(h.year, h.month)) : ''}</span>`);
   }
   if (jul) {
     const j = julianFromK(k);
@@ -210,7 +231,7 @@ function dayCell(k, evMap, opts) {
   const evs = evMap.get(k) || [];
   const x = cellExtras(evs, false);
   const showMon = gDay(k) === 1 || opts.first;
-  const g = `${gDay(k)}${showMon ? `<small>${RU_MON_SHORT[gMonth(k)]}</small>` : ''}`;
+  const g = `${gDay(k)}${showMon ? `<small>${RU(RU_MON_SHORT[gMonth(k)])}</small>` : ''}`;
   const cls = ['cell', wdClass(k), k === opts.today ? 'today' : ''].join(' ');
   if (opts.compact) {
     return `<div class="${cls}" title="${esc(gText(k))}${evs.filter((e) => !e.cont && e.kind !== 'moon').map((e) => ' · ' + label(e)).join('')}">`
@@ -219,8 +240,8 @@ function dayCell(k, evMap, opts) {
       + '</div>';
   }
   const top = opts.mainNum
-    ? `<span class="g">${opts.mainNum(k)}</span><span class="wd">${gDay(k)} ${RU_MON_SHORT[gMonth(k)]} · ${RU_WD[weekday(k)]}</span>`
-    : `<span class="g">${g}</span><span class="wd">${RU_WD[weekday(k)]}</span>`;
+    ? `<span class="g">${opts.mainNum(k)}</span><span class="wd">${gDay(k)} ${RU(RU_MON_SHORT[gMonth(k)])} · ${RU(RU_WD[weekday(k)])}</span>`
+    : `<span class="g">${g}</span><span class="wd">${RU(RU_WD[weekday(k)])}</span>`;
   return `<div class="${cls}"><div class="top">${top}</div>`
     + `<div class="sub">${subDates(k, opts.sub)}</div>${x.html}${x.bands}${x.moon}</div>`;
 }
@@ -258,9 +279,11 @@ function v8MonthRange(n, m) {
 
 function v8Heads(compact) {
   return K.numbers.map((x, i) => {
-    if (useSigns()) return compact ? `<span class="pas sg">${daySign(i + 1)}</span>` : `<span class="pas sg" title="${ORD_RU[i]} день">${daySign(i + 1)}</span><small>${ORD_RU[i]}${state.kp ? `, ${esc(x.kp)}` : ''}</small>`;
+    const word = anbOnly() ? A(x.kp) : `${ORD_RU[i]}${state.kp ? `, ${KP(x.kp)}` : ''}`;
+    if (useSigns()) return compact ? `<span class="pas sg">${daySign(i + 1)}</span>` : `<span class="pas sg" title="${ORD_RU[i]} день">${daySign(i + 1)}</span><small>${word}</small>`;
     if (compact) return String(i + 1);
-    return state.kp ? `${ORD_RU[i]}<small>${esc(x.kp)}</small>` : `${ORD_RU[i]}<small>день</small>`;
+    if (anbOnly()) return A(x.kp);
+    return state.kp ? `${ORD_RU[i]}<small>${KP(x.kp)}</small>` : `${ORD_RU[i]}<small>день</small>`;
   });
 }
 
@@ -273,9 +296,11 @@ function v8Rows(k0, k1, compact) {
       days.push(k <= k1 ? k : null);
     }
     const wk = v8Week(w + 1);
-    const lab = useSigns() ? (compact ? `<span class="pas sg">${weekSign(w + 1)}</span>` : `<span class="pas sg" title="${esc(wk.ru)}">${weekSign(w + 1)}</span><small>${esc(cap(wk.ru))}${state.kp ? `, ${esc(wk.kp)}` : ''}</small>`)
+    const wword = anbOnly() ? A(wk.kp) : `${esc(cap(wk.ru))}${state.kp ? `, ${KP(wk.kp)}` : ''}`;
+    const lab = useSigns() ? (compact ? `<span class="pas sg">${weekSign(w + 1)}</span>` : `<span class="pas sg" title="${esc(wk.ru)}">${weekSign(w + 1)}</span><small>${wword}</small>`)
       : compact ? String(w + 1)
-      : state.kp ? `${esc(cap(wk.ru))}<small>${esc(wk.kp)}</small>` : `${esc(cap(wk.ru))}<small>${wk.ord} неделя</small>`;
+      : anbOnly() ? A(wk.kp)
+      : state.kp ? `${esc(cap(wk.ru))}<small>${KP(wk.kp)}</small>` : `${esc(cap(wk.ru))}<small>${wk.ord} неделя</small>`;
     rows.push({ label: lab, days });
   }
   return rows;
@@ -343,15 +368,15 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
     p.pas ? `<div class="mh-pasbox"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div>` : '',
     p.gerb ? `<img class="mh-gerb" src="${esc(p.gerb.file)}" alt="Герб: ${esc(dist.district)} район">` : '',
   ].join('');
-  const meta = `Защитник — ${x.animal}. ${cap(x.season)}${state.kp ? ` (${K.seasons[x.season]})` : ''}. Событие месяца — ${x.event}.${dist ? ` ${dist.district} район.` : ''}`;
+  const meta = `Защитник — ${x.animal}. ${cap(x.season)}. Событие месяца — ${x.event}.${dist ? ` ${dist.district} район.` : ''}`;
   return {
     html: `<header class="mh">
       ${state.pics ? rhomb : ''}
       <div class="mh-text">
-        <h3 class="mh-name">${esc(title)}</h3>
-        ${state.kp ? `<p class="mh-kp">${esc(kpTitle)}</p>` : ''}
-        <p class="mh-dates">${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}. <span class="mh-year">${v8YearLine(n)}.</span></p>
-        <p class="mh-meta">${esc([meta, ...other].join(' '))}</p>
+        <h3 class="mh-name">${NAME(title, kpTitle)}</h3>
+        ${SEC(kpTitle) ? `<p class="mh-kp">${SEC(kpTitle)}</p>` : ''}
+        <p class="mh-dates">${RU(`${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}.`)} <span class="mh-year">${v8YearLine(n)}.</span></p>
+        <p class="mh-meta">${RU([meta, ...other].join(' '))}</p>
       </div>
       ${signs ? `<div class="mh-signs">${signs}</div>` : ''}
     </header>
@@ -369,7 +394,7 @@ function v8MonthSheet(n, m, compact = false) {
   if (compact) {
     const items = ev.list.filter((e) => !e.cont && e.kind !== 'moon').sort((a, b) => a.k - b.k);
     const pas = state.pics ? `<img class="ym-pas" src="pasy/mesyac-${m}-${MONTH_IDS[m - 1]}.svg" alt="">` : '';
-    return `<div class="ym"><h4><span>${pas}${esc(t.main)}${state.kp ? ` <em>${esc(t.kp)}</em>` : ''}</span><small>${gShort(k0)} – ${gShort(k1)}</small></h4>${grid}`
+    return `<div class="ym"><h4><span>${pas}${NAME(t.main, t.kp)}${SEC(t.kp) ? ` <em>${SEC(t.kp)}</em>` : ''}</span><small>${RU(`${gShort(k0)} – ${gShort(k1)}`)}</small></h4>${grid}`
       + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${gDay(e.k)}.${String(gMonth(e.k) + 1).padStart(2, '0')}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
   }
   const head = v8Head(n, m, k0, k1, t.main, t.kp);
@@ -388,9 +413,9 @@ function v8YearSheet(n) {
   const k1 = yearStart(n + 1) - 1;
   return `<article class="sheet">
     <div class="sh-head"><div></div><div class="sh-title">
-      <div class="t-main">Солнечная восьмёрка${state.kp ? ' · Шонді кыкьямыс' : ''}</div>
+      <div class="t-main">${NAME('Солнечная восьмёрка', 'Шонді кыкьямыс')}${SEC('Шонді кыкьямыс') ? ` <span class="t-kp">${SEC('Шонді кыкьямыс')}</span>` : ''}</div>
       <div class="t-line">${v8YearLine(n)}</div>
-      <div class="t-line2">${fmtSpan(k0, k1)} · ${k1 - k0 + 1} дней · дни идут справа налево, недели — сверху вниз</div>
+      <div class="t-line2">${RU(`${fmtSpan(k0, k1)}, ${k1 - k0 + 1} дней; дни идут справа налево, недели — сверху вниз`)}</div>
     </div><div></div></div>
     <div class="year-grid">${months.join('')}</div>
     ${legendHtml()}
@@ -410,19 +435,19 @@ function dayColumn(k, evMap, today, opts) {
   const x = cellExtras(evs, true);
   const set0 = sunsetOf(k - 1, place);
   const rows = [];
-  rows.push(`<div class="line">${RU_WD_LONG[weekday(k)]}</div>`);
+  rows.push(`<div class="line">${RU(RU_WD_LONG[weekday(k)])}</div>`);
   if (opts.v8) {
     const d = dateOfDay(k);
     rows.push(`<div class="line">${esc(v8Month(d.month).ru)} · ${esc(v8Week(d.week).ru)} · ${ORD_RU[d.day - 1]}${state.kp ? ` (${esc(v8Month(d.month).kp)} · ${esc(v8Week(d.week).kp)} · ${esc(v8Num(d.day).kp)})` : ''}</div>`);
   }
-  if (opts.musl) { const h = hijriOf(k); rows.push(`<div class="line" style="color:var(--c-musl)"><i>х</i>${h.day} ${nb(HIJRI_MONTHS_RU[h.month - 1])}</div>`); }
-  if (opts.jew) { const h = hebrewFromK(k); rows.push(`<div class="line" style="color:var(--c-jew)"><i>е</i>${h.day} ${hebrewMonthName(h.year, h.month)}</div>`); }
-  if (opts.jul) { const j = julianFromK(k); rows.push(`<div class="line" style="color:var(--c-orth)">${j.day} ${RU_MON_SHORT[j.month - 1]}. ст. ст.</div>`); }
-  if (set0 !== null) rows.push(`<div class="line">сутки с заката ${civilTime(set0)} накануне; закат ${civilTime(sunsetOf(k, place))}</div>`);
+  if (opts.musl) { const h = hijriOf(k); rows.push(`<div class="line" style="color:var(--c-musl)"><i>х</i>${h.day} ${RU(nb(HIJRI_MONTHS_RU[h.month - 1]))}</div>`); }
+  if (opts.jew) { const h = hebrewFromK(k); rows.push(`<div class="line" style="color:var(--c-jew)"><i>е</i>${h.day} ${RU(hebrewMonthName(h.year, h.month))}</div>`); }
+  if (opts.jul) { const j = julianFromK(k); rows.push(`<div class="line" style="color:var(--c-orth)">${j.day} ${RU(`${RU_MON_SHORT[j.month - 1]}. ст. ст.`)}</div>`); }
+  if (set0 !== null) rows.push(`<div class="line">${RU(`сутки с заката ${civilTime(set0)} накануне; закат ${civilTime(sunsetOf(k, place))}`)}</div>`);
   if (x.moonEv) rows.push(`<div class="line">${moonIcon(x.moonEv.id)} ${esc(x.moonEv.ru)} ${civilTime(x.moonEv.t)}</div>`);
   return `<div class="wday ${wdClass(k)}${k === today ? ' today' : ''}">
     <div class="wh">${opts.head}</div>
-    <span class="g">${gDay(k)}</span><div class="line">${RU_MON_GEN[gMonth(k)]}</div>
+    <span class="g">${gDay(k)}</span><div class="line">${RU(RU_MON_GEN[gMonth(k)])}</div>
     ${rows.join('')}${x.html}${x.bands}</div>`;
 }
 
@@ -433,8 +458,10 @@ function v8WeekSheet(k) {
   const cols = [];
   for (let kk = k0; kk <= k1; kk++) {
     const dd = dateOfDay(kk);
-    const head = useSigns() ? `<span class="pas sg">${daySign(dd.day)}</span><small>${ORD_RU[dd.day - 1]} день${state.kp ? `, ${esc(v8Num(dd.day).kp)}` : ''}</small>`
-      : state.kp ? `${cap(ORD_RU[dd.day - 1])} день<small>${esc(v8Num(dd.day).kp)}</small>` : `${cap(ORD_RU[dd.day - 1])} день`;
+    const dw = anbOnly() ? A(v8Num(dd.day).kp) : `${ORD_RU[dd.day - 1]} день${state.kp ? `, ${KP(v8Num(dd.day).kp)}` : ''}`;
+    const head = useSigns() ? `<span class="pas sg">${daySign(dd.day)}</span><small>${dw}</small>`
+      : anbOnly() ? A(v8Num(dd.day).kp)
+      : state.kp ? `${cap(ORD_RU[dd.day - 1])} день<small>${KP(v8Num(dd.day).kp)}</small>` : `${cap(ORD_RU[dd.day - 1])} день`;
     cols.push(dayColumn(kk, ev.byDay, today, { head, musl: state.musl, jew: state.jew, jul: state.orth }));
   }
   const wk = v8Week(d.week);
@@ -474,12 +501,12 @@ function pureMonth({ k0, k1, firstWd, rtl, title, line, compact, mainNum, sub })
   const grid = gridHtml({ rows: sevenRows(k0, k1, firstWd), heads: compact ? wdHeadsShort(firstWd) : wdHeads(firstWd), rtl, labelCol: false, evMap: ev.byDay, opts });
   if (compact) {
     const items = ev.list.filter((e) => !e.cont && e.kind !== 'moon').sort((a, b) => a.k - b.k);
-    return `<div class="ym"><h4><span>${esc(title)}</span><small>${gShort(k0)} – ${gShort(k1)}</small></h4>${grid}`
+    return `<div class="ym"><h4><span>${RU(title)}</span><small>${RU(`${gShort(k0)} – ${gShort(k1)}`)}</small></h4>${grid}`
       + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${mainNum ? mainNum(e.k) : gDay(e.k)}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
   }
   return `<article class="sheet">
     <div class="sh-head"><div></div><div class="sh-title">
-      <div class="t-main">${esc(title)}</div><div class="t-line">${line}</div>
+      <div class="t-main">${RU(title)}</div><div class="t-line">${RU(line)}</div>
     </div><div></div></div>
     ${grid}${legendHtml()}${footHtml()}
   </article>`;
@@ -536,7 +563,7 @@ function jewMonth(k, compact) {
 
 function pureYearSheet(title, line, months, cols = 'm12') {
   return `<article class="sheet">
-    <div class="sh-head"><div></div><div class="sh-title"><div class="t-main">${esc(title)}</div><div class="t-line">${line}</div></div><div></div></div>
+    <div class="sh-head"><div></div><div class="sh-title"><div class="t-main">${RU(title)}</div><div class="t-line">${RU(line)}</div></div><div></div></div>
     <div class="year-grid ${cols}">${months.join('')}</div>${legendHtml()}${footHtml()}
   </article>`;
 }
@@ -588,7 +615,7 @@ function pureWeek(k, firstWd, rtl, headFn, title) {
     cols.push(dayColumn(kk, ev.byDay, today, { head: headFn(kk), musl: state.musl || state.cal === 'musl', jew: state.jew || state.cal === 'jew', jul: state.orth || state.cal === 'orth' }));
   }
   return `<article class="sheet">
-    <div class="sh-head"><div></div><div class="sh-title"><div class="t-main">${esc(title)}</div><div class="t-line">${fmtSpan(k0, k1)}</div></div><div></div></div>
+    <div class="sh-head"><div></div><div class="sh-title"><div class="t-main">${RU(title)}</div><div class="t-line">${RU(fmtSpan(k0, k1))}</div></div><div></div></div>
     <div class="week-grid${rtl ? ' rtl' : ''}" style="grid-template-columns:repeat(7, minmax(0,1fr))">${cols.join('')}</div>
     ${legendHtml()}${footHtml()}
   </article>`;
@@ -604,7 +631,8 @@ function daySheet(k) {
   const d = dateOfDay(k);
   const dates = [
     `<b>${RU_WD_LONG[weekday(k)]}, ${gText(k)}</b>`,
-    `«Солнечная восьмёрка»: ${esc(v8Month(d.month).ru)} · ${esc(v8Week(d.week).ru)} · ${ORD_RU[d.day - 1]} день${state.kp ? ` (${esc(v8Month(d.month).kp)} · ${esc(v8Week(d.week).kp)} · ${esc(v8Num(d.day).kp)})` : ''}, ${d.yearNumber}-й год`,
+    anbOnly() ? A(`${v8Month(d.month).kp} ${v8Week(d.week).kp} ${v8Num(d.day).kp}`)
+      : `«Солнечная восьмёрка»: ${esc(v8Month(d.month).ru)}, ${esc(v8Week(d.week).ru)}, ${ORD_RU[d.day - 1]} день${state.kp ? ` (${KP(`${v8Month(d.month).kp} ${v8Week(d.week).kp} ${v8Num(d.day).kp}`)})` : ''}, ${d.yearNumber}-й год`,
     ...(useSigns() ? [`знаками: <span class="pas sg-line">${dateSigns(d, state.signs === 'print' ? 'print' : 'parade')}</span>`] : []),
     `по старому стилю: ${esc(julianLabel(julianFromK(k)))}`,
     `по хиджре: ${esc(hijriLabel(hijriOf(k)))}`,
@@ -643,9 +671,9 @@ function daySheet(k) {
     const pos = ((Math.max(r.t, start) - start) / span) * 100;
     const at = Math.max(pos, last + 4);
     last = at;
-    const kp = state.kp ? ` <span class="muted">${esc(n.kp)}${p ? ' → ' + esc(p.kp) : ''}</span>` : '';
+    const kp = state.kp && !anbOnly() ? ` <span class="muted">${KP(n.kp)}${p ? ' → ' + KP(p.kp) : ''}</span>` : '';
     return `<div class="rub${r.merged ? ' merged' : ''}" style="top:${pos.toFixed(3)}%"></div>`
-      + `<div class="rub-l" style="top:calc(${at.toFixed(3)}% + 2px)"><b>${r.id}</b> ${esc(n.ru)} ${civilTime(r.t)}${kp}<br><span class="muted rub-how">${esc(n.how)}</span></div>`;
+      + `<div class="rub-l" style="top:calc(${at.toFixed(3)}% + 2px)"><b>${r.id}</b> ${NAME(n.ru, n.kp)} ${civilTime(r.t)}${kp}<br><span class="muted rub-how">${RU(n.how)}</span></div>`;
   }).join('');
   const now = Date.now();
   const nowLine = now >= start && now < end ? `<div class="nowline" style="top:${y(now)}" title="сейчас"></div>` : '';
@@ -870,6 +898,7 @@ async function start() {
     $('sheet-wrap').textContent = 'Не удалось загрузить данные календаря. Обновите страницу.';
     return;
   }
+  try { TR = makeTransliterator(await fetch('data/anbur.json').then((r) => r.json())); } catch { TR = null; }
   try { PICS = await fetch('data/kartinki.json').then((r) => (r.ok ? r.json() : null)); } catch { PICS = null; }
   fillPlaces();
   restoreState();
@@ -883,7 +912,7 @@ async function start() {
     for (const id of ['orth', 'musl', 'jew']) $(`l-${id}`).checked = state[id];
     render();
   }));
-  document.querySelectorAll('input[name="view"], input[name="signs"], .checks input').forEach((el) => el.addEventListener('change', () => { readControls(); render(); }));
+  document.querySelectorAll('input[name="view"], input[name="signs"], input[name="script"], .checks input').forEach((el) => el.addEventListener('change', () => { readControls(); render(); }));
   $('prev').addEventListener('click', () => { anchor = range().k0 - 1; if (state.view !== 'day') anchor = range().k0; render(); });
   $('next').addEventListener('click', () => { anchor = range().k1 + 1; render(); });
   $('today').addEventListener('click', () => { anchor = todayK(); render(); });

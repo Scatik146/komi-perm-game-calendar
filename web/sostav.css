@@ -71,7 +71,9 @@
 .sh-title .t-line2 { font-size: 0.82rem; color: var(--psoft); }
 
 /* сетка месяца: справа налево для восьмёрки, хиджры и еврейского календаря */
-.grid { display: grid; gap: 1px; background: var(--pline); border: 1.5px solid var(--bronze); }
+.grid { display: grid; gap: 0; background: var(--pline); border: 1.5px solid var(--bronze); }
+/* линейки — рамками ячеек, а не зазорами: зазор в 1px теряется при печати в PDF */
+.grid > *, .week-grid > * { border: 0.5px solid var(--pline); }
 .grid.rtl { direction: rtl; }
 .grid > * { direction: ltr; }
 .grid .gh { background: var(--pcell); color: var(--pink); text-align: center; font-weight: 700; padding: 0.2rem; font-size: 0.8rem; }
@@ -149,7 +151,7 @@
 .ym-list li b { font-weight: 400; color: var(--pink); }
 
 /* неделя */
-.week-grid { display: grid; gap: 1px; background: var(--pline); border: 1.5px solid var(--bronze); }
+.week-grid { display: grid; gap: 0; background: var(--pline); border: 1.5px solid var(--bronze); }
 .week-grid.rtl { direction: rtl; }
 .week-grid > * { direction: ltr; }
 .wday { background: #fff; padding: 0.4rem; min-height: 16rem; display: flex; flex-direction: column; gap: 0.25rem; }
@@ -213,3 +215,8 @@
   .year-grid { flex: 1 1 auto; min-height: 0; align-content: start; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* анбур на листе: шрифт Noto Sans Old Permic чуть крупнее кириллицы */
+.sheet .anbur { font-family: "Anbur", var(--serif); letter-spacing: 0.02em; }
+.mh-name .anbur { font-size: 0.95em; }
+.grid .gh .anbur, .grid .wl .anbur { font-size: 1.05em; }
