@@ -238,6 +238,14 @@
 - **[Н]** Meeus J. Astronomical Algorithms — положение Солнца (ядро `engine/sun.js`).
 - **[Н]** Espenak F., Meeus J. — полиномы ΔT (Five Millennium Canon of Solar Eclipses).
 - **[П]** Календарь метеорных потоков IMO — радианты и даты (расчёт видимости, sistema.md 13.1).
+- **[Н]** Astronomy Engine 2.1.19 (Don Cross, MIT): сезоны, фазы и расстояние Луны, лунные
+  и местные солнечные затмения — `engine/astronomy.js`, «Составить календарь» (sostav.md).
+- **[Н]** Reingold E. M., Dershowitz N. Calendrical Calculations. 3rd ed. Cambridge, 2008 —
+  еврейский календарь (`engine/evrei.js`).
+- **[П]** Определение суперлуния по Р. Ноллю (1979): полнолуние ближе 90 % пути от апогея
+  к перигею; списки 2026 г. — Star Walk: https://starwalk.space/ru/news/full-moon-calendar-2026
+- **[Н]** Wikimedia Commons — гербы районов и фотографии для листов календаря; авторы
+  и лицензии — `data/kartinki.json`.
 
 ## 8. Климат
 

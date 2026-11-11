@@ -24,3 +24,11 @@ Authors) — лицензия SIL Open Font License 1.1.
 Знаки-пасы «Солнечной восьмёрки» (числа, восьмёрки, пасы месяцев) и шрифт Pasy
 (web/fonts/Pasy.ttf) — авторская разработка Scatik146, лицензия Apache License 2.0.
 Пасы месяцев нарисованы автором; числа и восьмёрки — по его замыслу (docs/pasy.md).
+
+Расчёты неба для «Составить календарь» (сезоны, фазы и расстояние Луны, затмения) —
+библиотека Astronomy Engine 2.1.19 (engine/astronomy.js), Copyright (c) 2019-2025
+Don Cross, лицензия MIT (текст лицензии — в начале файла).
+https://github.com/cosinekitty/astronomy
+
+Еврейский календарь — по алгоритмам книги: Reingold E. M., Dershowitz N.
+Calendrical Calculations. 3rd ed. Cambridge, 2008 (engine/evrei.js).

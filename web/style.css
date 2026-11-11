@@ -201,3 +201,9 @@ main {
 .kal-plank-box { margin: 0.5rem 0 0.75rem; }
 .kal-plank-box summary { cursor: pointer; color: var(--soft); }
 .kal-plank svg { display: block; max-width: min(100%, 26rem); height: auto; margin: 0.5rem 0; }
+.kal-make { margin-top: 1rem !important; }
+.kal-make-btn {
+  display: inline-block; padding: 0.5rem 0.9rem; border: 1px solid var(--line); border-radius: 0.4rem;
+  text-decoration: none; font-weight: 700;
+}
+.kal-make-btn:hover { border-color: var(--soft); }
