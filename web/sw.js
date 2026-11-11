@@ -1,5 +1,5 @@
 // Офлайн-кэш: сайт работает без сети после первого открытия.
-const CACHE = 'shondi-v16';
+const CACHE = 'shondi-v17';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
   'anbur.html', 'anbur.css', 'anbur.js', 'plashka.js', 'fonts/NotoSansOldPermic-Regular.ttf', 'fonts/Pasy.ttf',
