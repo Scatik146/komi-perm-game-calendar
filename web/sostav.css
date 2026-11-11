@@ -106,7 +106,8 @@
    В письме справа налево время в клетке идёт справа налево, в православном — слева направо. */
 .cell { overflow: hidden; }
 .cell .seg { position: absolute; height: 0.2rem; bottom: calc(0.15rem + var(--row) * 0.3rem); width: var(--w); opacity: .6; }
-.cell .vl { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed; opacity: .85; }
+/* пунктир начинается под числами — не перечёркивает их */
+.cell .vl { position: absolute; top: 2.9rem; bottom: 0; width: 0; border-left: 1px dashed; opacity: .85; }
 .grid.rtl .cell .seg { right: var(--from); }
 .grid.rtl .cell .vl { right: var(--at); }
 .grid:not(.rtl) .cell .seg { left: var(--from); }

@@ -824,8 +824,10 @@ function legendHtml() {
   if (faiths.length) line1.push('<span class="lg"><i class="segmark"></i>праздник — от заката до заката: сутки начинаются вечером, накануне указанной даты</span>');
   else if (state.cal === 'v8') line1.push('<span>сутки начинаются вечером, накануне указанной даты</span>');
   if (state.astro) line1.push('<span class="lg"><i class="lbar"></i>небесное событие на несколько дней</span>');
-  const rows = [`<div class="legend">${line1.join('')}</div>`];
+  // первая строка — фазы Луны, вторая — праздники и небо
+  const rows = [];
   if (state.moon) rows.push(`<div class="legend legend-moon"><span class="lg">${moonIcon('novolunie')} новолуние</span><span class="lg">${moonIcon('pervaya-chetvert')} первая четверть</span><span class="lg">${moonIcon('polnolunie')} полнолуние</span><span class="lg">${moonIcon('poslednyaya-chetvert')} последняя четверть</span></div>`);
+  rows.push(`<div class="legend">${line1.join('')}</div>`);
   return rows.join('');
 }
 
