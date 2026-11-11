@@ -80,6 +80,7 @@ export const ORTHODOX_FIXED = [
 // Подвижные — от Пасхи (дней).
 export const ORTHODOX_MOVABLE = [
   { id: 'maslenitsa', off: -55, ru: 'Масленица', kp: 'Масленьча', span: 7 },
+  { id: 'chistyy-chetverg', off: -3, ru: 'Чистый четверг', kp: 'Ыджыт четверг' }, // Грибова 1964 (Никонов 2026)
   { id: 'pasha', off: 0, ru: 'Пасха', kp: 'Ыджыт лун' }, // так у автора и в записях Никонова 2025 (Пелым)
   { id: 'semik', off: 46, ru: 'Семик', kp: 'Семик' },
   { id: 'troitsa', off: 49, ru: 'Троица', kp: 'Стрӧча' },

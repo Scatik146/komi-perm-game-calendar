@@ -32,7 +32,7 @@ test('православные праздники 1190 года', () => {
   const ev = orthodoxEvents(Y0, Y1);
   const want = {
     sochelnik: '2026-01-06', rozhdestvo: '2026-01-07', kreshchenie: '2026-01-19',
-    maslenitsa: '2026-02-16', pasha: '2026-04-12', egoriy: '2026-05-06',
+    maslenitsa: '2026-02-16', 'chistyy-chetverg': '2026-04-09', pasha: '2026-04-12', egoriy: '2026-05-06',
     semik: '2026-05-28', troitsa: '2026-05-31', 'petr-pavel': '2026-07-12', ilya: '2026-08-02',
     'spas-medovyy': '2026-08-14', 'spas-yablochnyy': '2026-08-19', 'spas-hlebnyy': '2026-08-29',
     pokrov: '2026-10-14', 'nikola-zimniy': '2026-12-19',
