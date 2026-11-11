@@ -436,7 +436,6 @@ function v8Pictures(m) {
     pas: on ? `pasy/mesyac-${m}-${id}.svg` : null,
     zver: on && pm ? pm.zver : null,
     gerb: on && pp ? pp.gerb : null,
-    vid: on && pp ? pp.vid : null,
     dist,
   };
 }
@@ -449,7 +448,6 @@ function focusStyle(x) {
 function creditsHtml(p) {
   const items = [];
   if (p.gerb && p.dist) items.push([`Герб: ${p.dist.district} район`, p.gerb]);
-  if (p.vid && p.dist) items.push([`Вид: ${p.dist.district} район`, p.vid]);
   if (!items.length) return '';
   const frag = (x) => (x.file.includes('/gerb-') ? '' : ', фрагмент');
   return `Викисклад: ${items.map(([what, x]) => `${esc(what)} — ${esc(x.author)}, ${esc(x.license)} («${esc(x.title)}»${frag(x)})`).join('; ')}.`;
@@ -503,8 +501,7 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
         ${other.map((o) => `<p class="mh-meta">${RU(o)}</p>`).join('')}
       </div>
       ${signs ? `<div class="mh-signs">${signs}</div>` : ''}
-    </header>
-    ${p.vid ? `<div class="mh-strip" role="img" aria-label="Вид: ${esc(dist.district)} район" style="background-image:url('${esc(p.vid.file)}');background-position:${p.vid.focus ? `${p.vid.focus.x}% ${p.vid.focus.y}%` : 'center 55%'}"></div>` : ''}`,
+    </header>`,
     credits: creditsHtml(p),
   };
 }
