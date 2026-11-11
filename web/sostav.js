@@ -457,33 +457,34 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
   const x = v8Month(m);
   const dist = p.dist;
   const days = k1 - k0 + 1;
+  // вторая строка — только другие календари; год у каждого конца, если годы разные
+  const span2 = (m0, y0, m1, y1) => (y0 === y1 ? `${m0}${m0 !== m1 ? ` – ${m1}` : ''} ${y0}` : `${m0} ${y0} – ${m1} ${y1}`);
   const other = [];
+  if (state.orth) {
+    const a = julianFromK(k0); const b = julianFromK(k1);
+    other.push(`По старому стилю: ${span2(`${a.day} ${RU_MON_GEN[a.month - 1]}`, a.year, `${b.day} ${RU_MON_GEN[b.month - 1]}`, b.year)}.`);
+  }
   if (state.musl) {
     const a = hijriOf(k0); const b = hijriOf(k1);
-    other.push(`По хиджре: ${HIJRI_MONTHS_RU[a.month - 1]}${a.month !== b.month ? ` – ${HIJRI_MONTHS_RU[b.month - 1]}` : ''} ${a.year === b.year ? a.year : `${a.year}–${b.year}`}.`);
+    other.push(`По хиджре: ${span2(HIJRI_MONTHS_RU[a.month - 1], a.year, HIJRI_MONTHS_RU[b.month - 1], b.year)}.`);
   }
   if (state.jew) {
     const a = hebrewFromK(k0); const b = hebrewFromK(k1);
-    other.push(`По еврейскому календарю: ${hebrewMonthName(a.year, a.month)}${a.month !== b.month ? ` – ${hebrewMonthName(b.year, b.month)}` : ''} ${a.year === b.year ? a.year : `${a.year}–${b.year}`}.`);
-  }
-  if (state.orth) {
-    const a = julianFromK(k0); const b = julianFromK(k1);
-    other.push(`По старому стилю: ${a.day} ${RU_MON_GEN[a.month - 1]} – ${b.day} ${RU_MON_GEN[b.month - 1]}.`);
+    other.push(`По еврейскому календарю: ${span2(hebrewMonthName(a.year, a.month), a.year, hebrewMonthName(b.year, b.month), b.year)}.`);
   }
   // в ромбе — пас месяца (решение автора: вместо фото зверя); справа — герб района
   const rhomb = p.pas
     ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in mh-rhomb-pas"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div></div>`
     : '';
   const signs = p.gerb ? `<img class="mh-gerb" src="${esc(p.gerb.file)}" alt="Герб: ${esc(dist.district)} район">` : '';
-  const meta = `Защитник — ${x.animal}. ${cap(x.season)}. Событие месяца — ${x.event}.${dist ? ` ${dist.district} район.` : ''}`;
   return {
     html: `<header class="mh">
       ${state.pics ? rhomb : ''}
       <div class="mh-text">
         <h3 class="mh-name">${NAME(title, kpTitle)}</h3>
         ${SEC(kpTitle) ? `<p class="mh-kp">${SEC(kpTitle)}</p>` : ''}
-        <p class="mh-dates">${RU(`${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}.`)} <span class="mh-year">${v8YearLine(n)}.</span></p>
-        <p class="mh-meta">${RU([meta, ...other].join(' '))}</p>
+        <p class="mh-dates">${RU(`${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}.`)} <span class="mh-year">${v8YearLine(n)}, ${NAME(x.season, K.seasons[x.season])}${SEC(K.seasons[x.season]) ? ` (${SEC(K.seasons[x.season])})` : ''}.</span></p>
+        ${other.length ? `<p class="mh-meta">${RU(other.join(' '))}</p>` : ''}
       </div>
       ${signs ? `<div class="mh-signs">${signs}</div>` : ''}
     </header>
