@@ -59,7 +59,7 @@
 .mh-pasbox { width: 4.6rem; height: 4.6rem; position: relative; display: grid; place-items: center; }
 .mh-pasbox::before { content: ""; position: absolute; inset: 0; border: 1px solid var(--bronze); transform: rotate(45deg) scale(0.72); }
 .mh-pas { width: 3.2rem; height: 3.2rem; background: var(--bronze); -webkit-mask: var(--pas) center / contain no-repeat; mask: var(--pas) center / contain no-repeat; }
-.mh-gerb { height: 7rem; width: auto; }
+.mh-gerb { height: 7rem; width: 5.6rem; object-fit: contain; }
 .mh-rhomb-pas { display: grid; place-items: center; }
 .mh-rhomb-pas .mh-pas { width: 58%; height: 58%; }
 .mh-strip { height: 12mm; margin: 0 0 0.5rem; background-size: cover; background-position: center 55%; border-top: 1px solid var(--bronze); border-bottom: 1px solid var(--bronze); }
@@ -227,7 +227,7 @@
   .mh { gap: 1rem; }
   .mh-meta { font-size: 0.74rem; }
   .mh-rhomb { width: 29mm; height: 29mm; }
-  .mh-gerb { height: 27mm; }
+  .mh-gerb { height: 27mm; width: 21.6mm; }
   .mh-name { font-size: 1.9rem; }
   .sheet.narrow { max-width: none; }
   .day-cols { flex: 1 1 auto; min-height: 0; }
