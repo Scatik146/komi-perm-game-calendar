@@ -111,15 +111,16 @@ function todayK() {
 
 /* ---------- надписи: русский, коми-пермяцкий, анбур ---------- */
 
-const anbOnly = () => state.script === 'anb' && TR;
+/** «Только анбуром» или «только по-коми-пермяцки»: русской расшифровки названий нет. */
+const anbOnly = () => (state.script === 'anb' && TR) || state.script === 'kpo';
 /** Надпись анбуром: коми-пермяцкое слово (kp) или русское (ru) — своим набором букв. */
-const A = (s, lang = 'kp') => (TR ? `<span class="anbur">${esc(TR(String(s), lang))}</span>` : esc(s));
+const A = (s, lang = 'kp') => (TR && state.script !== 'kpo' ? `<span class="anbur">${esc(TR(String(s), lang))}</span>` : esc(s));
 /** Вторая строка с коми-пермяцким словом: кириллицей или анбуром. */
 const KP = (s) => (state.script === 'ranb' || state.script === 'anb' ? A(s) : esc(s));
 /** Главная надпись: по-русски, а в режиме «только анбуром» — коми-пермяцкое слово анбуром (нет — русское). */
 const NAME = (ru, kp) => (anbOnly() ? (kp ? A(kp) : A(ru, 'ru')) : esc(ru));
 /** Свободный русский текст: в режиме «только анбуром» — русским набором анбура. */
-const RU = (s) => (anbOnly() ? A(s, 'ru') : esc(s));
+const RU = (s) => (state.script === 'anb' && TR ? A(s, 'ru') : esc(s));
 /** Вторая строка с коми-пермяцким словом — если нужна. */
 const SEC = (kp) => (state.kp && !anbOnly() && kp ? KP(kp) : '');
 
@@ -344,7 +345,7 @@ function dayCell(k, evMap, opts) {
     // ширина: от начала суток клетки до пунктира конца; многодневный — вдоль строки
     const rowLeft = (opts.ncols ?? 1) - 1 - (opts.col ?? 0);
     const lastHere = Math.min(b, k + rowLeft);
-    const width = (lastHere - k) + (lastHere === b ? sunsetFrac(b) : 1);
+    const width = lastHere === k ? sunsetFrac(b) : 1; // подпись — в своей клетке, до пунктира конца
     return { e, lane: seg ? seg.row : 0, width };
   }).sort((p, q) => q.lane - p.lane);
   const evs2 = labels.length
@@ -442,7 +443,6 @@ function focusStyle(x) {
 
 function creditsHtml(p) {
   const items = [];
-  if (p.zver) items.push([cap(v8Month(MONTH_IDS.indexOf(p.zverId) + 1).animal), p.zver]);
   if (p.gerb && p.dist) items.push([`Герб: ${p.dist.district} район`, p.gerb]);
   if (p.vid && p.dist) items.push([`Вид: ${p.dist.district} район`, p.vid]);
   if (!items.length) return '';
@@ -470,13 +470,11 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
     const a = julianFromK(k0); const b = julianFromK(k1);
     other.push(`По старому стилю: ${a.day} ${RU_MON_GEN[a.month - 1]} – ${b.day} ${RU_MON_GEN[b.month - 1]}.`);
   }
-  const rhomb = p.zver
-    ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in"><img src="${esc(p.zver.file)}" alt="" style="${focusStyle(p.zver)}"></div></div>`
-    : `<div class="mh-rhomb empty" aria-hidden="true"><div class="mh-rhomb-in"></div></div>`;
-  const signs = [
-    p.pas ? `<div class="mh-pasbox"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div>` : '',
-    p.gerb ? `<img class="mh-gerb" src="${esc(p.gerb.file)}" alt="Герб: ${esc(dist.district)} район">` : '',
-  ].join('');
+  // в ромбе — пас месяца (решение автора: вместо фото зверя); справа — герб района
+  const rhomb = p.pas
+    ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in mh-rhomb-pas"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div></div>`
+    : '';
+  const signs = p.gerb ? `<img class="mh-gerb" src="${esc(p.gerb.file)}" alt="Герб: ${esc(dist.district)} район">` : '';
   const meta = `Защитник — ${x.animal}. ${cap(x.season)}. Событие месяца — ${x.event}.${dist ? ` ${dist.district} район.` : ''}`;
   return {
     html: `<header class="mh">
