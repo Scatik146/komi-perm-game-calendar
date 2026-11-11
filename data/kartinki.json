@@ -9,7 +9,12 @@
     "license": "CC BY-SA 2.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Sciurus_vulgaris_in_snow_-_Helsinki,_Finland.jpg",
-    "description": "A red squirrel in the snow in Helsinki, Finland."
+    "description": "A red squirrel in the snow in Helsinki, Finland.",
+    "focus": {
+     "x": 50,
+     "y": 40,
+     "scale": 1.15
+    }
    }
   },
   "osh": {
@@ -20,7 +25,12 @@
     "license": "CC BY-SA 2.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
     "source": "https://commons.wikimedia.org/wiki/File:A_Russian_Bear.jpg",
-    "description": "A bear sleeping with a happy face in the cold Russian sun. He can run at 33 mph (55 km/h) in the deep forest"
+    "description": "A bear sleeping with a happy face in the cold Russian sun. He can run at 33 mph (55 km/h) in the deep forest",
+    "focus": {
+     "x": 45,
+     "y": 50,
+     "scale": 1.1
+    }
    }
   },
   "dozmor": {
@@ -31,7 +41,12 @@
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Tetrao_urogallus_Rila_Bulgaria_Stefan_Avramov_01.jpg",
-    "description": "Male Capercaillie (Tetrao urogallus) in the National Park and Natura 2000 site of Rila"
+    "description": "Male Capercaillie (Tetrao urogallus) in the National Park and Natura 2000 site of Rila",
+    "focus": {
+     "x": 55,
+     "y": 40,
+     "scale": 1.25
+    }
    }
   },
   "vormos": {
@@ -42,7 +57,12 @@
     "license": "Public domain",
     "licenseUrl": "",
     "source": "https://commons.wikimedia.org/wiki/File:A_moose_and_her_two_small_calves_in_a_spruce_forest_(698127dd-4326-412d-86bf-c617327c6a44).jpg",
-    "description": "A moose and her two small calves in a spruce forest Keywords: moose; wildlife"
+    "description": "A moose and her two small calves in a spruce forest Keywords: moose; wildlife",
+    "focus": {
+     "x": 50,
+     "y": 55,
+     "scale": 1.2
+    }
    }
   },
   "chuzhmor": {
@@ -53,7 +73,12 @@
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:R%C3%B8yskatt_(Mustela_erminea_erminea),_Lista,_Norway.jpg",
-    "description": "Stoat, nominate subspecies Mustela erminea erminea. Steinodden, Lista, Norway."
+    "description": "Stoat, nominate subspecies Mustela erminea erminea. Steinodden, Lista, Norway.",
+    "focus": {
+     "x": 40,
+     "y": 45,
+     "scale": 1.3
+    }
    }
   },
   "yus": {
@@ -64,7 +89,12 @@
     "license": "Public domain",
     "licenseUrl": "",
     "source": "https://commons.wikimedia.org/wiki/File:Cygnus_cygnus.JPG",
-    "description": "Cygnus cygnus flying in Jalasjärvi, Finland."
+    "description": "Cygnus cygnus flying in Jalasjärvi, Finland.",
+    "focus": {
+     "x": 50,
+     "y": 40,
+     "scale": 1.7
+    }
    }
   },
   "sir": {
@@ -75,7 +105,12 @@
     "license": "Public domain",
     "licenseUrl": "",
     "source": "https://commons.wikimedia.org/wiki/File:Europaeischer_Hecht.jpg",
-    "description": "Northern Pike - picture taken with Sony DSC5 in 5 m depth in Straussee near Strausberg"
+    "description": "Northern Pike - picture taken with Sony DSC5 in 5 m depth in Straussee near Strausberg",
+    "focus": {
+     "x": 50,
+     "y": 50,
+     "scale": 1.3
+    }
    }
   },
   "koch": {
@@ -86,7 +121,12 @@
     "license": "CC BY-SA 3.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Lepus_timidus_in_Volgograd_Oblast.jpg",
-    "description": "Заяц-беляк в Волгоградской области"
+    "description": "Заяц-беляк в Волгоградской области",
+    "focus": {
+     "x": 40,
+     "y": 50,
+     "scale": 1.25
+    }
    }
   }
  },
@@ -104,7 +144,7 @@
    "vid": {
     "file": "kartinki/vid-gainy.jpg",
     "title": "Veslyana.jpg",
-    "author": "Maximovich Nikolay",
+    "author": "Николай Максимович",
     "license": "CC BY 3.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Veslyana.jpg",
@@ -146,7 +186,7 @@
    "gerb": {
     "file": "kartinki/gerb-yusva.png",
     "title": "Coat of Arms of Yusva rayon (Perm krai).png",
-    "author": "автор не указан (векторизация — см. страницу файла)tor-images.com.",
+    "author": "автор не указан; официальный символ района",
     "license": "Public domain",
     "licenseUrl": "",
     "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Yusva_rayon_(Perm_krai).png",

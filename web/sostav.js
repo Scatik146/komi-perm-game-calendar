@@ -6,6 +6,7 @@
 import {
   DAY_MS, dateOfDay, yearStart, monthLengths, calendarDayAt, sunsetOf, rubezhiRange, QUARTER_OF_PART,
   orthodoxEvents, muslimEvents, jewishEvents, hijriOf, julianFromK, weekday,
+  numberSign, eightSign, printDigit, printEight, dateSigns,
   hebrewFromK, kFromHebrew, hebrewMonthDays, hebrewMonthsOfYear, hebrewMonthName, HIJRI_MONTHS_RU,
 } from './engine/index.js';
 import { astroEvents } from './engine/nebo.js';
@@ -37,7 +38,7 @@ const KIND_RU = { orthodox: 'православные', muslim: 'мусульм�
 /* ---------- состояние ---------- */
 
 const state = {
-  cal: 'v8', view: 'month',
+  cal: 'v8', view: 'month', signs: 'words',
   orth: false, musl: false, jew: false, astro: true, moon: true, kp: false, pics: true,
 };
 
@@ -51,6 +52,7 @@ const DEFAULT_LAYERS = {
 function readControls() {
   state.cal = document.querySelector('input[name="cal"]:checked').value;
   state.view = document.querySelector('input[name="view"]:checked').value;
+  state.signs = document.querySelector('input[name="signs"]:checked').value;
   for (const id of ['orth', 'musl', 'jew', 'astro', 'moon', 'kp', 'pics']) state[id] = $(`l-${id}`).checked;
 }
 
@@ -65,6 +67,8 @@ function restoreState() {
   } catch { /* старое или испорченное значение */ }
   document.querySelector(`input[name="cal"][value="${state.cal}"]`).checked = true;
   document.querySelector(`input[name="view"][value="${state.view}"]`).checked = true;
+  const sg = document.querySelector(`input[name="signs"][value="${state.signs}"]`);
+  if (sg) sg.checked = true;
   for (const id of ['orth', 'musl', 'jew', 'astro', 'moon', 'kp', 'pics']) $(`l-${id}`).checked = !!state[id];
 }
 
@@ -81,6 +85,7 @@ const gShort = (k) => `${gDay(k)} ${RU_MON_GEN[gMonth(k)]}`;
 const fmtSpan = (k0, k1) => (gYear(k0) === gYear(k1) ? `${gShort(k0)} – ${gText(k1)}` : `${gText(k0)} – ${gText(k1)}`);
 const civilTime = (ms) => new Intl.DateTimeFormat('ru-RU', { timeZone: place.tz || deviceTz, hour: '2-digit', minute: '2-digit' }).format(ms);
 
+const nb = (s) => s.replace(/-/g, '\u2011');
 function hijriLabel(h) {
   return `${h.day} ${HIJRI_MONTHS_RU[h.month - 1]} ${h.year}`;
 }
@@ -96,6 +101,11 @@ function todayK() {
 }
 
 /* ---------- названия «Солнечной восьмёрки» ---------- */
+
+/** Знак дня (1–8) и недели (1–6): печатный или парадный. */
+const daySign = (n) => (state.signs === 'print' ? printDigit(n) : numberSign(n));
+const weekSign = (w) => (state.signs === 'print' ? printEight(w) : eightSign(w));
+const useSigns = () => state.signs !== 'words';
 
 const v8Month = (m) => K.months[m - 1];
 const v8Week = (w) => K.weeks[w - 1];
@@ -136,24 +146,37 @@ function collectEvents(k0, k1) {
   return { list, byDay };
 }
 
-const label = (e) => (state.kp && e.kp ? e.kp : e.ru);
+const label = (e) => e.ru;
+/** Русское название первым; коми-пермяцкое — рядом, если включено. */
+const labelHtml = (e) => `${esc(e.ru)}${state.kp && e.kp && e.kp !== e.ru ? ` <span class="kpn">${esc(e.kp)}</span>` : ''}`;
+let sheetRange = null; // границы текущего листа: полоса на весь лист не нужна
+
+const MOON_SVG = {
+  novolunie: '<circle cx="6" cy="6" r="4.6" fill="currentColor"/>',
+  'pervaya-chetvert': '<circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6 1.4a4.6 4.6 0 0 1 0 9.2z" fill="currentColor"/>',
+  polnolunie: '<circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" stroke-width="1.2"/>',
+  'poslednyaya-chetvert': '<circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6 1.4a4.6 4.6 0 0 0 0 9.2z" fill="currentColor"/>',
+};
+const moonIcon = (id) => `<svg class="moon-i" viewBox="0 0 12 12" aria-hidden="true" style="color:var(--c-moon)">${MOON_SVG[id] || ''}</svg>`;
 
 function evHtml(e, withNote) {
   const title = [e.ru, e.kp && e.kp !== e.ru ? e.kp : '', e.night ? 'с вечера накануне' : '', e.note || ''].filter(Boolean).join(' · ');
   const span = e.span && !e.cont ? ` <span class="note">до ${gShort(e.span[1])}</span>` : '';
   const note = withNote && e.note ? ` <span class="note">${esc(e.note)}</span>` : '';
   const night = e.night ? '☾ ' : '';
-  return `<div class="ev ${e.kind}" title="${esc(title)}">${night}${esc(label(e))}${span}${note}</div>`;
+  return `<div class="ev ${e.kind}" title="${esc(title)}">${night}${labelHtml(e)}${span}${note}</div>`;
 }
 
 function cellExtras(evs, withNote) {
   const main = evs.filter((e) => !e.cont && e.kind !== 'moon');
-  const bands = [...new Set(evs.filter((e) => e.cont || (e.span && !e.cont)).map((e) => e.kind))];
+  const whole = (e) => sheetRange && e.span && e.span[0] <= sheetRange.k0 && e.span[1] >= sheetRange.k1;
+  const bands = [...new Set(evs.filter((e) => e.span && !whole(e)).map((e) => e.kind))];
   const moon = evs.find((e) => e.kind === 'moon');
   return {
     html: main.map((e) => evHtml(e, withNote)).join(''),
     bands: bands.length ? `<div class="bands">${bands.map((b) => `<i class="band ${b}"></i>`).join('')}</div>` : '',
-    moon: moon ? `<span class="moon" title="${esc(moon.ru)} ${civilTime(moon.t)}">${moon.sign}</span>` : '',
+    moon: moon ? `<span class="moon" title="${esc(moon.ru)} ${civilTime(moon.t)}">${moonIcon(moon.id)}</span>` : '',
+    moonEv: moon,
     dots: [...new Set(evs.filter((e) => !e.cont && e.kind !== 'moon').map((e) => e.kind))],
   };
 }
@@ -168,15 +191,15 @@ function subDates(k, { musl, jew, jul }) {
   const out = [];
   if (musl) {
     const h = hijriOf(k);
-    out.push(`<span class="h" title="По хиджре: ${esc(hijriLabel(h))}" style="color:var(--c-musl)">${h.day}${h.day === 1 ? ' ' + HIJRI_MONTHS_RU[h.month - 1] : ''}</span>`);
+    out.push(`<span class="h" title="По хиджре: ${esc(hijriLabel(h))}" style="color:var(--c-musl)"><i>х</i>${h.day}${h.day === 1 ? ' ' + nb(HIJRI_MONTHS_RU[h.month - 1]) : ''}</span>`);
   }
   if (jew) {
     const h = hebrewFromK(k);
-    out.push(`<span title="По еврейскому календарю: ${esc(hebrewLabel(h))}" style="color:var(--c-jew)">${h.day}${h.day === 1 ? ' ' + hebrewMonthName(h.year, h.month) : ''}</span>`);
+    out.push(`<span title="По еврейскому календарю: ${esc(hebrewLabel(h))}" style="color:var(--c-jew)"><i>е</i>${h.day}${h.day === 1 ? ' ' + hebrewMonthName(h.year, h.month) : ''}</span>`);
   }
   if (jul) {
     const j = julianFromK(k);
-    out.push(`<span title="По старому стилю: ${esc(julianLabel(j))}" style="color:var(--c-orth)">${j.day}${j.day === 1 ? ' ' + RU_MON_SHORT[j.month - 1] : ''} ст.</span>`);
+    out.push(`<span title="По старому стилю: ${esc(julianLabel(j))}" style="color:var(--c-orth)">${j.day}${j.day === 1 ? ' ' + RU_MON_SHORT[j.month - 1] : ''}<i> ст.</i></span>`);
   }
   return out.join('');
 }
@@ -235,8 +258,9 @@ function v8MonthRange(n, m) {
 
 function v8Heads(compact) {
   return K.numbers.map((x, i) => {
+    if (useSigns()) return compact ? `<span class="pas sg">${daySign(i + 1)}</span>` : `<span class="pas sg" title="${ORD_RU[i]} день">${daySign(i + 1)}</span><small>${ORD_RU[i]}${state.kp ? `, ${esc(x.kp)}` : ''}</small>`;
     if (compact) return String(i + 1);
-    return state.kp ? `${esc(x.kp)}<small>${ORD_RU[i]}</small>` : `${ORD_RU[i]}<small>день</small>`;
+    return state.kp ? `${ORD_RU[i]}<small>${esc(x.kp)}</small>` : `${ORD_RU[i]}<small>день</small>`;
   });
 }
 
@@ -249,8 +273,9 @@ function v8Rows(k0, k1, compact) {
       days.push(k <= k1 ? k : null);
     }
     const wk = v8Week(w + 1);
-    const lab = compact ? String(w + 1)
-      : state.kp ? `${esc(wk.kp)}<small>${esc(wk.ru)}</small>` : `${esc(wk.ru)}<small>${wk.ord} неделя</small>`;
+    const lab = useSigns() ? (compact ? `<span class="pas sg">${weekSign(w + 1)}</span>` : `<span class="pas sg" title="${esc(wk.ru)}">${weekSign(w + 1)}</span><small>${esc(cap(wk.ru))}${state.kp ? `, ${esc(wk.kp)}` : ''}</small>`)
+      : compact ? String(w + 1)
+      : state.kp ? `${esc(cap(wk.ru))}<small>${esc(wk.kp)}</small>` : `${esc(cap(wk.ru))}<small>${wk.ord} неделя</small>`;
     rows.push({ label: lab, days });
   }
   return rows;
@@ -276,13 +301,19 @@ function v8Pictures(m) {
   };
 }
 
+function focusStyle(x) {
+  const f = x.focus || {};
+  return `object-position:${f.x ?? 50}% ${f.y ?? 50}%;--fx:${f.x ?? 50}%;--fy:${f.y ?? 50}%;transform:scale(${f.scale ?? 1})`;
+}
+
 function creditsHtml(p) {
   const items = [];
   if (p.zver) items.push([cap(v8Month(MONTH_IDS.indexOf(p.zverId) + 1).animal), p.zver]);
   if (p.gerb && p.dist) items.push([`Герб: ${p.dist.district} район`, p.gerb]);
   if (p.vid && p.dist) items.push([`Вид: ${p.dist.district} район`, p.vid]);
   if (!items.length) return '';
-  return `<p class="credits">${items.map(([what, x]) => `${esc(what)} — ${esc(x.author)}, ${esc(x.license)} (Викисклад: «${esc(x.title)}»)`).join('; ')}.</p>`;
+  const frag = (x) => (x.file.includes('/gerb-') ? '' : ', фрагмент');
+  return `<p class="credits">Фото и гербы с Викисклада: ${items.map(([what, x]) => `${esc(what)} — ${esc(x.author)}, ${esc(x.license)} («${esc(x.title)}»${frag(x)})`).join('; ')}.</p>`;
 }
 
 /** Шапка листа месяца или недели «Солнечной восьмёрки». */
@@ -306,10 +337,10 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
     other.push(`По старому стилю: ${a.day} ${RU_MON_GEN[a.month - 1]} – ${b.day} ${RU_MON_GEN[b.month - 1]}.`);
   }
   const rhomb = p.zver
-    ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in"><img src="${esc(p.zver.file)}" alt=""></div></div>`
+    ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in"><img src="${esc(p.zver.file)}" alt="" style="${focusStyle(p.zver)}"></div></div>`
     : `<div class="mh-rhomb empty" aria-hidden="true"><div class="mh-rhomb-in"></div></div>`;
   const signs = [
-    p.pas ? `<img class="mh-pas" src="${p.pas}" alt="Пас месяца">` : '',
+    p.pas ? `<div class="mh-pasbox"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div>` : '',
     p.gerb ? `<img class="mh-gerb" src="${esc(p.gerb.file)}" alt="Герб: ${esc(dist.district)} район">` : '',
   ].join('');
   const meta = `Защитник — ${x.animal}. ${cap(x.season)}${state.kp ? ` (${K.seasons[x.season]})` : ''}. Событие месяца — ${x.event}.${dist ? ` ${dist.district} район.` : ''}`;
@@ -319,14 +350,12 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
       <div class="mh-text">
         <h3 class="mh-name">${esc(title)}</h3>
         ${state.kp ? `<p class="mh-kp">${esc(kpTitle)}</p>` : ''}
-        <p class="mh-dates">${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}</p>
-        <p class="mh-year">${v8YearLine(n)}</p>
-        <p class="mh-meta">${esc(meta)}</p>
-        ${other.length ? `<p class="mh-meta">${esc(other.join(' '))}</p>` : ''}
+        <p class="mh-dates">${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}${sub ? `. ${sub}` : ''}. <span class="mh-year">${v8YearLine(n)}.</span></p>
+        <p class="mh-meta">${esc([meta, ...other].join(' '))}</p>
       </div>
       ${signs ? `<div class="mh-signs">${signs}</div>` : ''}
     </header>
-    ${p.vid ? `<div class="mh-strip" role="img" aria-label="Вид: ${esc(dist.district)} район" style="background-image:url('${esc(p.vid.file)}')"></div>` : ''}`,
+    ${p.vid ? `<div class="mh-strip" role="img" aria-label="Вид: ${esc(dist.district)} район" style="background-image:url('${esc(p.vid.file)}');background-position:${p.vid.focus ? `${p.vid.focus.x}% ${p.vid.focus.y}%` : 'center 55%'}"></div>` : ''}`,
     credits: creditsHtml(p),
   };
 }
@@ -341,7 +370,7 @@ function v8MonthSheet(n, m, compact = false) {
     const items = ev.list.filter((e) => !e.cont && e.kind !== 'moon').sort((a, b) => a.k - b.k);
     const pas = state.pics ? `<img class="ym-pas" src="pasy/mesyac-${m}-${MONTH_IDS[m - 1]}.svg" alt="">` : '';
     return `<div class="ym"><h4><span>${pas}${esc(t.main)}${state.kp ? ` <em>${esc(t.kp)}</em>` : ''}</span><small>${gShort(k0)} – ${gShort(k1)}</small></h4>${grid}`
-      + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}">${gDay(e.k)}.${String(gMonth(e.k) + 1).padStart(2, '0')} ${esc(label(e))}</li>`).join('')}</ul></div>`;
+      + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${gDay(e.k)}.${String(gMonth(e.k) + 1).padStart(2, '0')}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
   }
   const head = v8Head(n, m, k0, k1, t.main, t.kp);
   return `<article class="sheet">
@@ -386,14 +415,14 @@ function dayColumn(k, evMap, today, opts) {
     const d = dateOfDay(k);
     rows.push(`<div class="line">${esc(v8Month(d.month).ru)} · ${esc(v8Week(d.week).ru)} · ${ORD_RU[d.day - 1]}${state.kp ? ` (${esc(v8Month(d.month).kp)} · ${esc(v8Week(d.week).kp)} · ${esc(v8Num(d.day).kp)})` : ''}</div>`);
   }
-  if (opts.musl) rows.push(`<div class="line"><span class="h">${esc(hijriLabel(hijriOf(k)))}</span></div>`);
-  if (opts.jew) rows.push(`<div class="line" style="color:var(--c-jew)">${esc(hebrewLabel(hebrewFromK(k)))}</div>`);
-  if (opts.jul) rows.push(`<div class="line" style="color:var(--c-orth)">${esc(julianLabel(julianFromK(k)))} ст. ст.</div>`);
+  if (opts.musl) { const h = hijriOf(k); rows.push(`<div class="line" style="color:var(--c-musl)"><i>х</i>${h.day} ${nb(HIJRI_MONTHS_RU[h.month - 1])}</div>`); }
+  if (opts.jew) { const h = hebrewFromK(k); rows.push(`<div class="line" style="color:var(--c-jew)"><i>е</i>${h.day} ${hebrewMonthName(h.year, h.month)}</div>`); }
+  if (opts.jul) { const j = julianFromK(k); rows.push(`<div class="line" style="color:var(--c-orth)">${j.day} ${RU_MON_SHORT[j.month - 1]}. ст. ст.</div>`); }
   if (set0 !== null) rows.push(`<div class="line">сутки с заката ${civilTime(set0)} накануне; закат ${civilTime(sunsetOf(k, place))}</div>`);
-  if (x.moon) rows.push(`<div class="line">${x.moon.replace('class="moon"', 'class=""')} ${esc((evs.find((e) => e.kind === 'moon') || {}).ru || '')}</div>`);
+  if (x.moonEv) rows.push(`<div class="line">${moonIcon(x.moonEv.id)} ${esc(x.moonEv.ru)} ${civilTime(x.moonEv.t)}</div>`);
   return `<div class="wday ${wdClass(k)}${k === today ? ' today' : ''}">
     <div class="wh">${opts.head}</div>
-    <span class="g">${gDay(k)}</span><div class="line">${RU_MON_GEN[gMonth(k)]} ${gYear(k)}</div>
+    <span class="g">${gDay(k)}</span><div class="line">${RU_MON_GEN[gMonth(k)]}</div>
     ${rows.join('')}${x.html}${x.bands}</div>`;
 }
 
@@ -404,7 +433,8 @@ function v8WeekSheet(k) {
   const cols = [];
   for (let kk = k0; kk <= k1; kk++) {
     const dd = dateOfDay(kk);
-    const head = state.kp ? `${esc(v8Num(dd.day).kp)}<small>${ORD_RU[dd.day - 1]} день</small>` : `${ORD_RU[dd.day - 1]} день`;
+    const head = useSigns() ? `<span class="pas sg">${daySign(dd.day)}</span><small>${ORD_RU[dd.day - 1]} день${state.kp ? `, ${esc(v8Num(dd.day).kp)}` : ''}</small>`
+      : state.kp ? `${cap(ORD_RU[dd.day - 1])} день<small>${esc(v8Num(dd.day).kp)}</small>` : `${cap(ORD_RU[dd.day - 1])} день`;
     cols.push(dayColumn(kk, ev.byDay, today, { head, musl: state.musl, jew: state.jew, jul: state.orth }));
   }
   const wk = v8Week(d.week);
@@ -445,7 +475,7 @@ function pureMonth({ k0, k1, firstWd, rtl, title, line, compact, mainNum, sub })
   if (compact) {
     const items = ev.list.filter((e) => !e.cont && e.kind !== 'moon').sort((a, b) => a.k - b.k);
     return `<div class="ym"><h4><span>${esc(title)}</span><small>${gShort(k0)} – ${gShort(k1)}</small></h4>${grid}`
-      + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}">${mainNum ? mainNum(e.k) : gDay(e.k)} ${esc(label(e))}</li>`).join('')}</ul></div>`;
+      + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${mainNum ? mainNum(e.k) : gDay(e.k)}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
   }
   return `<article class="sheet">
     <div class="sh-head"><div></div><div class="sh-title">
@@ -504,10 +534,10 @@ function jewMonth(k, compact) {
 
 /* ---------- годовые листы чистых календарей ---------- */
 
-function pureYearSheet(title, line, months) {
+function pureYearSheet(title, line, months, cols = 'm12') {
   return `<article class="sheet">
     <div class="sh-head"><div></div><div class="sh-title"><div class="t-main">${esc(title)}</div><div class="t-line">${line}</div></div><div></div></div>
-    <div class="year-grid m12">${months.join('')}</div>${legendHtml()}${footHtml()}
+    <div class="year-grid ${cols}">${months.join('')}</div>${legendHtml()}${footHtml()}
   </article>`;
 }
 
@@ -543,7 +573,7 @@ function jewYear(k) {
   const months = hebrewMonthsOfYear(y).map((m) => jewMonth(kFromHebrew(y, m, 1), true));
   const k0 = kFromHebrew(y, 7, 1);
   const k1 = kFromHebrew(y + 1, 7, 1) - 1;
-  return pureYearSheet(`${y} год`, `${fmtSpan(k0, k1)} · ${months.length} месяцев · праздники по диаспоре`, months);
+  return pureYearSheet(`${y} год`, `${fmtSpan(k0, k1)}, ${months.length} месяцев; праздники по диаспоре`, months, months.length > 12 ? 'm13' : 'm12');
 }
 
 /* ---------- неделя для чистых календарей ---------- */
@@ -575,6 +605,7 @@ function daySheet(k) {
   const dates = [
     `<b>${RU_WD_LONG[weekday(k)]}, ${gText(k)}</b>`,
     `«Солнечная восьмёрка»: ${esc(v8Month(d.month).ru)} · ${esc(v8Week(d.week).ru)} · ${ORD_RU[d.day - 1]} день${state.kp ? ` (${esc(v8Month(d.month).kp)} · ${esc(v8Week(d.week).kp)} · ${esc(v8Num(d.day).kp)})` : ''}, ${d.yearNumber}-й год`,
+    ...(useSigns() ? [`знаками: <span class="pas sg-line">${dateSigns(d, state.signs === 'print' ? 'print' : 'parade')}</span>`] : []),
     `по старому стилю: ${esc(julianLabel(julianFromK(k)))}`,
     `по хиджре: ${esc(hijriLabel(hijriOf(k)))}`,
     `по еврейскому календарю: ${esc(hebrewLabel(hebrewFromK(k)))}`,
@@ -604,22 +635,30 @@ function daySheet(k) {
     const q = QUARTER_OF_PART[a.id];
     blocks.push(`<div class="part ${q}" style="top:${y(Math.max(a.t, start))};height:${(((b - Math.max(a.t, start)) / span) * 100).toFixed(3)}%"></div>`);
   }
+  // подписи рубежей не наезжают: шаг не меньше 4 % высоты колонки; линия — на своём времени
+  let last = -10;
   const lines = rub.map((r) => {
     const n = names[r.id];
     const p = parts[r.id];
+    const pos = ((Math.max(r.t, start) - start) / span) * 100;
+    const at = Math.max(pos, last + 4);
+    last = at;
     const kp = state.kp ? ` <span class="muted">${esc(n.kp)}${p ? ' → ' + esc(p.kp) : ''}</span>` : '';
-    return `<div class="rub${r.merged ? ' merged' : ''}" style="top:${y(Math.max(r.t, start))}"><b>${r.id}</b> ${esc(n.ru)} ${civilTime(r.t)}${kp}<br><span class="muted">${esc(n.how)}</span></div>`;
+    return `<div class="rub${r.merged ? ' merged' : ''}" style="top:${pos.toFixed(3)}%"></div>`
+      + `<div class="rub-l" style="top:calc(${at.toFixed(3)}% + 2px)"><b>${r.id}</b> ${esc(n.ru)} ${civilTime(r.t)}${kp}<br><span class="muted rub-how">${esc(n.how)}</span></div>`;
   }).join('');
   const now = Date.now();
   const nowLine = now >= start && now < end ? `<div class="nowline" style="top:${y(now)}" title="сейчас"></div>` : '';
-  const tzNote = tz === deviceTz ? '' : ` (${tz})`;
+  let off = '';
+  try { off = new Intl.DateTimeFormat('ru-RU', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(start).find((x) => x.type === 'timeZoneName').value.replace('GMT', 'UTC'); } catch { off = tz; }
+  const tzNote = ` (${off})`;
   return `<article class="sheet narrow">
     <div class="sh-title" style="text-align:left"><div class="t-main">Сутки</div></div>
     <p class="day-dates">${dates.join('<br>')}</p>
-    <p class="small muted">Сутки начинаются на закате ${civilTime(start)} накануне и кончаются на закате ${civilTime(end)} · ${esc(place.name || 'моё место')}</p>
+    <p class="small muted">Сутки начинаются на закате ${civilTime(start)} накануне и кончаются на закате ${civilTime(end)}; ${esc(place.name || 'моё место')}, время ${esc(tzNote.trim().replace(/[()]/g, ''))}.</p>
     <ul class="day-events">${evs.map((e) => `<li>${evHtml(e, true)}</li>`).join('') || '<li class="muted">Праздников и событий нет</li>'}</ul>
     <div class="day-cols">
-      <div class="day-col"><h4>Часы и получасы${esc(tzNote)}</h4>${ticks.join('')}${nowLine}</div>
+      <div class="day-col"><h4>Часы</h4>${ticks.join('')}${nowLine}</div>
       <div class="day-col"><h4>Солнечные рубежи и части суток</h4>${blocks.join('')}${lines}${nowLine}</div>
     </div>
     ${footHtml()}
@@ -629,19 +668,23 @@ function daySheet(k) {
 /* ---------- подписи ---------- */
 
 function legendHtml() {
-  const items = [];
-  items.push('<span><i class="sw" style="background:var(--wk-fri)"></i>пятница</span>');
-  items.push('<span><i class="sw" style="background:var(--wk-sat)"></i>суббота</span>');
-  items.push('<span><i class="sw" style="background:var(--wk-sun)"></i>воскресенье</span>');
-  const kinds = [];
-  if (state.orth) kinds.push('<b class="orthodox">православные праздники</b>');
-  if (state.musl) kinds.push('<b class="muslim">мусульманские</b>');
-  if (state.jew) kinds.push('<b class="jewish">иудейские</b>');
-  if (state.astro) kinds.push('<b class="astro">небо</b>', '<b class="eclipse">затмения</b>');
-  items.push(...kinds);
-  if (state.moon) items.push('<span>● новолуние, ◐ первая четверть, ○ полнолуние, ◑ последняя четверть</span>');
-  items.push('<span>☾ с вечера накануне: сутки начинаются на закате</span>');
-  return `<div class="legend">${items.join('')}</div>`;
+  const it = [];
+  it.push('<span class="lg"><i class="sw" style="background:var(--wk-fri)"></i>пятница</span>');
+  it.push('<span class="lg"><i class="sw sat" style="background:var(--wk-sat)"></i>суббота</span>');
+  it.push('<span class="lg"><i class="sw sun" style="background:var(--wk-sun)"></i>воскресенье</span>');
+  if (state.orth) it.push('<b class="orthodox">православные праздники</b>');
+  if (state.musl) it.push('<b class="muslim">мусульманские</b>');
+  if (state.jew) it.push('<b class="jewish">иудейские</b>');
+  if (state.astro) it.push('<b class="astro">небесные события</b>', '<b class="eclipse">затмения</b>');
+  const subs = [];
+  if (state.musl) subs.push('х — хиджра');
+  if (state.jew) subs.push('е — еврейская дата');
+  if (state.orth) subs.push('ст. — старый стиль');
+  if (subs.length && state.cal === 'v8') it.push(`<span>${subs.join(', ')}</span>`);
+  it.push('<span class="lg"><i class="lbar"></i>праздник на несколько дней</span>');
+  if (state.moon) it.push(`<span class="lg">${moonIcon('novolunie')} новолуние ${moonIcon('pervaya-chetvert')} первая четверть ${moonIcon('polnolunie')} полнолуние ${moonIcon('poslednyaya-chetvert')} последняя</span>`);
+  it.push('<span>☾ с вечера накануне: сутки начинаются на закате</span>');
+  return `<div class="legend">${it.join('')}</div>`;
 }
 
 function footHtml(credits = '') {
@@ -694,6 +737,7 @@ function render() {
   const { cal, view } = state;
   const k = anchor;
   let html = '';
+  try { sheetRange = range(); } catch { sheetRange = null; }
   try {
     if (view === 'day') html = daySheet(k);
     else if (cal === 'v8') {
@@ -839,7 +883,7 @@ async function start() {
     for (const id of ['orth', 'musl', 'jew']) $(`l-${id}`).checked = state[id];
     render();
   }));
-  document.querySelectorAll('input[name="view"], .checks input').forEach((el) => el.addEventListener('change', () => { readControls(); render(); }));
+  document.querySelectorAll('input[name="view"], input[name="signs"], .checks input').forEach((el) => el.addEventListener('change', () => { readControls(); render(); }));
   $('prev').addEventListener('click', () => { anchor = range().k0 - 1; if (state.view !== 'day') anchor = range().k0; render(); });
   $('next').addEventListener('click', () => { anchor = range().k1 + 1; render(); });
   $('today').addEventListener('click', () => { anchor = todayK(); render(); });
@@ -847,7 +891,7 @@ async function start() {
     const v = $('date').value;
     if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { anchor = Math.floor(Date.parse(v + 'T00:00:00Z') / DAY_MS); render(); }
   });
-  $('print').addEventListener('click', () => window.print());
+  $('print').addEventListener('click', async () => { try { await document.fonts.ready; } catch { /* без шрифтов */ } window.print(); });
   $('ics').addEventListener('click', downloadIcs);
   $('locate').addEventListener('click', locate);
   render();
