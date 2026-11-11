@@ -68,6 +68,7 @@ function restoreState() {
   try {
     const s = JSON.parse(store.get('sostav') || 'null');
     if (s) Object.assign(state, s);
+    if (document.querySelector(`input[name="view"][value="${state.view}"]`)?.disabled) state.view = 'month'; // год, неделя и сутки — в работе
   } catch { /* старое или испорченное значение */ }
   document.querySelector(`input[name="cal"][value="${state.cal}"]`).checked = true;
   document.querySelector(`input[name="view"][value="${state.view}"]`).checked = true;

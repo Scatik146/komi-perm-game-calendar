@@ -256,3 +256,5 @@
 
 .mh.mh-pure { grid-template-columns: minmax(0, 1fr); }
 .cal-v8 .not-v8 { display: none; }
+.seg .soon span { opacity: .5; cursor: default; }
+body:not(.cal-v8) #signs-box { display: none; }

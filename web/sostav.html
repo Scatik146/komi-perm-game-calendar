@@ -44,8 +44,9 @@
     <section class="sv-controls no-print" aria-labelledby="sv-title">
       <p class="sv-back"><a href="kalendar.html">← Календарь на сегодня</a></p>
       <h2 id="sv-title" class="list-title">Составить календарь</h2>
-      <p class="small sv-sub">Игровая реконструкция для книги и настольной игры, а также православный,
-        мусульманский и иудейский календари — на год, месяц, неделю или сутки.</p>
+      <p class="small sv-sub">«Солнечная восьмёрка» — игровая реконструкция для книги и настольной игры,
+        а также православный, коми-пермяцкий, мусульманский и иудейский календари. Выберите календарь,
+        отметьте, что показать, и напечатайте лист A4 или сохраните его в PDF.</p>
 
       <fieldset class="sv-group">
         <legend>Календарь</legend>
@@ -61,10 +62,10 @@
       <fieldset class="sv-group">
         <legend>На какой срок</legend>
         <div class="seg" role="radiogroup" id="view">
-          <label><input type="radio" name="view" value="year"> <span>Год</span></label>
           <label><input type="radio" name="view" value="month" checked> <span>Месяц</span></label>
-          <label><input type="radio" name="view" value="week"> <span>Неделя</span></label>
-          <label><input type="radio" name="view" value="day"> <span>Сутки</span></label>
+          <label class="soon"><input type="radio" name="view" value="year" disabled> <span>Год — скоро</span></label>
+          <label class="soon"><input type="radio" name="view" value="week" disabled> <span>Неделя — скоро</span></label>
+          <label class="soon"><input type="radio" name="view" value="day" disabled> <span>Сутки — скоро</span></label>
         </div>
       </fieldset>
 
