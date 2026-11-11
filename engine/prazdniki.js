@@ -73,14 +73,14 @@ export const ORTHODOX_FIXED = [
   { id: 'flor-lavr', jm: 8, jd: 18, ru: 'Флор и Лавр' },
   { id: 'pokrov', jm: 10, jd: 1, ru: 'Покров', kp: 'Покров лун' },
   { id: 'kazanskaya', jm: 10, jd: 22, ru: 'Казанская' },
-  { id: 'mihaylov', jm: 11, jd: 8, ru: 'Михайлов день' },
+  { id: 'mihaylov', jm: 11, jd: 8, ru: 'Михайлов день', kp: 'Микайлӧв лун' }, // Никонов 2025, Коса
   { id: 'nikola-zimniy', jm: 12, jd: 6, ru: 'Никола зимний', kp: 'Кольӧ лун' },
 ];
 
 // Подвижные — от Пасхи (дней).
 export const ORTHODOX_MOVABLE = [
   { id: 'maslenitsa', off: -55, ru: 'Масленица', kp: 'Масленьча', span: 7 },
-  { id: 'pasha', off: 0, ru: 'Пасха', kp: 'Ыджыд лун' },
+  { id: 'pasha', off: 0, ru: 'Пасха', kp: 'Ыджыт лун' }, // так у автора и в записях Никонова 2025 (Пелым)
   { id: 'semik', off: 46, ru: 'Семик', kp: 'Семик' },
   { id: 'troitsa', off: 49, ru: 'Троица', kp: 'Стрӧча' },
 ];
