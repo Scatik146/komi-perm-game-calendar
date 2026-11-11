@@ -806,29 +806,22 @@ function daySheet(k) {
 /* ---------- подписи ---------- */
 
 function legendHtml() {
+  // строка 1 — традиции, небо, затмения и фазы Луны; строка 2 — как читать полосы
   const line1 = [];
-  // плашки святых дней — только там, где день недели не написан словами (год «Солнечной восьмёрки»)
+  const line2 = [];
   if (state.cal === 'v8' && state.view === 'year') {
     line1.push('<span class="lg"><i class="sw" style="background:var(--wk-fri)"></i>пятница</span>');
-    line1.push('<span class="lg"><i class="sw sat" style="background:var(--wk-sat)"></i>суббота</span>');
-    line1.push('<span class="lg"><i class="sw sun" style="background:var(--wk-sun)"></i>воскресенье</span>');
+    line1.push('<span class="lg"><i class="sw" style="background:var(--wk-sat)"></i>суббота</span>');
+    line1.push('<span class="lg"><i class="sw" style="background:var(--wk-sun)"></i>воскресенье</span>');
   }
-  // названия традиций — только если на листе их больше одной
   const faiths = [state.orth && '<b class="orthodox">православные праздники</b>', state.musl && '<b class="muslim">мусульманские</b>', state.jew && '<b class="jewish">иудейские</b>'].filter(Boolean);
   if (faiths.length > 1 || (faiths.length && state.astro)) line1.push(...faiths);
   if (state.astro) line1.push('<b class="astro">небесные события</b>', '<b class="eclipse">затмения</b>');
-  const subs = [];
-  if (state.musl) subs.push('х — хиджра');
-  if (state.jew) subs.push('е — еврейская дата');
-  if (state.orth) subs.push('ст. — старый стиль');
-  if (faiths.length) line1.push('<span class="lg"><i class="segmark"></i>праздник — от заката до заката: сутки начинаются вечером, накануне указанной даты</span>');
-  else if (state.cal === 'v8') line1.push('<span>сутки начинаются вечером, накануне указанной даты</span>');
-  if (state.astro) line1.push('<span class="lg"><i class="lbar"></i>небесное событие на несколько дней</span>');
-  // первая строка — фазы Луны, вторая — праздники и небо
-  const rows = [];
-  if (state.moon) rows.push(`<div class="legend legend-moon"><span class="lg">${moonIcon('novolunie')} новолуние</span><span class="lg">${moonIcon('pervaya-chetvert')} первая четверть</span><span class="lg">${moonIcon('polnolunie')} полнолуние</span><span class="lg">${moonIcon('poslednyaya-chetvert')} последняя четверть</span></div>`);
-  rows.push(`<div class="legend">${line1.join('')}</div>`);
-  return rows.join('');
+  if (state.moon) line1.push(`<span class="lg">${moonIcon('novolunie')} новолуние</span><span class="lg">${moonIcon('pervaya-chetvert')} первая четверть</span><span class="lg">${moonIcon('polnolunie')} полнолуние</span><span class="lg">${moonIcon('poslednyaya-chetvert')} последняя четверть</span>`);
+  if (faiths.length) line2.push('<span class="lg"><i class="segmark"></i>праздник — от заката до заката: сутки начинаются вечером, накануне указанной даты</span>');
+  else if (state.cal === 'v8') line2.push('<span>сутки начинаются вечером, накануне указанной даты</span>');
+  if (state.astro) line2.push('<span class="lg"><i class="lbar"></i>небесное событие на несколько дней</span>');
+  return [line1, line2].filter((l) => l.length).map((l) => `<div class="legend">${l.join('')}</div>`).join('');
 }
 
 function footHtml(credits = '') {
