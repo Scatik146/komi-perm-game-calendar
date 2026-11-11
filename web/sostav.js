@@ -46,6 +46,7 @@ const state = {
 const DEFAULT_LAYERS = {
   v8: { orth: false, musl: false, jew: false },
   orth: { orth: true, musl: false, jew: false },
+  komi: { orth: true, musl: false, jew: false },
   musl: { orth: false, musl: true, jew: false },
   jew: { orth: false, musl: false, jew: true },
 };
@@ -159,10 +160,11 @@ function shabbatEvents(k0, k1) {
 function collectEvents(k0, k1) {
   // праздники берём на день дальше: праздник следующего дня начинается на закате последнего
   const faith = [];
-  if (state.orth) faith.push(...orthodoxEvents(k0, k1 + 1));
+  const komi = state.cal === 'komi';
+  if (state.orth) faith.push(...orthodoxEvents(k0, k1 + 1).filter((e) => !komi || e.kp).map((e) => (komi ? { ...e, ru: e.kp } : e)));
   if (state.musl) faith.push(...muslimEvents(k0, k1 + 1));
   if (state.jew) faith.push(...jewishEvents(k0, k1 + 1), ...shabbatEvents(k0, k1 + 1));
-  const list = faith.filter((e) => e.k <= k1);
+  const list = faith.filter((e) => e.k <= k1 && !e.minor);
   if (state.astro || state.moon) {
     for (const e of astroEvents(k0, k1, place, { phases: state.moon })) {
       if (e.kind === 'moon' ? state.moon : state.astro) list.push(e);
@@ -605,7 +607,8 @@ function orthMonth(y, m, compact) {
   const j0 = julianFromK(k0); const j1 = julianFromK(k1);
   const title = compact ? RU_MON[m][0].toUpperCase() + RU_MON[m].slice(1) : `${RU_MON[m][0].toUpperCase() + RU_MON[m].slice(1)} ${y}`;
   const line = `по старому стилю: ${j0.day} ${RU_MON_GEN[j0.month - 1]} – ${j1.day} ${RU_MON_GEN[j1.month - 1]}`;
-  return pureMonth({ k0, k1, firstWd: 1, rtl: false, title, line: `${fmtSpan(k0, k1)} · ${line}`, compact, sub: { jul: true, musl: state.musl, jew: state.jew } });
+  const what = state.cal === 'komi' ? 'коми-пермяцкие праздники' : 'православные праздники';
+  return pureMonth({ k0, k1, firstWd: 1, rtl: false, title, line: `${fmtSpan(k0, k1)}; ${what}; ${line}`, compact, sub: { jul: true, musl: state.musl, jew: state.jew } });
 }
 
 /* ---------- мусульманский (месяцы хиджры) ---------- */
@@ -660,7 +663,7 @@ function orthYear(k) {
   const y = gYear(k);
   const months = [];
   for (let m = 0; m < 12; m++) months.push(orthMonth(y, m, true));
-  return pureYearSheet(`${y} год`, 'Гражданский календарь с православными праздниками; мелко — дата по старому стилю', months);
+  return pureYearSheet(`${y} год`, `Гражданский календарь, ${state.cal === 'komi' ? 'коми-пермяцкие праздники' : 'православные праздники'}; мелко — дата по старому стилю`, months);
 }
 
 function muslYear(k) {
@@ -700,7 +703,7 @@ function pureWeek(k, firstWd, rtl, headFn, title) {
   const today = todayK();
   const cols = [];
   for (let kk = k0; kk <= k1; kk++) {
-    cols.push(dayColumn(kk, ev.byDay, today, { head: headFn(kk), musl: state.musl || state.cal === 'musl', jew: state.jew || state.cal === 'jew', jul: state.orth || state.cal === 'orth' }));
+    cols.push(dayColumn(kk, ev.byDay, today, { head: headFn(kk), musl: state.musl || state.cal === 'musl', jew: state.jew || state.cal === 'jew', jul: state.orth || state.cal === 'orth' || state.cal === 'komi' }));
   }
   return `<article class="sheet">
     <div class="sh-head"><div></div><div class="sh-title"><div class="t-main">${RU(title)}</div><div class="t-line">${RU(fmtSpan(k0, k1))}</div></div><div></div></div>
@@ -836,11 +839,11 @@ function range() {
     return v8WeekRange(k);
   }
   if (view === 'week') {
-    const first = cal === 'orth' ? 1 : cal === 'musl' ? 6 : 0;
+    const first = cal === 'orth' || cal === 'komi' ? 1 : cal === 'musl' ? 6 : 0;
     const k0 = k - ((weekday(k) - first + 7) % 7);
     return { k0, k1: k0 + 6 };
   }
-  if (cal === 'orth') {
+  if (cal === 'orth' || cal === 'komi') {
     const y = gYear(k);
     return view === 'year' ? { k0: kOf(y, 0, 1), k1: kOf(y + 1, 0, 1) - 1 } : gregMonthRange(y, gMonth(k));
   }
@@ -864,7 +867,7 @@ function render() {
     else if (cal === 'v8') {
       const d = dateOfDay(k);
       html = view === 'year' ? v8YearSheet(d.yearNumber) : view === 'month' ? v8MonthSheet(d.yearNumber, d.month) : v8WeekSheet(k);
-    } else if (cal === 'orth') {
+    } else if (cal === 'orth' || cal === 'komi') {
       html = view === 'year' ? orthYear(k) : view === 'month' ? orthMonth(gYear(k), gMonth(k)) : pureWeek(k, 1, false, (kk) => RU_WD_LONG[weekday(kk)], 'Неделя');
     } else if (cal === 'musl') {
       html = view === 'year' ? muslYear(k) : view === 'month' ? muslMonth(k) : pureWeek(k, 6, true, (kk) => RU_WD_LONG[weekday(kk)], 'Неделя');
@@ -886,7 +889,8 @@ function notesHtml() {
   n.push('<p>Сутки «Солнечной восьмёрки», хиджры и еврейского календаря начинаются на закате, поэтому событие, случившееся вечером после заката, стоит на следующем дне — как «ночь на…».</p>');
   if (state.musl || state.cal === 'musl') n.push('<p>Хиджра — расчётный календарь Умм аль-Кура. В России начало месяца объявляют по наблюдению молодой Луны, и оно может отличаться на день.</p>');
   if (state.jew || state.cal === 'jew') n.push('<p>Иудейские праздники — по диаспоре: Песах 8 дней, Шавуот 2 дня, Симхат Тора отдельно.</p>');
-  if (state.orth || state.cal === 'orth') n.push('<p>Православные праздники — по юлианскому календарю Русской православной церкви; Пасха — по юлианской пасхалии.</p>');
+  if (state.cal === 'komi') n.push('<p>Коми-пермяцкий календарь: только праздники, у которых есть коми-пермяцкое название в нашем списке (календарь автора 2025/26); даты — по юлианскому календарю РПЦ.</p>');
+  else if (state.orth || state.cal === 'orth') n.push('<p>Православные праздники — по юлианскому календарю Русской православной церкви; Пасха — по юлианской пасхалии.</p>');
   if (state.astro) n.push('<p>Затмения показаны, только если их видно в выбранном месте. Суперлуние — полнолуние ближе 90 % пути от апогея к перигею своего месяца. Расчёты неба — библиотека Astronomy Engine (MIT).</p>');
   return n.join('');
 }

@@ -89,8 +89,8 @@
 .cell .g small { font: 400 0.65rem/1 var(--sans); margin-left: 0.15rem; }
 .cell .wd { font-size: 0.65rem; color: var(--psoft); }
 .cell.fri .g { background: var(--wk-fri); color: #175c35; }
-.cell.sat .g { background: var(--wk-sat); color: #1b3f6e; box-shadow: inset 0 0 0 1px #24548f; }
-.cell.sun .g { background: var(--wk-sun); color: #8c1f17; box-shadow: inset 0 -2px 0 #b2302a; }
+.cell.sat .g { background: var(--wk-sat); color: #1b3f6e; }
+.cell.sun .g { background: var(--wk-sun); color: #8c1f17; }
 .cell.fri .wd { color: var(--c-musl); font-weight: 700; } .cell.sat .wd { color: var(--c-jew); font-weight: 700; } .cell.sun .wd { color: var(--c-orth); font-weight: 700; }
 .cell .sub { display: flex; flex-wrap: wrap; gap: 0.1rem 0.4rem; font-size: 0.72rem; color: var(--psoft); font-variant-numeric: tabular-nums; }
 .sub i, .line i { font-style: normal; font-size: 0.55rem; color: var(--psoft); margin-right: 0.08rem; }
@@ -140,7 +140,7 @@
 .legend b.orthodox { color: var(--c-orth); } .legend b.muslim { color: var(--c-musl); }
 .legend b.jewish { color: var(--c-jew); } .legend b.astro { color: var(--c-astro); } .legend b.eclipse { color: var(--c-ecl); }
 .legend .sw { display: inline-block; width: 0.9rem; height: 0.9rem; border-radius: 0.15rem; box-shadow: inset 0 0 0 0.5px #00000033; }
-.legend .sw.sat { box-shadow: inset 0 0 0 1px #24548f; } .legend .sw.sun { box-shadow: inset 0 -2px 0 #b2302a; }
+.legend .sw.sat { } .legend .sw.sun { }
 .sh-foot { margin-top: 0.5rem; font-size: 0.68rem; color: var(--psoft); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 
 /* год */
@@ -160,7 +160,7 @@
 .ym .cell .dot i { width: 0.34rem; height: 0.34rem; display: block; }
 .dot i.muslim { border-radius: 50%; } .dot i.jewish { border-radius: 0; } .dot i.orthodox { transform: rotate(45deg) scale(.85); }
 .dot i.astro, .dot i.eclipse { border-radius: 50%; width: 0.26rem; height: 0.26rem; }
-.ym .cell.fri .g { background: var(--wk-fri); } .ym .cell.sat .g { background: var(--wk-sat); box-shadow: inset 0 0 0 1px #24548f; } .ym .cell.sun .g { background: var(--wk-sun); box-shadow: inset 0 -1.5px 0 #b2302a; }
+.ym .cell.fri .g { background: var(--wk-fri); } .ym .cell.sat .g { background: var(--wk-sat); } .ym .cell.sun .g { background: var(--wk-sun); }
 .dot i.orthodox { background: var(--c-orth); } .dot i.muslim { background: var(--c-musl); }
 .dot i.jewish { background: var(--c-jew); } .dot i.astro { background: var(--c-astro); } .dot i.eclipse { background: var(--c-ecl); }
 .ym-list { margin: 0.25rem 0 0; padding: 0; list-style: none; font-size: 0.6rem; line-height: 1.2; }
@@ -176,8 +176,8 @@
 .wday .wh small { display: block; font-weight: 400; color: var(--psoft); }
 .wday .g { font: 700 3rem/1 var(--serif); padding: 0.1rem 0.3rem; border-radius: 0.2rem; align-self: flex-start; }
 .wday.fri .g { background: var(--wk-fri); color: #175c35; }
-.wday.sat .g { background: var(--wk-sat); color: #1b3f6e; box-shadow: inset 0 0 0 1px #24548f; }
-.wday.sun .g { background: var(--wk-sun); color: #8c1f17; box-shadow: inset 0 -2px 0 #b2302a; }
+.wday.sat .g { background: var(--wk-sat); color: #1b3f6e; }
+.wday.sun .g { background: var(--wk-sun); color: #8c1f17; }
 
 .wday .line { font-size: 0.75rem; color: var(--psoft); font-variant-numeric: tabular-nums; }
 .wday.today { outline: 3px solid var(--c-astro); outline-offset: -3px; }
