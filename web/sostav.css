@@ -54,7 +54,7 @@
 .mh-name { font: 700 2.3rem/1.05 var(--serif); letter-spacing: 0.005em; }
 .mh-kp { margin: 0.1rem 0 0; font: 400 1.35rem/1.15 var(--serif); color: var(--bronze); }
 .mh-dates { margin: 0.35rem 0 0; font-weight: 700; }
-.mh-year, .mh-meta { margin: 0.1rem 0 0; font-size: 0.82rem; color: var(--psoft); }
+.mh-year, .mh-meta { margin: 0.05rem 0 0; font-size: 0.82rem; color: var(--psoft); }
 .mh-signs { display: flex; gap: 0.8rem; align-items: center; }
 .mh-pasbox { width: 4.6rem; height: 4.6rem; position: relative; display: grid; place-items: center; }
 .mh-pasbox::before { content: ""; position: absolute; inset: 0; border: 1px solid var(--bronze); transform: rotate(45deg) scale(0.72); }
