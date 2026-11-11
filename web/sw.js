@@ -1,5 +1,5 @@
 // Офлайн-кэш: сайт работает без сети после первого открытия.
-const CACHE = 'shondi-v17';
+const CACHE = 'shondi-v18';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
   'anbur.html', 'anbur.css', 'anbur.js', 'plashka.js', 'fonts/NotoSansOldPermic-Regular.ttf', 'fonts/Pasy.ttf',
@@ -7,7 +7,7 @@ const ASSETS = [
   'engine/index.js', 'engine/sun.js', 'engine/sutki.js', 'engine/moon.js', 'engine/anbur.js', 'engine/kalendar.js', 'engine/pasy.js', 'engine/hijri.js',
   'engine/evrei.js', 'engine/prazdniki.js', 'engine/nebo.js', 'engine/astronomy.js',
   'data/places.json', 'data/names.json', 'data/anbur.json', 'data/kalendar.json', 'data/pasy.json', 'data/kartinki.json',
-  'kartinki/gerb-cherdyn.png', 'kartinki/gerb-gainy.png', 'kartinki/gerb-kochevo.png', 'kartinki/gerb-kosa.png', 'kartinki/gerb-koygorodok.png', 'kartinki/gerb-kudymkar.png', 'kartinki/gerb-yurla.png', 'kartinki/gerb-yusva.png', 'kartinki/vid-cherdyn.jpg', 'kartinki/vid-gainy.jpg', 'kartinki/vid-kosa.jpg', 'kartinki/vid-koygorodok.jpg', 'kartinki/vid-kudymkar.jpg', 'kartinki/vid-yurla.jpg', 'kartinki/vid-yusva.jpg', 'kartinki/zver-chuzhmor.jpg', 'kartinki/zver-dozmor.jpg', 'kartinki/zver-koch.jpg', 'kartinki/zver-osh.jpg', 'kartinki/zver-sir.jpg', 'kartinki/zver-ur.jpg', 'kartinki/zver-vormos.jpg', 'kartinki/zver-yus.jpg',
+  'kartinki/gerb-cherdyn.png', 'kartinki/gerb-gainy.png', 'kartinki/gerb-kochevo.png', 'kartinki/gerb-kosa.png', 'kartinki/gerb-koygorodok.png', 'kartinki/gerb-kudymkar.png', 'kartinki/gerb-yurla.png', 'kartinki/gerb-yusva.png',
 ];
 
 self.addEventListener('install', (e) => {
