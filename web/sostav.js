@@ -451,6 +451,30 @@ function creditsHtml(p) {
   return `Викисклад: ${items.map(([what, x]) => `${esc(what)} — ${esc(x.author)}, ${esc(x.license)} («${esc(x.title)}»${frag(x)})`).join('; ')}.`;
 }
 
+/**
+ * Строки других календарей для шапки: хиджра — своей строкой; еврейский и старый стиль — другой.
+ * С какой и по какую дату; год у каждого конца, если годы разные.
+ */
+function otherCalLines(k0, k1, { musl, jew, jul }) {
+  const span2 = (d0, y0, d1, y1) => (y0 === y1 ? `${d0} – ${d1} ${y0}` : `${d0} ${y0} – ${d1} ${y1}`);
+  const lines = [];
+  if (musl) {
+    const a = hijriOf(k0); const b = hijriOf(k1);
+    lines.push(`По хиджре: ${span2(`${a.day} ${HIJRI_MONTHS_RU[a.month - 1]}`, a.year, `${b.day} ${HIJRI_MONTHS_RU[b.month - 1]}`, b.year)}.`);
+  }
+  const line3 = [];
+  if (jew) {
+    const a = hebrewFromK(k0); const b = hebrewFromK(k1);
+    line3.push(`По еврейскому календарю: ${span2(`${a.day} ${hebrewMonthName(a.year, a.month)}`, a.year, `${b.day} ${hebrewMonthName(b.year, b.month)}`, b.year)}.`);
+  }
+  if (jul) {
+    const a = julianFromK(k0); const b = julianFromK(k1);
+    line3.push(`По старому стилю: ${span2(`${a.day} ${RU_MON_GEN[a.month - 1]}`, a.year, `${b.day} ${RU_MON_GEN[b.month - 1]}`, b.year)}.`);
+  }
+  if (line3.length) lines.push(line3.join(' '));
+  return lines;
+}
+
 /** Шапка листа месяца или недели «Солнечной восьмёрки». */
 function v8Head(n, m, k0, k1, title, kpTitle, sub) {
   const p = v8Pictures(m);
@@ -459,23 +483,7 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
   const dist = p.dist;
   const days = k1 - k0 + 1;
   // вторая строка — только другие календари; год у каждого конца, если годы разные
-  // с какой и по какую дату; год у каждого конца, если годы разные
-  const span2 = (d0, y0, d1, y1) => (y0 === y1 ? `${d0} – ${d1} ${y0}` : `${d0} ${y0} – ${d1} ${y1}`);
-  const other = []; // строка хиджры; строка еврейского календаря и старого стиля
-  if (state.musl) {
-    const a = hijriOf(k0); const b = hijriOf(k1);
-    other.push(`По хиджре: ${span2(`${a.day} ${HIJRI_MONTHS_RU[a.month - 1]}`, a.year, `${b.day} ${HIJRI_MONTHS_RU[b.month - 1]}`, b.year)}.`);
-  }
-  const line3 = [];
-  if (state.jew) {
-    const a = hebrewFromK(k0); const b = hebrewFromK(k1);
-    line3.push(`По еврейскому календарю: ${span2(`${a.day} ${hebrewMonthName(a.year, a.month)}`, a.year, `${b.day} ${hebrewMonthName(b.year, b.month)}`, b.year)}.`);
-  }
-  if (state.orth) {
-    const a = julianFromK(k0); const b = julianFromK(k1);
-    line3.push(`По старому стилю: ${span2(`${a.day} ${RU_MON_GEN[a.month - 1]}`, a.year, `${b.day} ${RU_MON_GEN[b.month - 1]}`, b.year)}.`);
-  }
-  if (line3.length) other.push(line3.join(' '));
+  const other = otherCalLines(k0, k1, { musl: state.musl, jew: state.jew, jul: state.orth });
   // в ромбе — пас месяца (решение автора: вместо фото зверя); справа — герб района
   const rhomb = p.pas
     ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in mh-rhomb-pas"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div></div>`
@@ -607,7 +615,7 @@ function sevenRows(k0, k1, firstWd) {
 const wdHeads = (first) => Array.from({ length: 7 }, (_, i) => RU_WD_LONG[(first + i) % 7]);
 const wdHeadsShort = (first) => Array.from({ length: 7 }, (_, i) => RU_WD[(first + i) % 7]);
 
-function pureMonth({ k0, k1, firstWd, rtl, title, line, compact, mainNum, sub }) {
+function pureMonth({ k0, k1, firstWd, rtl, title, line, compact, mainNum, sub, note = '', other = {} }) {
   const ev = collectEvents(k0, k1);
   const opts = { today: todayK(), compact, mainNum, sub, segs: ev.segs };
   const grid = gridHtml({ rows: sevenRows(k0, k1, firstWd), heads: compact ? wdHeadsShort(firstWd) : wdHeads(firstWd), rtl, labelCol: false, evMap: ev.byDay, opts });
@@ -616,10 +624,14 @@ function pureMonth({ k0, k1, firstWd, rtl, title, line, compact, mainNum, sub })
     return `<div class="ym"><h4><span>${RU(title)}</span><small>${RU(`${gShort(k0)} – ${gShort(k1)}`)}</small></h4>${grid}`
       + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${mainNum ? mainNum(e.k) : gDay(e.k)}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
   }
+  const days = k1 - k0 + 1;
+  const lines = otherCalLines(k0, k1, other);
   return `<article class="sheet">
-    <div class="sh-head"><div></div><div class="sh-title">
-      <div class="t-main">${RU(title)}</div><div class="t-line">${RU(line)}</div>
-    </div><div></div></div>
+    <header class="mh mh-pure"><div class="mh-text">
+      <h3 class="mh-name">${RU(title)}</h3>
+      <p class="mh-dates">${RU(`${fmtSpan(k0, k1)}, ${days} ${plural(days, 'день', 'дня', 'дней')}.`)}${note ? ` <span class="mh-year">${RU(note)}</span>` : ''}</p>
+      ${lines.map((o) => `<p class="mh-meta">${RU(o)}</p>`).join('')}
+    </div></header>
     ${grid}${legendHtml()}${footHtml()}
   </article>`;
 }
@@ -628,9 +640,8 @@ function orthMonth(y, m, compact) {
   const { k0, k1 } = gregMonthRange(y, m);
   const j0 = julianFromK(k0); const j1 = julianFromK(k1);
   const title = compact ? RU_MON[m][0].toUpperCase() + RU_MON[m].slice(1) : `${RU_MON[m][0].toUpperCase() + RU_MON[m].slice(1)} ${y}`;
-  const line = `по старому стилю: ${j0.day} ${RU_MON_GEN[j0.month - 1]} – ${j1.day} ${RU_MON_GEN[j1.month - 1]}`;
-  const what = state.cal === 'komi' ? 'коми-пермяцкие праздники' : 'православные праздники';
-  return pureMonth({ k0, k1, firstWd: 1, rtl: false, title, line: `${fmtSpan(k0, k1)}; ${what}; ${line}`, compact, sub: { jul: true, musl: state.musl, jew: state.jew } });
+  const what = state.cal === 'komi' ? 'Коми-пермяцкие праздники.' : 'Православные праздники.';
+  return pureMonth({ k0, k1, firstWd: 1, rtl: false, title, note: what, compact, sub: { jul: true, musl: state.musl, jew: state.jew }, other: { musl: state.musl, jew: state.jew, jul: true } });
 }
 
 /* ---------- мусульманский (месяцы хиджры) ---------- */
@@ -650,9 +661,10 @@ function muslMonth(k, compact) {
   const title = compact ? cap(name) : `${cap(name)} ${h.year} г. хиджры`;
   return pureMonth({
     k0, k1, firstWd: 6, rtl: true, title, compact,
-    line: `${fmtSpan(k0, k1)} · ${k1 - k0 + 1} ${plural(k1 - k0 + 1, 'день', 'дня', 'дней')} · неделя с субботы, пятница — последний день`,
+    note: 'Неделя с субботы, пятница — последний день.',
     mainNum: (kk) => hijriOf(kk).day,
     sub: { jul: state.orth, musl: false, jew: state.jew },
+    other: { jew: state.jew, jul: state.orth },
   });
 }
 
@@ -666,9 +678,10 @@ function jewMonth(k, compact) {
   const title = compact ? cap(name) : `${cap(name)} ${h.year}`;
   return pureMonth({
     k0, k1, firstWd: 0, rtl: true, title, compact,
-    line: `${fmtSpan(k0, k1)} · ${k1 - k0 + 1} ${plural(k1 - k0 + 1, 'день', 'дня', 'дней')} · неделя с воскресенья, суббота — последний день`,
+    note: 'Неделя с воскресенья, суббота — последний день. Праздники по диаспоре.',
     mainNum: (kk) => hebrewFromK(kk).day,
     sub: { jul: state.orth, musl: state.musl, jew: false },
+    other: { musl: state.musl, jul: state.orth },
   });
 }
 

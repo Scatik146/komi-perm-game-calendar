@@ -253,3 +253,5 @@
 /* в тесной клетке ужимаются мелкие даты, а не подписи праздников */
 .cell .sub { min-height: 0; overflow: hidden; flex: 0 1 auto; }
 .cell .evs { flex-shrink: 0; }
+
+.mh.mh-pure { grid-template-columns: minmax(0, 1fr); }
