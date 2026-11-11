@@ -97,12 +97,12 @@
 .cell .sub .h { padding: 0 0.2rem; border-radius: 0.15rem; }
 
 .moon-i { width: 0.75rem; height: 0.75rem; display: inline-block; vertical-align: -0.1rem; }
-.cell .moon { position: absolute; right: 0.25rem; bottom: 0.2rem; line-height: 0; }
+.cell .moon { position: absolute; right: 0.3rem; top: 1.35rem; line-height: 0; }
 .ev { font-size: 0.72rem; line-height: 1.15; font-weight: 700; }
 .ev .note { font-weight: 400; color: var(--psoft); }
 /* праздник — от заката до заката: полоса цвета веры и тонкий пунктир на закатах.
    В письме справа налево время в клетке идёт справа налево, в православном — слева направо. */
-.cell { overflow: hidden; }
+.cell { overflow-x: visible; overflow-y: clip; }
 .cell .seg { position: absolute; height: 0.2rem; bottom: calc(0.15rem + var(--row) * 0.3rem); width: var(--w); opacity: .6; }
 .cell .vl { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed; opacity: .85; }
 .grid.rtl .cell .seg { right: var(--from); }
@@ -216,7 +216,7 @@
   .sheet > .grid { grid-template-rows: auto; grid-auto-rows: minmax(0, 1fr); }
   .sheet > .week-grid { grid-auto-rows: minmax(0, 1fr); }
   .wday { min-height: 0; overflow: hidden; }
-  .cell { min-height: 0; overflow: hidden; }
+  .cell { min-height: 0; overflow-x: visible; overflow-y: clip; }
   .cell .ev { font-size: 0.66rem; line-height: 1.08; }
   .cell .ev .kpn { display: block; }
   .cell.today, .wday.today { outline: none; }
@@ -238,3 +238,10 @@
 .sheet .anbur { font-family: "Anbur", var(--serif); letter-spacing: 0.02em; }
 .mh-name .anbur { font-size: 0.95em; }
 .grid .gh .anbur, .grid .wl .anbur { font-size: 1.05em; }
+
+/* подпись праздника — внизу клетки над своей полосой, не дальше пунктира конца */
+.cell .evs { margin-top: auto; display: flex; flex-direction: column; gap: 0.05rem; position: relative; z-index: 2; }
+.grid.rtl .cell .evs { direction: rtl; }
+.cell .evl { width: var(--lw); max-width: none; padding: 0 0.15rem; box-sizing: border-box; direction: ltr; overflow-wrap: anywhere; }
+.grid.rtl .cell .evl { text-align: right; }
+.cell .moon { z-index: 1; }

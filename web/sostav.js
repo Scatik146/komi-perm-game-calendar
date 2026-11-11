@@ -332,8 +332,26 @@ function dayCell(k, evMap, opts) {
   const top = opts.mainNum
     ? `<span class="g">${opts.mainNum(k)}</span><span class="wd">${gDay(k)} ${RU(RU_MON_SHORT[gMonth(k)])} · ${RU(RU_WD[weekday(k)])}</span>`
     : `<span class="g">${g}</span><span class="wd">${RU(RU_WD[weekday(k)])}</span>`;
+  // праздники веры — внизу клетки, над своими полосами, в пределах своего пунктира
+  const faith = opts.segs ? evs.filter((e) => !e.cont && !e.minor && FAITH.has(e.kind)) : [];
+  const other = evs.filter((e) => !(faith.includes(e)) && !e.cont && e.kind !== 'moon');
+  const segHere = (opts.segs && opts.segs.get(k)) || [];
+  const lanes = segHere.length ? Math.max(...segHere.map((x) => x.row)) + 1 : 0;
+  const labels = faith.map((e) => {
+    const a = e.span ? e.span[0] : e.k;
+    const b = e.span ? e.span[1] : e.k;
+    const seg = segHere.find((x) => x.id === `${e.id}:${a}`);
+    // ширина: от начала суток клетки до пунктира конца; многодневный — вдоль строки
+    const rowLeft = (opts.ncols ?? 1) - 1 - (opts.col ?? 0);
+    const lastHere = Math.min(b, k + rowLeft);
+    const width = (lastHere - k) + (lastHere === b ? sunsetFrac(b) : 1);
+    return { e, lane: seg ? seg.row : 0, width };
+  }).sort((p, q) => q.lane - p.lane);
+  const evs2 = labels.length
+    ? `<div class="evs" style="padding-bottom:calc(0.2rem + ${lanes} * 0.3rem)">${labels.map(({ e, width }) => `<div class="ev evl ${e.kind}" style="--lw:${(width * 100).toFixed(1)}%" title="${esc(e.ru)}">${labelHtml(e)}</div>`).join('')}</div>`
+    : '';
   return `<div class="${cls}"><div class="top">${top}</div>`
-    + `<div class="sub">${subDates(k, opts.sub)}</div>${x.html}${x.bands}${x.moon}${segsHtml(k, opts.segs)}</div>`;
+    + `<div class="sub">${subDates(k, opts.sub)}</div>${other.map((e) => evHtml(e, false, true)).join('')}${evs2}${x.bands}${x.moon}${segsHtml(k, opts.segs)}</div>`;
 }
 
 /**
@@ -353,7 +371,7 @@ function gridHtml({ rows, heads, rtl, labelCol, evMap, opts }) {
     r.days.forEach((k, i) => {
       if (k === null) { h += '<div class="cell empty"></div>'; return; }
       if (typeof k === 'object') { h += `<div class="cell empty">${opts.compact ? '' : segsHtml(k.out, opts.segs)}</div>`; return; }
-      h += dayCell(k, evMap, { ...opts, first, rowStart: i === 0 });
+      h += dayCell(k, evMap, { ...opts, first, rowStart: i === 0, col: i, ncols: r.days.length });
       first = false;
     });
   }
