@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Составить календарь — Солнечная восьмёрка</title>
+  <meta name="description" content="Календарь на год, месяц, неделю или сутки по «Солнечной восьмёрке» — игровой реконструкции для книги и настольной игры, — а также православный, мусульманский и иудейский календари с праздниками, фазами Луны и затмениями для выбранного места.">
+  <meta name="theme-color" content="#1d2b3a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="anbur.css">
+  <link rel="stylesheet" href="sostav.css">
+  <script type="module" src="sostav.js"></script>
+</head>
+<body data-quarter="lun" class="sostav-page">
+  <header class="bar no-print">
+    <h1 class="sr">Составить календарь</h1>
+    <nav class="tabs" aria-label="Разделы">
+      <a class="tab" href="./">
+        <span class="tab-ru">Солнечные часы</span>
+        <span class="tab-kp">Шонді</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇</span>
+      </a>
+      <a class="tab" href="kalendar.html" aria-current="page">
+        <span class="tab-ru">Календарь</span>
+        <span class="tab-kp">Шонді кыкьямыс</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇ 𐍚𐍧𐍚𐍰𐍴𐍜𐍧𐍡</span>
+      </a>
+      <a class="tab" href="anbur.html">
+        <span class="tab-ru">Пишем анбуром</span>
+        <span class="tab-kp">Анбурӧн гижам</span>
+        <span class="tab-anb anbur" aria-hidden="true">𐍐𐍝𐍑𐍣𐍠𐍩𐍝 𐍒𐍙𐍕𐍐𐍜</span>
+      </a>
+    </nav>
+    <div class="where">
+      <label for="place" class="sr">Место</label>
+      <select id="place"></select>
+      <button type="button" id="locate">Где я</button>
+    </div>
+  </header>
+
+  <main class="sostav">
+    <section class="sv-controls no-print" aria-labelledby="sv-title">
+      <p class="sv-back"><a href="kalendar.html">← Календарь на сегодня</a></p>
+      <h2 id="sv-title" class="list-title">Составить календарь</h2>
+      <p class="small sv-sub">«Солнечная восьмёрка» — игровая реконструкция для книги и настольной игры,
+        а также православный, коми-пермяцкий, мусульманский и иудейский календари. Выберите календарь,
+        отметьте, что показать, и напечатайте лист A4 или сохраните его в PDF.</p>
+
+      <fieldset class="sv-group">
+        <legend>Календарь</legend>
+        <div class="seg" role="radiogroup" id="cal">
+          <label><input type="radio" name="cal" value="v8" checked> <span>Солнечная восьмёрка</span></label>
+          <label><input type="radio" name="cal" value="orth"> <span>Православный</span></label>
+          <label><input type="radio" name="cal" value="komi"> <span>Коми-пермяцкий</span></label>
+          <label><input type="radio" name="cal" value="musl"> <span>Мусульманский</span></label>
+          <label><input type="radio" name="cal" value="jew"> <span>Иудейский</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sv-group">
+        <legend>На какой срок</legend>
+        <div class="seg" role="radiogroup" id="view">
+          <label><input type="radio" name="view" value="month" checked> <span>Месяц</span></label>
+          <label class="soon"><input type="radio" name="view" value="year" disabled> <span>Год — скоро</span></label>
+          <label class="soon"><input type="radio" name="view" value="week" disabled> <span>Неделя — скоро</span></label>
+          <label class="soon"><input type="radio" name="view" value="day" disabled> <span>Сутки — скоро</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sv-group" id="signs-box">
+        <legend>Дни и недели «Солнечной восьмёрки»</legend>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="signs" value="words" checked> <span>Словами</span></label>
+          <label><input type="radio" name="signs" value="print"> <span>Печатными знаками</span></label>
+          <label><input type="radio" name="signs" value="parade"> <span>Парадными резами</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sv-group">
+        <legend>Надписи</legend>
+        <div class="seg" role="radiogroup">
+          <label class="not-v8"><input type="radio" name="script" value="ru" checked> <span>По-русски</span></label>
+          <label class="not-v8"><input type="radio" name="script" value="kp"> <span>По-русски и по-коми-пермяцки</span></label>
+          <label><input type="radio" name="script" value="kpo"> <span>Только по-коми-пермяцки</span></label>
+          <label class="not-v8"><input type="radio" name="script" value="ranb"> <span>По-русски и анбуром</span></label>
+          <label><input type="radio" name="script" value="anb"> <span>Только анбуром</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sv-group">
+        <legend>Что показать</legend>
+        <div class="checks">
+          <label><input type="checkbox" id="l-orth"> Православные праздники</label>
+          <label><input type="checkbox" id="l-musl"> Мусульманские праздники</label>
+          <label><input type="checkbox" id="l-jew"> Иудейские праздники</label>
+          <label><input type="checkbox" id="l-astro" checked> Солнцестояния, равноденствия, метеоры, суперлуния, затмения</label>
+          <label><input type="checkbox" id="l-moon" checked> Фазы Луны</label>
+          <label><input type="checkbox" id="l-pics" checked> Пасы, гербы и картинки</label>
+        </div>
+      </fieldset>
+
+      <div class="sv-nav">
+        <button type="button" id="prev" aria-label="Назад">◀</button>
+        <button type="button" id="today">Сегодня</button>
+        <button type="button" id="next" aria-label="Вперёд">▶</button>
+        <label class="sv-date"><span>Дата</span> <input type="date" id="date" min="1600-01-01" max="2400-12-31"></label>
+      </div>
+      <div class="sv-actions">
+        <button type="button" id="print">Печать или PDF</button>
+        <button type="button" id="ics">Скачать праздники (.ics)</button>
+      </div>
+      <p id="status" class="small" aria-live="polite"></p>
+    </section>
+
+    <section class="sv-out" aria-live="polite">
+      <div id="sheet-wrap" class="sheet-wrap"></div>
+      <div id="notes" class="sv-notes small no-print"></div>
+    </section>
+  </main>
+</body>
+</html>
