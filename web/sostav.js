@@ -149,11 +149,20 @@ function v8YearLine(n) {
 
 /* ---------- события ---------- */
 
+/** Шаббат — каждую субботу (от заката пятницы до заката субботы). */
+function shabbatEvents(k0, k1) {
+  const out = [];
+  for (let k = k0; k <= k1; k++) if (weekday(k) === 6) out.push({ k, id: 'shabbat', kind: 'jewish', ru: 'Шаббат', minor: true });
+  return out;
+}
+
 function collectEvents(k0, k1) {
-  const list = [];
-  if (state.orth) list.push(...orthodoxEvents(k0, k1));
-  if (state.musl) list.push(...muslimEvents(k0, k1));
-  if (state.jew) list.push(...jewishEvents(k0, k1));
+  // праздники берём на день дальше: праздник следующего дня начинается на закате последнего
+  const faith = [];
+  if (state.orth) faith.push(...orthodoxEvents(k0, k1 + 1));
+  if (state.musl) faith.push(...muslimEvents(k0, k1 + 1));
+  if (state.jew) faith.push(...jewishEvents(k0, k1 + 1), ...shabbatEvents(k0, k1 + 1));
+  const list = faith.filter((e) => e.k <= k1);
   if (state.astro || state.moon) {
     for (const e of astroEvents(k0, k1, place, { phases: state.moon })) {
       if (e.kind === 'moon' ? state.moon : state.astro) list.push(e);
@@ -164,7 +173,82 @@ function collectEvents(k0, k1) {
     if (!byDay.has(e.k)) byDay.set(e.k, []);
     byDay.get(e.k).push(e);
   }
-  return { list, byDay };
+  return { list, byDay, segs: buildSegs(faith, k0, k1) };
+}
+
+/* ---------- праздник от заката до заката ---------- */
+
+const sunsetFracCache = new Map();
+/** Доля гражданских суток дня k, когда в выбранном месте заходит Солнце (0…1). */
+function sunsetFrac(k) {
+  const key = `${place.lat},${place.lon},${k}`;
+  if (sunsetFracCache.has(key)) return sunsetFracCache.get(key);
+  let f = 0.75;
+  const t = sunsetOf(k, place);
+  if (t !== null) {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: place.tz || deviceTz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+      .formatToParts(t).map((x) => [x.type, x.value]));
+    f = (Number(p.hour) * 60 + Number(p.minute)) / 1440;
+  }
+  sunsetFracCache.set(key, f);
+  return f;
+}
+
+const KIND_ORDER = { orthodox: 0, muslim: 1, jewish: 2 };
+
+/**
+ * Отрезки праздников по клеткам (гражданским суткам): праздник дней [a, b] длится
+ * от заката дня a−1 до заката дня b. Клетка получает {kind, id, from, to, start, end}.
+ */
+function buildSegs(faith, k0, k1) {
+  const c0 = k0 - 7;
+  const c1 = k1 + 7;
+  const segs = new Map();
+  const seen = new Set();
+  const evs = [];
+  for (const e of faith) {
+    const a = e.span ? e.span[0] : e.k;
+    const b = e.span ? e.span[1] : e.k;
+    const key = `${e.id}:${a}`;
+    if (seen.has(key) || b < k0 || a > k1) continue; // только праздники этого листа
+    seen.add(key);
+    evs.push({ e, a, b, key });
+  }
+  // дорожки: длинные праздники — ниже, у каждого праздника своя дорожка на всём протяжении
+  evs.sort((x, y) => (y.b - y.a) - (x.b - x.a) || x.a - y.a || KIND_ORDER[x.e.kind] - KIND_ORDER[y.e.kind]);
+  const lanes = [];
+  evs.forEach((x) => {
+    let lane = lanes.findIndex((busy) => busy.every(([p, q]) => x.b < p - 1 || x.a - 1 > q));
+    if (lane < 0) { lanes.push([]); lane = lanes.length - 1; }
+    lanes[lane].push([x.a, x.b]);
+    x.lane = lane;
+  });
+  evs.forEach(({ e, a, b, key, lane }) => {
+    const row = lane;
+    for (let c = Math.max(a - 1, c0); c <= Math.min(b, c1); c++) {
+      const start = c === a - 1;
+      const end = c === b;
+      const from = start ? sunsetFrac(c) : 0;
+      const to = end ? sunsetFrac(c) : 1;
+      if (!segs.has(c)) segs.set(c, []);
+      segs.get(c).push({ kind: e.kind, id: key, from, to, start, end, row });
+    }
+  });
+  return segs;
+}
+
+/** Полосы праздников и пунктир закатов в клетке. */
+function segsHtml(k, segMap) {
+  const list = (segMap && segMap.get(k)) || [];
+  if (!list.length) return '';
+  return list.map((x) => {
+    const r = x.row;
+    const pos = (v) => `${(v * 100).toFixed(2)}%`;
+    let h = `<i class="seg ${x.kind}" style="--from:${pos(x.from)};--w:${pos(x.to - x.from)};--row:${r}"></i>`;
+    if (x.start) h += `<i class="vl ${x.kind}" style="--at:${pos(x.from)}" title="закат: начало праздника"></i>`;
+    if (x.end) h += `<i class="vl ${x.kind}" style="--at:${pos(x.to)}" title="закат: конец праздника"></i>`;
+    return h;
+  }).join('');
 }
 
 const label = (e) => e.ru;
@@ -187,14 +271,14 @@ function evHtml(e, withNote, inGrid = false) {
   const span = e.span && !e.cont ? ` <span class="note">до ${gShort(e.span[1])}</span>` : '';
   const note = withNote && e.note ? ` <span class="note">${esc(e.note)}</span>` : '';
   // как в календаре автора: праздник вынесен на часть суток назад — начинается на закате накануне
-  const eve = inGrid && FAITH.has(e.kind) ? ' eve' : '';
+  const eve = e.minor ? ' minor' : '';
   return `<div class="ev ${e.kind}${eve}" title="${esc(title)}">${labelHtml(e)}${span}${note}</div>`;
 }
 
 function cellExtras(evs, withNote, inGrid = false) {
   const main = evs.filter((e) => !e.cont && e.kind !== 'moon');
   const whole = (e) => sheetRange && e.span && e.span[0] <= sheetRange.k0 && e.span[1] >= sheetRange.k1;
-  const bands = [...new Set(evs.filter((e) => e.span && !whole(e)).map((e) => e.kind))];
+  const bands = [...new Set(evs.filter((e) => e.span && !whole(e) && !FAITH.has(e.kind)).map((e) => e.kind))];
   const moon = evs.find((e) => e.kind === 'moon');
   return {
     html: main.map((e) => evHtml(e, withNote, inGrid)).join(''),
@@ -246,7 +330,7 @@ function dayCell(k, evMap, opts) {
     ? `<span class="g">${opts.mainNum(k)}</span><span class="wd">${gDay(k)} ${RU(RU_MON_SHORT[gMonth(k)])} · ${RU(RU_WD[weekday(k)])}</span>`
     : `<span class="g">${g}</span><span class="wd">${RU(RU_WD[weekday(k)])}</span>`;
   return `<div class="${cls}"><div class="top">${top}</div>`
-    + `<div class="sub">${subDates(k, opts.sub)}</div>${x.html}${x.bands}${x.moon}</div>`;
+    + `<div class="sub">${subDates(k, opts.sub)}</div>${x.html}${x.bands}${x.moon}${segsHtml(k, opts.segs)}</div>`;
 }
 
 /**
@@ -265,6 +349,7 @@ function gridHtml({ rows, heads, rtl, labelCol, evMap, opts }) {
     if (labelCol) h += `<div class="wl">${r.label}</div>`;
     r.days.forEach((k, i) => {
       if (k === null) { h += '<div class="cell empty"></div>'; return; }
+      if (typeof k === 'object') { h += `<div class="cell empty">${opts.compact ? '' : segsHtml(k.out, opts.segs)}</div>`; return; }
       h += dayCell(k, evMap, { ...opts, first, rowStart: i === 0 });
       first = false;
     });
@@ -296,7 +381,7 @@ function v8Rows(k0, k1, compact) {
     const days = [];
     for (let d = 0; d < 8; d++) {
       const k = k0 + w * 8 + d;
-      days.push(k <= k1 ? k : null);
+      days.push(k <= k1 ? k : { out: k });
     }
     const wk = v8Week(w + 1);
     const wword = anbOnly() ? A(wk.kp) : `${esc(cap(wk.ru))}${state.kp ? `, ${KP(wk.kp)}` : ''}`;
@@ -391,11 +476,11 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
 function v8MonthSheet(n, m, compact = false) {
   const { k0, k1 } = v8MonthRange(n, m);
   const ev = collectEvents(k0, k1);
-  const opts = { today: todayK(), compact, sub: { musl: state.musl, jew: state.jew, jul: state.orth } };
+  const opts = { today: todayK(), compact, segs: ev.segs, sub: { musl: state.musl, jew: state.jew, jul: state.orth } };
   const grid = gridHtml({ rows: v8Rows(k0, k1, compact), heads: v8Heads(compact), rtl: true, labelCol: true, evMap: ev.byDay, opts });
   const t = v8MonthTitle(m);
   if (compact) {
-    const items = ev.list.filter((e) => !e.cont && e.kind !== 'moon').sort((a, b) => a.k - b.k);
+    const items = ev.list.filter((e) => !e.cont && !e.minor && e.kind !== 'moon').sort((a, b) => a.k - b.k);
     const pas = state.pics ? `<img class="ym-pas" src="pasy/mesyac-${m}-${MONTH_IDS[m - 1]}.svg" alt="">` : '';
     return `<div class="ym"><h4><span>${pas}${NAME(t.main, t.kp)}${SEC(t.kp) ? ` <em>${SEC(t.kp)}</em>` : ''}</span><small>${RU(`${gShort(k0)} – ${gShort(k1)}`)}</small></h4>${grid}`
       + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${gDay(e.k)}.${String(gMonth(e.k) + 1).padStart(2, '0')}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
@@ -486,12 +571,12 @@ function sevenRows(k0, k1, firstWd) {
   const rows = [];
   const off = (weekday(k0) - firstWd + 7) % 7;
   let row = [];
-  for (let i = 0; i < off; i++) row.push(null);
+  for (let i = 0; i < off; i++) row.push({ out: k0 - off + i });
   for (let k = k0; k <= k1; k++) {
     row.push(k);
     if (row.length === 7) { rows.push({ days: row }); row = []; }
   }
-  if (row.length) { while (row.length < 7) row.push(null); rows.push({ days: row }); }
+  if (row.length) { let n = 1; while (row.length < 7) row.push({ out: k1 + n++ }); rows.push({ days: row }); }
   return rows;
 }
 
@@ -500,10 +585,10 @@ const wdHeadsShort = (first) => Array.from({ length: 7 }, (_, i) => RU_WD[(first
 
 function pureMonth({ k0, k1, firstWd, rtl, title, line, compact, mainNum, sub }) {
   const ev = collectEvents(k0, k1);
-  const opts = { today: todayK(), compact, mainNum, sub };
+  const opts = { today: todayK(), compact, mainNum, sub, segs: ev.segs };
   const grid = gridHtml({ rows: sevenRows(k0, k1, firstWd), heads: compact ? wdHeadsShort(firstWd) : wdHeads(firstWd), rtl, labelCol: false, evMap: ev.byDay, opts });
   if (compact) {
-    const items = ev.list.filter((e) => !e.cont && e.kind !== 'moon').sort((a, b) => a.k - b.k);
+    const items = ev.list.filter((e) => !e.cont && !e.minor && e.kind !== 'moon').sort((a, b) => a.k - b.k);
     return `<div class="ym"><h4><span>${RU(title)}</span><small>${RU(`${gShort(k0)} – ${gShort(k1)}`)}</small></h4>${grid}`
       + `<ul class="ym-list">${items.map((e) => `<li class="ev ${e.kind}"><b>${mainNum ? mainNum(e.k) : gDay(e.k)}</b> ${labelHtml(e)}</li>`).join('')}</ul></div>`;
   }
@@ -715,8 +800,9 @@ function legendHtml() {
   if (state.jew) subs.push('е — еврейская дата');
   if (state.orth) subs.push('ст. — старый стиль');
   if (subs.length && state.cal === 'v8') line1.push(`<span>${subs.join(', ')}</span>`);
-  line1.push('<span class="lg"><i class="lbar"></i>праздник на несколько дней</span>');
-  if (faiths.length || state.cal === 'v8') line1.push('<span class="lg"><i class="evemark"></i>сутки начинаются вечером, накануне указанной даты</span>');
+  if (faiths.length) line1.push('<span class="lg"><i class="segmark"></i>праздник — от заката до заката: сутки начинаются вечером, накануне указанной даты</span>');
+  else if (state.cal === 'v8') line1.push('<span>сутки начинаются вечером, накануне указанной даты</span>');
+  if (state.astro) line1.push('<span class="lg"><i class="lbar"></i>небесное событие на несколько дней</span>');
   const rows = [`<div class="legend">${line1.join('')}</div>`];
   if (state.moon) rows.push(`<div class="legend legend-moon"><span class="lg">${moonIcon('novolunie')} новолуние</span><span class="lg">${moonIcon('pervaya-chetvert')} первая четверть</span><span class="lg">${moonIcon('polnolunie')} полнолуние</span><span class="lg">${moonIcon('poslednyaya-chetvert')} последняя четверть</span></div>`);
   return rows.join('');
@@ -814,7 +900,7 @@ function downloadIcs() {
   const { list } = collectEvents(k0, k1);
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Scatik146//Solnechnaya vosmyorka//RU', 'CALSCALE:GREGORIAN'];
   const stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
-  for (const e of list.filter((x) => !x.cont && x.kind !== 'moon')) {
+  for (const e of list.filter((x) => !x.cont && !x.minor && x.kind !== 'moon')) {
     const endK = (e.span ? e.span[1] : e.k) + 1;
     lines.push('BEGIN:VEVENT', `UID:${e.id}-${e.k}@komi-perm-game-calendar`, `DTSTAMP:${stamp}`,
       `DTSTART;VALUE=DATE:${icsDate(e.k)}`, `DTEND;VALUE=DATE:${icsDate(endK)}`,
