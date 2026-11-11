@@ -202,9 +202,10 @@ main {
 .kal-plank-box { margin: 0.5rem 0 0.75rem; }
 .kal-plank-box summary { cursor: pointer; color: var(--soft); }
 .kal-plank svg { display: block; max-width: min(100%, 26rem); height: auto; margin: 0.5rem 0; }
-.kal-make { margin-top: 1rem !important; }
+.kal-make { max-width: 68rem; margin: 0.75rem auto 0; padding: 0 1rem; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.8rem; }
 .kal-make-btn {
-  display: inline-block; padding: 0.5rem 0.9rem; border: 1px solid var(--line); border-radius: 0.4rem;
-  text-decoration: none; font-weight: 700;
+  display: inline-block; padding: 0.6rem 1.1rem; border-radius: 0.4rem;
+  background: var(--accent); color: var(--bg); text-decoration: none; font-weight: 700; font-size: 1.05rem;
 }
-.kal-make-btn:hover { border-color: var(--soft); }
+.kal-make-btn:hover { filter: brightness(1.1); }
+.kal-make-sub { color: var(--soft); font-size: 0.9rem; }
