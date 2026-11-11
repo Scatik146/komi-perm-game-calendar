@@ -144,7 +144,7 @@
 .legend b.jewish { color: var(--c-jew); } .legend b.astro { color: var(--c-astro); } .legend b.eclipse { color: var(--c-ecl); }
 .legend .sw { display: inline-block; width: 0.9rem; height: 0.9rem; border-radius: 0.15rem; box-shadow: inset 0 0 0 0.5px #00000033; }
 .legend .sw.sat { } .legend .sw.sun { }
-.sh-foot { margin-top: 0.5rem; font-size: 0.68rem; color: var(--psoft); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.sh-foot { margin: 0.35rem 0 0; font-size: 0.62rem; line-height: 1.3; color: var(--psoft); }
 
 /* год */
 .year-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem 1rem; }

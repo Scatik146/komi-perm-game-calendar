@@ -448,7 +448,7 @@ function creditsHtml(p) {
   if (p.vid && p.dist) items.push([`Вид: ${p.dist.district} район`, p.vid]);
   if (!items.length) return '';
   const frag = (x) => (x.file.includes('/gerb-') ? '' : ', фрагмент');
-  return `<p class="credits">Фото и гербы с Викисклада: ${items.map(([what, x]) => `${esc(what)} — ${esc(x.author)}, ${esc(x.license)} («${esc(x.title)}»${frag(x)})`).join('; ')}.</p>`;
+  return `Викисклад: ${items.map(([what, x]) => `${esc(what)} — ${esc(x.author)}, ${esc(x.license)} («${esc(x.title)}»${frag(x)})`).join('; ')}.`;
 }
 
 /** Шапка листа месяца или недели «Солнечной восьмёрки». */
@@ -459,20 +459,23 @@ function v8Head(n, m, k0, k1, title, kpTitle, sub) {
   const dist = p.dist;
   const days = k1 - k0 + 1;
   // вторая строка — только другие календари; год у каждого конца, если годы разные
-  const span2 = (m0, y0, m1, y1) => (y0 === y1 ? `${m0}${m0 !== m1 ? ` – ${m1}` : ''} ${y0}` : `${m0} ${y0} – ${m1} ${y1}`);
-  const other = [];
+  // с какой и по какую дату; год у каждого конца, если годы разные
+  const span2 = (d0, y0, d1, y1) => (y0 === y1 ? `${d0} – ${d1} ${y0}` : `${d0} ${y0} – ${d1} ${y1}`);
+  const other = []; // строка хиджры; строка еврейского календаря и старого стиля
   if (state.musl) {
     const a = hijriOf(k0); const b = hijriOf(k1);
-    other.push(`По хиджре: ${span2(HIJRI_MONTHS_RU[a.month - 1], a.year, HIJRI_MONTHS_RU[b.month - 1], b.year)}.`);
+    other.push(`По хиджре: ${span2(`${a.day} ${HIJRI_MONTHS_RU[a.month - 1]}`, a.year, `${b.day} ${HIJRI_MONTHS_RU[b.month - 1]}`, b.year)}.`);
   }
+  const line3 = [];
   if (state.jew) {
     const a = hebrewFromK(k0); const b = hebrewFromK(k1);
-    other.push(`По еврейскому календарю: ${span2(hebrewMonthName(a.year, a.month), a.year, hebrewMonthName(b.year, b.month), b.year)}.`);
+    line3.push(`По еврейскому календарю: ${span2(`${a.day} ${hebrewMonthName(a.year, a.month)}`, a.year, `${b.day} ${hebrewMonthName(b.year, b.month)}`, b.year)}.`);
   }
   if (state.orth) {
     const a = julianFromK(k0); const b = julianFromK(k1);
-    other.push(`По старому стилю: ${span2(`${a.day} ${RU_MON_GEN[a.month - 1]}`, a.year, `${b.day} ${RU_MON_GEN[b.month - 1]}`, b.year)}.`);
+    line3.push(`По старому стилю: ${span2(`${a.day} ${RU_MON_GEN[a.month - 1]}`, a.year, `${b.day} ${RU_MON_GEN[b.month - 1]}`, b.year)}.`);
   }
+  if (line3.length) other.push(line3.join(' '));
   // в ромбе — пас месяца (решение автора: вместо фото зверя); справа — герб района
   const rhomb = p.pas
     ? `<div class="mh-rhomb" aria-hidden="true"><div class="mh-rhomb-in mh-rhomb-pas"><span class="mh-pas" role="img" aria-label="Пас месяца" style="--pas:url('${p.pas}')"></span></div></div>`
@@ -825,9 +828,10 @@ function legendHtml() {
 }
 
 function footHtml(credits = '') {
+  // подвал одной строкой: что это, место, сайт и подписи гербов и снимков
   const where = place ? `${place.name || 'Моё место'} (${place.lat.toFixed(2)}°, ${place.lon.toFixed(2)}°)` : '';
-  return `<div class="sh-foot"><span>«Солнечная восьмёрка» — игровая реконструкция для книги и настольной игры · ${esc(where)}</span>`
-    + `<span>scatik146.github.io/komi-perm-game-calendar</span></div>${credits}`;
+  return `<p class="sh-foot">«Солнечная восьмёрка» — игровая реконструкция для книги и настольной игры. ${esc(where)}. `
+    + `scatik146.github.io/komi-perm-game-calendar${credits ? `. ${credits}` : ''}</p>`;
 }
 
 /* ---------- сборка ---------- */
