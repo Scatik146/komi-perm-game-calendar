@@ -1,0 +1,283 @@
+<title>Кама 1236</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=PT+Sans:wght@400;700&family=PT+Sans+Narrow:wght@400;700&display=swap">
+<style>
+/* Карта-схема речного края: земля — тёплая береста, вода — холодная синь, булгарское — охра, пермское — хвойная зелень */
+:root {
+  --bg: #f3efe6; --paper: #fbf8f1; --ink: #23282a; --soft: #5d6662; --line: #cfc7b6;
+  --water: #4b7fa8; --sea: #ece6d8; --grid: #ddd5c4;
+  --bul: #b5651d; --perm: #2f6b4a; --komi: #4e7f3b; --udm: #7a4f8c; --bash: #8a6d1a; --rus: #6b6f78; --battle: #b3261e; --route: #b5651d; --state: #a02a72; --ost: #227a73;
+  --display: "Alegreya", Georgia, serif; --body: "PT Sans", "Segoe UI", sans-serif; --narrow: "PT Sans Narrow", "Arial Narrow", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1b1f1e; --paper: #222826; --ink: #e8e4da; --soft: #a9b0aa; --line: #3c4441;
+  --water: #7fb0d6; --sea: #232a28; --grid: #2f3633;
+  --bul: #e0954c; --perm: #6fbf8e; --komi: #93c473; --udm: #c597d6; --bash: #d6b65a; --rus: #a7abb4; --battle: #ef6a5f; --route: #e0954c; --state: #ee7cc0; --ost: #5cc4b9; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1b1f1e; --paper: #222826; --ink: #e8e4da; --soft: #a9b0aa; --line: #3c4441;
+  --water: #7fb0d6; --sea: #232a28; --grid: #2f3633;
+  --bul: #e0954c; --perm: #6fbf8e; --komi: #93c473; --udm: #c597d6; --bash: #d6b65a; --rus: #a7abb4; --battle: #ef6a5f; --route: #e0954c; --state: #ee7cc0; --ost: #5cc4b9; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); }
+.wrap { max-width: 76rem; margin: 0 auto; padding-block: 1.5rem 3rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font: 700 clamp(1.8rem, 4vw, 2.6rem)/1.1 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 700 1.35rem/1.25 var(--display); margin: 2rem 0 0.6rem; text-wrap: balance; }
+.lede { color: var(--soft); max-width: 62ch; margin: 0.5rem 0 0; }
+.tag { display: inline-block; font: 700 0.72rem/1 var(--narrow); letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.5rem; border-radius: 0.25rem; }
+.tag.fact { background: color-mix(in srgb, var(--water) 18%, transparent); color: var(--water); }
+.tag.world { background: color-mix(in srgb, var(--bul) 18%, transparent); color: var(--bul); }
+.grid2 { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); margin-top: 1.25rem; }
+@media (min-width: 62rem) { .grid2 { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); } }
+.mapbox { background: var(--paper); border: 1px solid var(--line); border-radius: 0.5rem; padding: 0.75rem; min-width: 0; }
+.map { width: 100%; height: auto; display: block; }
+.sea { fill: var(--sea); }
+.grid { stroke: var(--grid); stroke-width: 0.6; }
+.gl { fill: var(--soft); font: 9px var(--narrow); }
+.reg { stroke-width: 1; fill-opacity: 0.16; stroke-opacity: 0.55; }
+.r-bul { fill: var(--bul); stroke: var(--bul); } .r-bash { fill: var(--bash); stroke: var(--bash); }
+.r-udm { fill: var(--udm); stroke: var(--udm); } .r-perm { fill: var(--perm); stroke: var(--perm); }
+.r-komi { fill: var(--komi); stroke: var(--komi); } .r-mari { fill: var(--soft); stroke: var(--soft); fill-opacity: 0.08; }
+.r-rus { fill: var(--rus); stroke: var(--rus); fill-opacity: 0.1; }
+.r-ost { fill: var(--ost); stroke: var(--ost); fill-opacity: 0.2; }
+.r-ost-t { fill: var(--ost); }
+.r-chi { fill: var(--ost); stroke: var(--ost); fill-opacity: 0.12; stroke-dasharray: 5 3; }
+.m-chi { fill: var(--ost); stroke: var(--paper); stroke-width: 1.5; }
+ol.places li.g-chi b { color: var(--ost); }
+.m-transit { fill: var(--route); stroke: var(--paper); stroke-width: 1.5; }
+ol.places li.g-transit b { color: var(--route); }
+.r-vog { fill: var(--ost); stroke: var(--ost); fill-opacity: 0.08; stroke-dasharray: 4 3; }
+.m-later { fill: none; stroke: var(--soft); stroke-width: 1.5; stroke-dasharray: 2 2; }
+ol.places li.g-later b { color: var(--soft); } ol.places li.g-sanct b { color: var(--perm); } ol.places li.g-ugr b { color: var(--ost); }
+.regl { font: 700 11px var(--narrow); letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.85; }
+.r-bul-t { fill: var(--bul); } .r-bash-t { fill: var(--bash); } .r-udm-t { fill: var(--udm); } .r-perm-t { fill: var(--perm); }
+.r-komi-t { fill: var(--komi); } .r-mari-t { fill: var(--soft); } .r-rus-t { fill: var(--rus); }
+.game { fill: none; stroke: var(--perm); stroke-width: 2; stroke-dasharray: 6 4; }
+.game-l { fill: var(--perm); font: italic 700 11px var(--body); }
+.riv { fill: none; stroke: var(--water); stroke-width: 1.3; stroke-linejoin: round; stroke-linecap: round; opacity: 0.85; }
+.riv.big { stroke-width: 2.6; }
+.rl { fill: var(--water); font: italic 10px var(--body); }
+.route { fill: none; stroke: var(--route); stroke-width: 2.2; stroke-dasharray: 2 5; stroke-linecap: round; }
+.ahead { fill: var(--route); }
+.pl { fill: var(--ink); font: 11px var(--narrow); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+.pn { font-weight: 700; fill: var(--soft); }
+.m-bul { fill: var(--bul); stroke: var(--paper); stroke-width: 1.5; }
+.m-perm { fill: var(--perm); stroke: var(--paper); stroke-width: 1.2; }
+.m-komi { fill: var(--paper); stroke: var(--komi); stroke-width: 2; }
+.m-udm { fill: var(--udm); stroke: var(--paper); stroke-width: 1.2; }
+.m-bash { fill: var(--bash); stroke: var(--paper); stroke-width: 1.2; }
+.m-rus { fill: var(--paper); stroke: var(--rus); stroke-width: 2; }
+.m-ugr { fill: var(--paper); stroke: var(--ost); stroke-width: 2.5; }
+.hung { fill: none; stroke: var(--bash); stroke-width: 1.5; stroke-dasharray: 1 4; stroke-linecap: round; }
+.hung-l { fill: var(--bash); font: italic 700 10px var(--body); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.ostyak { fill: var(--bash); fill-opacity: 0.12; stroke: var(--bash); stroke-dasharray: 2 3; }
+.ostyak-l { fill: var(--bash); font: italic 10px var(--body); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.m-sanct { fill: var(--perm); stroke: var(--paper); stroke-width: 1; }
+.way { fill: none; stroke: var(--water); stroke-width: 5; stroke-opacity: 0.35; stroke-linecap: round; stroke-linejoin: round; }
+.way-l { fill: var(--water); font: 700 10px var(--narrow); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.contact { fill: var(--udm); fill-opacity: 0.12; stroke: var(--udm); stroke-dasharray: 3 3; }
+.contact-l { fill: var(--udm); font: italic 10px var(--body); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.commune { fill: var(--state); fill-opacity: 0.05; stroke: var(--state); stroke-width: 3; stroke-opacity: 0.85; stroke-dasharray: 10 5; }
+.com-l { fill: var(--state); font: italic 700 11px var(--body); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.m-battle { stroke: var(--battle); stroke-width: 3; stroke-linecap: round; }
+.out { fill: var(--soft); font: italic 11px var(--body); }
+.hide-reg .lay-reg, .hide-route .lay-route, .hide-rus .lay-rus, .hide-way .lay-way, .hide-com .lay-com { display: none; }
+.toggles { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin: 0.6rem 0 0.2rem; font-size: 0.9rem; color: var(--soft); }
+.toggles input { accent-color: var(--bul); }
+.legend { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.85rem; color: var(--soft); margin-top: 0.5rem; }
+.legend svg { vertical-align: -3px; margin-right: 0.3rem; }
+.note { font-size: 0.85rem; color: var(--soft); margin: 0.5rem 0 0; }
+.side { min-width: 0; }
+ol.places { margin: 0; padding-left: 1.6rem; font-size: 0.92rem; display: grid; gap: 0.25rem; }
+ol.places li::marker { font: 700 0.85rem var(--narrow); color: var(--soft); }
+ol.places li.g-bul b { color: var(--bul); } ol.places li.g-perm b { color: var(--perm); } ol.places li.g-komi b { color: var(--komi); }
+ol.places li.g-udm b { color: var(--udm); } ol.places li.g-bash b { color: var(--bash); } ol.places li.g-rus b { color: var(--rus); } ol.places li.g-battle b { color: var(--battle); }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+.timeline li { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 0.75rem; }
+.timeline .yr { font: 700 1rem/1.5 var(--display); color: var(--bul); font-variant-numeric: tabular-nums; }
+.timeline .src { color: var(--soft); font-size: 0.85rem; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.tablebox { overflow-x: auto; }
+th, td { text-align: left; vertical-align: top; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--line); }
+th { font: 700 0.8rem var(--narrow); letter-spacing: 0.06em; text-transform: uppercase; color: var(--soft); }
+.stages { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.stage { border-top: 3px solid var(--bul); padding-top: 0.5rem; }
+.stage h3 { font: 700 1.05rem/1.3 var(--display); margin: 0 0 0.3rem; }
+.stage p { margin: 0; font-size: 0.93rem; }
+.stage .when { font: 700 0.8rem var(--narrow); color: var(--soft); letter-spacing: 0.05em; }
+.sources { font-size: 0.85rem; color: var(--soft); }
+.sources a { color: var(--water); }
+p { max-width: 70ch; }
+</style>
+
+<div class="wrap">
+  <span class="tag world">мир книги · рабочая схема</span>
+  <h1>Кама 1236: куда бежать от монголов</h1>
+  <p class="lede">Схема игрового края и соседей: Волжская Булгария, Прикамье, Чепца, Белая и Вычегда. Отмечены городища из наших документов и крупные центры эпохи. Пунктир — возможный путь массового исхода булгар вверх по рекам. Координаты приблизительные: это схема, а не карта для навигации.</p>
+
+  <div class="grid2">
+    <div class="mapbox" id="mapbox">
+      <div class="toggles" role="group" aria-label="Слои карты">
+        <label><input type="checkbox" id="t-reg" checked> области народов</label>
+        <label><input type="checkbox" id="t-route" checked> пути исхода (мир книги)</label>
+        <label><input type="checkbox" id="t-rus" checked> русские города</label>
+        <label><input type="checkbox" id="t-way" checked> водные пути и волоки</label>
+        <label><input type="checkbox" id="t-com" checked> граница предполагаемого государства</label>
+      </div>
+      <svg viewBox="-10 -10 614 783" role="img" aria-labelledby="map-t" class="map"><title id="map-t">Схема игрового региона: Волжская Булгария, Прикамье, Чепца, Белая, Вычегда</title><rect x="0" y="0" width="594" height="763" class="sea"/><g><path d="M0 735.0H594" class="grid"/><text x="4" y="732.0" class="gl">53°</text><path d="M0 665.0H594" class="grid"/><text x="4" y="662.0" class="gl">54°</text><path d="M0 595.0H594" class="grid"/><text x="4" y="592.0" class="gl">55°</text><path d="M0 525.0H594" class="grid"/><text x="4" y="522.0" class="gl">56°</text><path d="M0 455.0H594" class="grid"/><text x="4" y="452.0" class="gl">57°</text><path d="M0 385.0H594" class="grid"/><text x="4" y="382.0" class="gl">58°</text><path d="M0 315.0H594" class="grid"/><text x="4" y="312.0" class="gl">59°</text><path d="M0 245.0H594" class="grid"/><text x="4" y="242.0" class="gl">60°</text><path d="M0 175.0H594" class="grid"/><text x="4" y="172.0" class="gl">61°</text><path d="M0 105.0H594" class="grid"/><text x="4" y="102.0" class="gl">62°</text><path d="M0 35.0H594" class="grid"/><text x="4" y="32.0" class="gl">63°</text><path d="M14.8 0V763" class="grid"/><text x="17.8" y="759" class="gl">44°</text><path d="M89.0 0V763" class="grid"/><text x="92.0" y="759" class="gl">46°</text><path d="M163.2 0V763" class="grid"/><text x="166.2" y="759" class="gl">48°</text><path d="M237.4 0V763" class="grid"/><text x="240.4" y="759" class="gl">50°</text><path d="M311.6 0V763" class="grid"/><text x="314.6" y="759" class="gl">52°</text><path d="M385.8 0V763" class="grid"/><text x="388.8" y="759" class="gl">54°</text><path d="M460.0 0V763" class="grid"/><text x="463.0" y="759" class="gl">56°</text><path d="M534.2 0V763" class="grid"/><text x="537.2" y="759" class="gl">58°</text></g><g class="lay-reg"><polygon points="155.8,525.0 256.0,514.5 345.0,525.0 370.9,588.0 352.4,665.0 259.7,717.5 174.3,700.0 141.0,609.0" class="reg r-bul"/><polygon points="378.4,504.0 408.0,455.0 434.0,427.0 456.3,455.0 482.2,479.5 519.3,490.0 578.7,581.0 578.7,735.0 430.3,756.0 374.7,651.0" class="reg r-bash"/><polygon points="248.5,248.5 339.4,248.5 382.1,318.5 400.6,427.0 370.9,493.5 289.3,500.5 259.7,413.0 237.4,322.0" class="reg r-udm"/><polygon points="419.2,157.5 541.6,168.0 549.0,315.0 482.2,413.0 408.0,399.0 382.1,318.5 339.4,248.5 337.6,241.5 374.7,203.0" class="reg r-perm"/><polygon points="178.1,21.0 408.0,21.0 411.7,154.0 337.6,241.5 248.5,248.5 170.6,196.0" class="reg r-komi"/><polygon points="85.3,427.0 226.3,413.0 252.2,500.5 137.2,528.5 77.9,497.0" class="reg r-mari"/><polygon points="0.0,0.0 144.7,0.0 155.8,175.0 148.4,315.0 107.6,413.0 63.1,483.0 37.1,553.0 0.0,595.0" class="reg r-rus"/></g><polygon points="230.0,168.0 333.8,161.0 511.9,157.5 526.7,231.0 497.1,343.0 467.4,402.5 437.7,406.0 363.5,395.5 315.3,392.0 289.3,343.0 230.0,273.0" class="commune lay-com"/><text x="24" y="255" class="com-l lay-com"><tspan x="24">граница предполагаемого</tspan><tspan x="24" dy="13">государства (мир книги) →</tspan></text><g class="lay-way"><ellipse cx="260" cy="228" rx="59" ry="52" class="contact"/><text x="260" y="292" text-anchor="middle" class="contact-l">контакт удмуртов и зырян, XIV–XV вв.</text></g><g class="lay-reg"><polygon points="337.6,511.0 396.9,507.5 434.0,539.0 437.7,595.0 408.0,626.5 348.7,623.0 326.4,574.0" class="reg r-chi"/><text x="384" y="598" text-anchor="middle" class="regl r-ost-t">чияликцы</text></g><g class="lay-reg"><polygon points="458.1,374.5 497.1,367.5 545.3,385.0 560.1,434.0 526.7,472.5 474.8,465.5 445.1,451.5 450.7,413.0" class="reg r-ost"/><text x="525" y="452" text-anchor="middle" class="regl r-ost-t">остяки Прикамья</text></g><polygon points="237.4,178.5 326.4,175.0 370.9,192.5 493.4,189.0 500.8,273.0 460.0,346.5 393.2,371.0 345.0,294.0 311.6,255.5 237.4,248.5" class="game"/><text x="321" y="202" class="game-l">земля календаря</text><g><polyline points="0.0,501.9 14.8,501.9 135.4,515.9 178.1,535.5 204.0,539.7 211.4,581.0 202.5,596.4 178.1,644.0 215.1,700.0 241.1,721.0 248.5,742.0" class="riv big"/><polyline points="211.4,581.0 260.8,569.8 294.9,553.0 326.4,543.9 370.9,521.5 378.4,492.1 391.3,471.1 439.6,435.4 469.2,385.0 474.8,353.5 482.2,315.0 487.8,273.0 474.8,241.5 445.1,224.0 396.9,224.0 356.1,252.0 333.8,315.0 330.1,364.0" class="riv big"/><polyline points="293.0,553.0 277.1,508.9 237.4,434.0 218.9,385.0 224.4,343.0 241.1,287.0 285.6,245.0" class="riv"/><polyline points="239.3,346.5 336.1,375.2 349.1,387.1 385.8,378.0" class="riv"/><polyline points="383.9,528.5 442.5,565.6 458.5,613.9 467.4,672.0 497.1,728.0" class="riv"/><polyline points="450.7,346.5 426.6,329.0 410.3,314.3 398.8,283.5" class="riv"/><polyline points="458.1,352.1 426.6,360.5 400.6,364.0 378.4,357.0" class="riv"/><polyline points="469.2,385.0 526.7,364.0 582.4,420.0" class="riv"/><polyline points="475.5,241.5 478.5,217.0 493.4,175.0 508.2,140.0" class="riv"/><polyline points="113.1,156.8 144.7,133.0 204.0,93.8 252.2,88.9 293.0,112.0 374.7,126.0 430.3,105.0" class="riv"/><polyline points="267.8,128.1 270.8,175.0 274.1,213.5 285.6,245.0" class="riv"/><polyline points="252.2,88.9 263.4,49.0 289.3,7.0" class="riv"/></g><g><text x="191" y="665" class="rl">Волга</text><text x="406" y="462" class="rl">Кама</text><text x="221" y="441" class="rl">Вятка</text><text x="469" y="644" class="rl">Белая</text><text x="184" y="105" class="rl">Вычегда</text><text x="289" y="364" class="rl">Чепца</text><text x="425" y="318" class="rl">Иньва</text><text x="377" y="377" class="rl">Обва</text><text x="495" y="185" class="rl">Колва</text><text x="274" y="150" class="rl">Сысола</text><text x="542" y="357" class="rl">Чусовая</text></g><g class="lay-reg"><text x="260" y="651" text-anchor="middle" class="regl r-bul-t">Волжская Булгария</text><text x="519" y="553" text-anchor="middle" class="regl r-bash-t">Башкиры</text><text x="334" y="420" text-anchor="middle" class="regl r-udm-t">Удмурты</text><text x="482" y="147" text-anchor="middle" class="regl r-perm-t">Пермь Великая · Чулыман</text><text x="286" y="52" text-anchor="middle" class="regl r-komi-t">Пермь Вычегодская · коми</text><text x="148" y="469" text-anchor="middle" class="regl r-mari-t">Марийцы</text><text x="74" y="322" text-anchor="middle" class="regl r-rus-t">Русские земли</text></g><defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" class="ahead"/></marker></defs><g class="lay-way"><polyline points="274.1,213.5 270.8,175.0 267.8,128.1 263.4,108.5 252.2,88.9" class="way"/><text x="184" y="150" class="way-l">Сысола — Вычегда</text><polyline points="370.9,122.5 387.6,157.5 406.2,192.5 419.2,222.6" class="way"/><text x="349" y="182" class="way-l">волок Кельтма — Джурич</text><polyline points="478.5,217.0 493.4,175.0 508.2,140.0 523.0,98.0" class="way"/><text x="449" y="80" class="way-l">Колва → Печора</text><polyline points="334.6,375.9 332.0,364.0" class="way"/><text x="282" y="336" class="way-l">Чепца ↔ верховья Камы</text></g><g class="lay-route"><polyline points="252.2,596.4 260.8,569.8 326.4,543.9 378.4,492.1 439.6,435.4 469.2,385.0 458.1,352.1 432.1,360.5" class="route" marker-end="url(#ah)"/><polyline points="326.4,543.9 378.4,492.1 439.6,435.4 469.2,385.0 474.8,353.5 454.4,346.5" class="route" marker-end="url(#ah)"/><polyline points="294.9,553.0 277.1,508.9 237.4,434.0 218.9,385.0 239.3,346.5 330.1,375.2" class="route" marker-end="url(#ah)"/><polyline points="383.9,528.5 442.5,565.6 456.3,609.0" class="route" marker-end="url(#ah)"/><polyline points="450.7,346.5 426.6,329.0 413.6,317.1" class="route" marker-end="url(#ah)"/><polyline points="474.8,353.5 482.2,315.0 487.8,273.0 474.8,241.5 477.4,219.8" class="route" marker-end="url(#ah)"/></g><g><g class="pt g-bul"><title>Биляр — «Великий город» — столица Булгарии; взят и сожжён осенью 1236</title><circle cx="252.2" cy="596.4" r="6" class="m-bul"/><text x="262" y="600" text-anchor="start" class="pl"><tspan class="pn">1</tspan> Биляр</text></g><g class="pt g-bul"><title>Болгар — разорён 1236; отстроен — город улуса Джучи, монеты XIII–XIV вв.</title><circle cx="202.5" cy="596.4" r="6" class="m-bul"/><text x="193" y="600" text-anchor="end" class="pl"><tspan class="pn">2</tspan> Болгар</text></g><g class="pt g-bul"><title>Сувар — взят 1236</title><circle cx="227.0" cy="604.8" r="6" class="m-bul"/><text x="227" y="624" text-anchor="middle" class="pl"><tspan class="pn">3</tspan> Сувар</text></g><g class="pt g-bul"><title>Джукетау — взят 1236; отстроен; взят русскими 1399</title><circle cx="261.9" cy="569.8" r="6" class="m-bul"/><text x="272" y="574" text-anchor="start" class="pl"><tspan class="pn">4</tspan> Джукетау</text></g><g class="pt g-bul"><title>Казань — булгарская крепость; с 1438 — столица ханства</title><circle cx="204.4" cy="539.7" r="6" class="m-bul"/><text x="194" y="544" text-anchor="end" class="pl"><tspan class="pn">5</tspan> Казань</text></g><g class="pt g-bul"><title>Алабуга (Елабужское городище) — булгарская крепость на Каме</title><circle cx="313.4" cy="541.8" r="6" class="m-bul"/><text x="313" y="561" text-anchor="middle" class="pl"><tspan class="pn">6</tspan> Алабуга</text></g><g class="pt g-battle"><title>Самарская лука — 1223: булгары бьют корпус Субэдэя и Джэбэ</title><path d="M214.7 702.4L226.7 714.4M226.7 702.4L214.7 714.4" class="m-battle"/><text x="231" y="712" text-anchor="start" class="pl"><tspan class="pn">7</tspan> Самарская лука</text></g><g class="pt g-battle"><title>заставы на Яике — 1229: монголы громят булгарские заставы</title><path d="M290.8 736.0L302.8 748.0M302.8 736.0L290.8 748.0" class="m-battle"/><text x="307" y="746" text-anchor="start" class="pl"><tspan class="pn">8</tspan> заставы на Яике</text></g><g class="pt g-transit"><title>Иске-аул — чияликское селище у устья Белой (Новокабаново, конец XIII–XIV вв., ордынские монеты); в мире книги — перевалочная база беглецов</title><rect x="391.7" y="519.0" width="12" height="12" transform="rotate(45 397.7 525.0)" class="m-transit"/><text x="408" y="529" text-anchor="start" class="pl"><tspan class="pn">9</tspan> Иске-аул</text></g><g class="pt g-bash"><title>Уфа-II (Уфимское городище) — крупное городище башкирских земель</title><path d="M458.1 607.6L465.1 614.6L458.1 621.6L451.1 614.6Z" class="m-bash"/><text x="468" y="619" text-anchor="start" class="pl"><tspan class="pn">10</tspan> Уфа-II</text></g><g class="pt g-udm"><title>Иднакар — главное городище на Чепце, IX–XIII вв.; рядом Учкакар, Гурьякар, Весьякар</title><rect x="329.1" y="370.4" width="11" height="11" class="m-udm"/><text x="345" y="380" text-anchor="start" class="pl"><tspan class="pn">11</tspan> Иднакар</text></g><g class="pt g-perm"><title>Афкула (Рождественское) — булгарский город-касаба, X — сер. XIV в.; мусульманский могильник</title><path d="M426.6 353.5L433.1 365.5L420.1 365.5Z" class="m-perm"/><text x="427" y="379" text-anchor="middle" class="pl"><tspan class="pn">12</tspan> Афкула</text></g><g class="pt g-perm"><title>Анюшкар (Кыласово) — булгарская фактория в устье Иньвы, IX–XIV(XV) вв.</title><path d="M450.7 339.5L457.2 351.5L444.2 351.5Z" class="m-perm"/><text x="461" y="351" text-anchor="start" class="pl"><tspan class="pn">13</tspan> Анюшкар</text></g><g class="pt g-perm"><title>Кудымкар (Изъюр) — VII–XVII вв., самая долгая жизнь на одном месте</title><path d="M410.3 307.3L416.8 319.3L403.8 319.3Z" class="m-perm"/><text x="400" y="318" text-anchor="end" class="pl"><tspan class="pn">14</tspan> Кудымкар</text></g><g class="pt g-sanct"><title>Гляденово — святилище гляденовской культуры; в мире книги — культурный центр остяков Прикамья; рядом устье Мулянки, где в 1570-е проповедовал Трифон Вятский</title><polygon points="459.2,381.2 461.2,386.4 466.8,386.7 462.5,390.3 463.9,395.7 459.2,392.6 454.5,395.7 456.0,390.3 451.6,386.7 457.2,386.4" class="m-sanct"/><text x="459" y="408" text-anchor="middle" class="pl"><tspan class="pn">15</tspan> Гляденово</text></g><g class="pt g-bash"><title>Оссат — мир книги: небольшой городок на месте будущей Осы, башкирские земли; в источниках — лишь гипотеза о селении «Оссат»; русская Оса — с 1591</title><path d="M439.6 428.4L446.6 435.4L439.6 442.4L432.6 435.4Z" class="m-bash"/><text x="430" y="439" text-anchor="end" class="pl"><tspan class="pn">16</tspan> Оссат</text></g><g class="pt g-perm"><title>Чердынь — торговля с булгарами с IX–X вв.; путь в Югру; название связывают с выходцами с Выми и Вычегды</title><path d="M477.8 210.0L484.3 222.0L471.3 222.0Z" class="m-perm"/><text x="468" y="221" text-anchor="end" class="pl"><tspan class="pn">17</tspan> Чердынь</text></g><g class="pt g-perm"><title>Чашкинское озеро — поселения ломоватовской и родановской культур, VIII–XII вв.</title><path d="M485.9 271.6L492.4 283.6L479.4 283.6Z" class="m-perm"/><text x="476" y="283" text-anchor="end" class="pl"><tspan class="pn">18</tspan> Чашкинское озеро</text></g><g class="pt g-ugr"><title>Неволино — неволинская культура V–IX вв. на Сылве, её связывают с уграми; в мире книги — предки остяков Прикамья</title><circle cx="495.2" cy="427.0" r="5.5" class="m-ugr"/><text x="505" y="431" text-anchor="start" class="pl"><tspan class="pn">19</tspan> Неволино</text></g><g class="pt g-komi"><title>Усть-Вымь (Йемдын) — центр Перми Вычегодской; кафедра Стефана с 1383</title><path d="M252.2 81.9L258.7 93.9L245.7 93.9Z" class="m-komi"/><text x="262" y="93" text-anchor="start" class="pl"><tspan class="pn">20</tspan> Усть-Вымь</text></g><g class="pt g-komi"><title>Койгородок — земля календаря: Койгородский район, тотем — глухарь (Дозмӧр)</title><path d="M274.1 206.5L280.6 218.5L267.6 218.5Z" class="m-komi"/><text x="284" y="217" text-anchor="start" class="pl"><tspan class="pn">21</tspan> Койгородок</text></g><g class="pt g-rus lay-rus"><title>Нижний Новгород — основан в 1221 Юрием Всеволодовичем как крепость против булгар и мордвы; в 1229 его осаждает мордовский князь Пургас</title><circle cx="14.8" cy="501.9" r="5" class="m-rus"/><text x="25" y="506" text-anchor="start" class="pl"><tspan class="pn">22</tspan> Нижний Новгород</text></g><g class="pt g-rus lay-rus"><title>Великий Устюг — известен с начала XIII в.; в 1218–1219 его берут булгары — по летописи</title><circle cx="100.2" cy="191.8" r="5" class="m-rus"/><text x="110" y="196" text-anchor="start" class="pl"><tspan class="pn">23</tspan> Великий Устюг</text></g><g class="pt g-rus lay-rus"><title>Хлынов (Вятка) — в летописях — с 1374 (вятские ушкуйники); по преданию — 1174, предание позднее и ненадёжное; поселение по археологии — XI–XIII вв.</title><circle cx="224.8" cy="343.0" r="5" class="m-rus"/><text x="235" y="347" text-anchor="start" class="pl"><tspan class="pn">24</tspan> Хлынов</text></g></g><g><text x="4" y="557" text-anchor="start" class="out"><title>к великому князю Юрию — беглые булгары (летопись; цитату сверить)</title>← Владимир</text><text x="126" y="752" text-anchor="start" class="out"><title>ставка Батыя, Нижняя Волга</title>↓ Сарай</text><text x="586" y="140" text-anchor="end" class="out"><title>за Урал: путь из Чердыни</title>Югра →</text></g></svg>
+      <div class="legend">
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="var(--bul)"/></svg>булгарский город</span>
+        <span><svg width="14" height="14"><path d="M7 1L13 12H1Z" fill="var(--perm)"/></svg>городище Прикамья</span>
+        <span><svg width="14" height="14"><path d="M7 1L13 12H1Z" fill="none" stroke="var(--komi)" stroke-width="2"/></svg>коми-зыряне</span>
+        <span><svg width="14" height="14"><polygon points="7,0 8.8,5 14,5 9.8,8.4 11.4,13.5 7,10.4 2.6,13.5 4.2,8.4 0,5 5.2,5" fill="var(--perm)"/></svg>святилище</span>
+        <span><svg width="22" height="10"><path d="M2 5H20" stroke="var(--water)" stroke-width="5" stroke-opacity="0.35" stroke-linecap="round"/></svg>водный путь, волок</span>
+        <span><svg width="22" height="10"><path d="M1 5H21" stroke="var(--state)" stroke-width="3" stroke-dasharray="6 3"/></svg>граница предполагаемого государства</span>
+        <span><svg width="14" height="14"><rect x="2" y="2" width="10" height="10" fill="var(--udm)"/></svg>удмурты</span>
+        <span><svg width="14" height="14"><path d="M7 0L14 7L7 14L0 7Z" fill="var(--bash)"/></svg>башкиры</span>
+        <span><svg width="14" height="14"><rect x="1" y="2" width="12" height="10" fill="var(--ost)" fill-opacity="0.35" stroke="var(--ost)"/></svg>остяки Прикамья</span>
+        <span><svg width="14" height="14"><path d="M7 2L12.5 12H1.5Z" fill="none" stroke="var(--soft)" stroke-width="1.5" stroke-dasharray="2 2"/></svg>появится позже</span>
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--ost)"/></svg>чияликский памятник</span>
+        <span><svg width="14" height="14"><rect x="3" y="3" width="8" height="8" transform="rotate(45 7 7)" fill="var(--route)"/></svg>перевалочная база (мир книги)</span>
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="var(--rus)" stroke-width="2"/></svg>русский город</span>
+        <span><svg width="14" height="14"><path d="M2 2L12 12M12 2L2 12" stroke="var(--battle)" stroke-width="3"/></svg>сражение</span>
+        <span><svg width="22" height="10"><path d="M1 5H21" stroke="var(--route)" stroke-width="2.4" stroke-dasharray="2 4"/></svg>исход (мир книги)</span>
+      </div>
+      <p class="note">Наведите на значок, чтобы увидеть подпись. Пунктирный контур — земля календаря: восемь районов бывшего Коми-Пермяцкого округа и соседей, включая Чердынский и Койгородский (Республика Коми).</p>
+    </div>
+    <div class="side">
+      <h2 style="margin-top:0">Места на схеме</h2>
+      <ol class="places"><li class="g-bul"><b>Биляр — «Великий город»</b> — столица Булгарии; взят и сожжён осенью 1236</li><li class="g-bul"><b>Болгар</b> — разорён 1236; отстроен — город улуса Джучи, монеты XIII–XIV вв.</li><li class="g-bul"><b>Сувар</b> — взят 1236</li><li class="g-bul"><b>Джукетау</b> — взят 1236; отстроен; взят русскими 1399</li><li class="g-bul"><b>Казань</b> — булгарская крепость; с 1438 — столица ханства</li><li class="g-bul"><b>Алабуга (Елабужское городище)</b> — булгарская крепость на Каме</li><li class="g-battle"><b>Самарская лука</b> — 1223: булгары бьют корпус Субэдэя и Джэбэ</li><li class="g-battle"><b>заставы на Яике</b> — 1229: монголы громят булгарские заставы</li><li class="g-transit"><b>Иске-аул</b> — чияликское селище у устья Белой (Новокабаново, конец XIII–XIV вв., ордынские монеты); в мире книги — перевалочная база беглецов</li><li class="g-bash"><b>Уфа-II (Уфимское городище)</b> — крупное городище башкирских земель</li><li class="g-udm"><b>Иднакар</b> — главное городище на Чепце, IX–XIII вв.; рядом Учкакар, Гурьякар, Весьякар</li><li class="g-perm"><b>Афкула (Рождественское)</b> — булгарский город-касаба, X — сер. XIV в.; мусульманский могильник</li><li class="g-perm"><b>Анюшкар (Кыласово)</b> — булгарская фактория в устье Иньвы, IX–XIV(XV) вв.</li><li class="g-perm"><b>Кудымкар (Изъюр)</b> — VII–XVII вв., самая долгая жизнь на одном месте</li><li class="g-sanct"><b>Гляденово</b> — святилище гляденовской культуры; в мире книги — культурный центр остяков Прикамья; рядом устье Мулянки, где в 1570-е проповедовал Трифон Вятский</li><li class="g-bash"><b>Оссат</b> — мир книги: небольшой городок на месте будущей Осы, башкирские земли; в источниках — лишь гипотеза о селении «Оссат»; русская Оса — с 1591</li><li class="g-perm"><b>Чердынь</b> — торговля с булгарами с IX–X вв.; путь в Югру; название связывают с выходцами с Выми и Вычегды</li><li class="g-perm"><b>Чашкинское озеро</b> — поселения ломоватовской и родановской культур, VIII–XII вв.</li><li class="g-ugr"><b>Неволино</b> — неволинская культура V–IX вв. на Сылве, её связывают с уграми; в мире книги — предки остяков Прикамья</li><li class="g-komi"><b>Усть-Вымь (Йемдын)</b> — центр Перми Вычегодской; кафедра Стефана с 1383</li><li class="g-komi"><b>Койгородок</b> — земля календаря: Койгородский район, тотем — глухарь (Дозмӧр)</li><li class="g-rus"><b>Нижний Новгород</b> — основан в 1221 Юрием Всеволодовичем как крепость против булгар и мордвы; в 1229 его осаждает мордовский князь Пургас</li><li class="g-rus"><b>Великий Устюг</b> — известен с начала XIII в.; в 1218–1219 его берут булгары — по летописи</li><li class="g-rus"><b>Хлынов (Вятка)</b> — в летописях — с 1374 (вятские ушкуйники); по преданию — 1174, предание позднее и ненадёжное; поселение по археологии — XI–XIII вв.</li></ol>
+    </div>
+  </div>
+
+  <h2>Что было на самом деле <span class="tag fact">факт</span></h2>
+  <ul class="timeline">
+    <li><span class="yr">1221</span><span>Юрий Всеволодович основывает Нижний Новгород — русский форпост против булгар на Волге.</span></li>
+    <li><span class="yr">1223</span><span>После битвы на Калке булгары встречают корпус Субэдэя и Джэбэ у Самарской луки, и монголы отходят. <span class="src">Единственный источник — Ибн ал-Асир; масштаб и исход спорны.</span></span></li>
+    <li><span class="yr">1229</span><span>Монголы разбивают булгарские заставы на Яике (Урале) и занимают верховья реки. <span class="src">Ибн Василь; русские летописи о бегстве булгарских сторожей.</span></span></li>
+    <li><span class="yr">1232</span><span>Монгольская конница покоряет юго-восток Башкирии и занимает южную Булгарию, но до «Великого города» не доходит.</span></li>
+    <li><span class="yr">1235–36</span><span>Венгерский монах Юлиан находит на востоке «Великую Венгрию» — родичей венгров (обычно её ищут в Приуралье, у башкир) — и видит, как к ней подступают монголы.</span></li>
+    <li><span class="yr">1236</span><span>Осенью Батый берёт и сжигает Биляр («Великий город»), Болгар, Сувар, Джукетау и Кернек; округа опустошена. «…взяша славный Великий город Болгарьскый и избиша оружьем от старца и до унаго». <span class="src">Лаврентьевская летопись; БРЭ.</span></span></li>
+    <li><span class="yr">1236–37</span><span>В том же походе покорены земли Башкирии; башкирских воинов берут в монгольское войско. Второе войско (Гуюк, Мункэ) идёт на мордву и марийцев.</span></li>
+    <li><span class="yr">после 1236</span><span>Булгарская знать поднимает восстания; монголы возвращаются и подавляют их. <span class="src">Имена вождей — Баян и Джику (Рашид ад-Дин) — сверить.</span></span></li>
+    <li><span class="yr">1236?</span><span>«Многие болгары, избегши, пришли в Русь и просили, чтоб им дать место», и князь Юрий Всеволодович расселил их по городам у Волги. <span class="src">Только у В. Н. Татищева (XVIII в.); в дошедших летописях записи нет, это, вероятно, его реконструкция (А. Ю. Карпов).</span></span></li>
+    <li><span class="yr">XIII–XIV</span><span>Булгария — часть улуса Джучи (Золотой Орды): не данник, как Русь, а земля самой Орды с вассальными князьями. Болгар и Джукетау отстроены, в Болгаре чеканят монету. Уцелевшие земледельцы уходят на север — к Каме, в будущие Казанскую землю и Чувашию.</span></li>
+    <li><span class="yr">XIII–XIV</span><span>Камский путь работает и при Орде: в Пермском крае находят джучидские монеты; на Анюшкаре — монгольские наконечники стрел. Афкула живёт до середины XIV века, Анюшкар — до XIV–XV.</span></li>
+    <li><span class="yr">1376–1399</span><span>Москва ходит на Булгар (поход Боброка в 1376); в 1399 году князь Юрий Дмитриевич берёт Болгар, Джукетау и Казань.</span></li>
+    <li><span class="yr">1383</span><span>Стефан Пермский становится епископом с кафедрой в Усть-Выми, на Вычегде.</span></li>
+    <li><span class="yr">1438</span><span>Возникает Казанское ханство; Болгар угасает, южные удмурты (арские князья) входят в ханство.</span></li>
+    <li><span class="yr">1472</span><span>Москва присоединяет Пермь Великую (поход Фёдора Пёстрого).</span></li>
+  </ul>
+
+  <h2>Было ли иго — по народам</h2>
+  <div class="tablebox"><table>
+    <thead><tr><th>Народ / земля</th><th>Что произошло</th><th>Форма власти</th></tr></thead>
+    <tbody>
+      <tr><td><b>Волжские булгары</b></td><td>Войны 1223–1236, разгром городов в 1236, восстания после.</td><td>Прямое включение в улус Джучи: ордынская земля с вассальными князьями и наместниками. Не «иго» в русском смысле, а сама Орда.</td></tr>
+      <tr><td><b>Башкиры</b></td><td>Удары 1229–1232, покорение в 1236–1237.</td><td>Подданство Орде: ясак, воины в войско; роды сохраняют самоуправление.</td></tr>
+      <tr><td><b>Мордва, марийцы</b></td><td>Поход Гуюка и Мункэ, 1236–1237.</td><td>Подчинение Орде.</td></tr>
+      <tr><td><b>Удмурты</b></td><td>Походов и сражений не известно. Чепецкие городища угасают в XIII веке. Ещё в смуту начала XIII века купцы-чепецкие возвращаются из Булгарии домой.</td><td>Север — вне прямой власти Орды. Юг — под булгарско-ордынским, потом казанским влиянием.</td></tr>
+      <tr><td><b>Пермь Великая (коми-пермяки)</b></td><td>Монгольских походов нет. Торговля с Болгаром продолжается; Афкула и Анюшкар доживают до XIV–XV веков.</td><td>Прямой власти Орды нет. Пермь — в сфере Новгорода, затем Москвы; Орда влияет через торговлю.</td></tr>
+      <tr><td><b>Пермь Вычегодская (коми-зыряне)</b></td><td>Монгольских походов нет.</td><td>Данническая зона Новгорода, с 1383 года — епархия Стефана.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">«Ига» в русском смысле (князья-данники, ярлыки, баскаки) здесь не было ни у кого. Булгария стала частью самой Орды, башкиры — её подданными. Север края — пермяки, зыряне, северные удмурты — монголов не видел; Орда дошла до него только монетой и товаром.</p>
+
+  <h2>Мог ли быть исход в городища <span class="tag world">мир книги</span></h2>
+  <p><b>Да, и куда бежать — было.</b> Кама — прямая речная дорога от Биляра и Болгара в Прикамье. По ней булгары веками ходили за мехом. В Афкуле и Анюшкаре уже жили булгарские общины: там мусульманские могильники, гончарные горны, весы и пломбы для связок мехов. Были прецеденты и раньше: в конце XI — начале XII века булгары переселялись на Чепцу, к Иднакару, и растворились среди удмуртов. А после 1236 года выжившие и в реальности уходили на север, к Каме. Развилка мира книги только усиливает этот поток и ведёт его дальше вверх по реке, к городищам, где говорят по-булгарски и молятся в сторону кыблы.</p>
+  <p>Убежища по степени «булгарскости»: <b>Афкула</b> (город-касаба с мусульманским могильником, ближе всех по Каме и Обве) → <b>Анюшкар</b> (фактория в устье Иньвы) → <b>Иднакар</b> и Чепца (булгарские находки, путь по Вятке) → <b>Уфа-II</b> на Белой (южнее, ближе к монголам) → <b>Чердынь</b> (дальний северный торг, ворота в Югру). В глубине страны, в стороне от реки, лежит <b>Кудымкар</b>: не булгарский, но самый живучий центр самих пермяков.</p>
+
+  <h2>Предполагаемое государство: общность народов по рекам <span class="tag world">мир книги</span></h2>
+  <p>Граница предполагаемого государства (малиновый пунктир) проведена так, чтобы в неё вошли земля календаря, Иднакар и Гляденово. Сухопутных дорог между пермяками и удмуртами в источниках нет, поэтому связь держится на воде.</p>
+  <ul>
+    <li><b>Кама — хребет общности.</b> От Гляденова вверх: Анюшкар, устья Обвы и Иньвы, Соликамск, Чердынь (по Вишере и Колве).</li>
+    <li><b>Верхняя Кама — мост к удмуртам.</b> Кама берёт начало в Удмуртии, рядом с верховьями Чепцы, течёт на север к Гайнам и поворачивает на юг. От Иднакара до её верховьев — короткий волок. Сам волок в источниках пока не подтверждён.</li>
+    <li><b>Волок Кельтма — Джурич</b> связывает Каму с Вычегдой: путь к Усть-Выми и зырянам. В XIX веке здесь прорыли Северо-Екатерининский канал.</li>
+    <li><b>Сысола — Вычегда</b>: от Койгородка вниз по рекам к Усть-Выми, кафедре Стефана.</li>
+    <li><b>Колва → Печора</b>: дальний путь на север и за Урал.</li>
+    <li><b>Сама Пермь Великая — смешанная.</b> Название Покчи выводят из удмуртского (выходцы с Чепцы и Вятки), а Чердынь, Искор и Вымкор связывают с пришельцами с Выми и Вычегды. Общность здесь подтверждается и топонимикой.</li>
+    <li><b>Зона контакта</b> у Койгородка: в XIV–XV веках здесь соседствовали северные удмурты, лузские пермяне и сысольские зыряне (Насибуллин).</li>
+    <li><b>Оса и среднее течение Камы ниже Гляденова — башкирские земли.</b> Это южный сосед общности, а не её часть.</li>
+  </ul>
+
+  <h2>Остяки <span class="tag fact">факт</span></h2>
+  <p><b>«Остяки» — русское общее название, а не один народ.</b> В Сибири так звали хантов, обских угров, родственных манси (вогулам). Их язык ближе всех к венгерскому. «Енисейскими остяками» называли кетов, «остяко-самоедами» — селькупов.</p>
+  <p><b>Остяки Прикамья</b> — особая группа. Перепись 1579 года делит их на сылвенских и мулянских; грамота 1623–1624 годов помещает остяков на Ирени, Шакве, Сылве, Тулве, Мулянке, Бырме. Именно их у устья Мулянки обращал Трифон. По Ф. С. Фасееву, это отюреченные финно-угорские (угорские) племена Среднего Урала; гидронимы Сылва, Шаква, Тулва связывают с угорским слоем. Тюрки называли их иштяками. К XVI веку их в основном поглотили татары и башкиры: из них сложилась часть пермских татар и северных башкир. Южнее, на Сылве, в V–IX веках жила неволинская культура, которую часто считают угорской.</p>
+  <p class="note">Мир книги: остяки Прикамья — потомки неволинцев, их культурный центр — Гляденово (святилище у устья Мулянки). На карте — своя цветная область: Мулянка, Сылва, Ирень (с Кунгуром у их слияния), Шаква, Тулва. Чусовой в списке остяцких рек 1623–1624 годов нет. Вогулы (манси) на Чусовой известны по письменным источникам XVI века, но в найденных археологических работах по Пермскому Предуралью их памятники не описаны — поэтому на карте вогулов нет. Археологи, впрочем, считают угров главным населением Урала в VI–VII веках, а часть неволинской культуры ушла с мадьярами на запад в IX веке. Для мира книги: угорский сосед на юго-востоке, у самой Перми, — ещё одна нить к «вогулам и остякам» из союзной рати.</p>
+
+  <h2>Между Алабугой и Осой: чияликцы <span class="tag fact">факт</span></h2>
+  <p>Путь от Алабуги до Осы — сотни километров вверх по Каме, и беглецам нужна стоянка. Булгарских городищ здесь нет: самые восточные известные крепости — Алабуга (Елабужское Чёртово городище) у устья Тоймы и малые пограничные крепости Закамья. Зато в низовьях Белой и Ика, в междуречье Камы, Белой и Ика жили <b>чияликцы</b> — чияликская культура X–XIV(XV) веков. Большинство исследователей считает их уграми, позже отюреченными и вошедшими в башкир и татар. Они были под сильным булгарским влиянием: булгарские вещи в могилах, а с конца XIII — начала XIV века мусульманские погребения и эпитафии на булгарском языке. Известны в основном могильники и селища. Прямо на Каме у устья Белой — селище <b>Иске-аул</b> у Новокабанова (Краснокамский район Башкортостана, конец XIII–XIV вв., ордынские монеты). Главное городище края — Уфа-II: в XIII–XIV веках там, возможно, сидел ордынский чиновник.</p>
+  <p><span class="tag world">мир книги</span> <b>Иске-аул</b> — перевалочная база беглецов: полпути от Алабуги до Оссата, союзники-угры, дорога вверх по Белой к Уфе. <b>Оссат</b> — небольшой башкирский городок на месте будущей Осы: русская Оса 1591 года встала не на пустом месте.</p>
+
+  <h2>Почему не на запад <span class="tag fact">факт</span> <span class="tag world">мир книги</span></h2>
+  <p>Наше время — от битвы на Калке (1223) до смерти Стефана Пермского (1396). На западе в это время граница войны, а не убежище:</p>
+  <ul>
+    <li><b>1218–1219</b> — булгары берут Устюг (по летописи; год сверить).</li>
+    <li><b>1220</b> — владимирская рать Святослава Всеволодовича берёт булгарский Ошель.</li>
+    <li><b>1221</b> — Юрий Всеволодович ставит Нижний Новгород — крепость против булгар и мордвы.</li>
+    <li><b>1229</b> — мордовский князь Пургас, союзник булгар, ходит на Нижний Новгород.</li>
+    <li><b>1237–1238</b> — Батый жжёт Рязань и Владимир. Князь Юрий гибнет на Сити.</li>
+  </ul>
+  <p>Нижний Новгород и Великий Устюг в наше время уже есть, Хлынов в летописях — только с 1374 года. Русь для булгар — недавний враг с крепостями на границе, а через год сама горит. Рассказ о булгарах, пришедших к Юрию, известен лишь по Татищеву. В мире книги беглецы делают естественный выбор: на запад — к врагу, на юг — к монголам, а на север — по своей торговой дороге к своим факториям.</p>
+
+  <h2>Перегоны вверх по Каме <span class="tag world">расчёт</span></h2>
+  <p>Расстояния — по прямой между стоянками и по реке с поправкой на извилистость Камы (×1,6; оценка). Скорости — порядок величины для XIII века: ладьи вверх по течению на вёслах и бечевой — 20–30 км в день; пешие с повозками и скотом — 10–15 км в день по суше (путь ≈ прямая ×1,3); санный путь по льду — 30–40 км в день.</p>
+  <div class="tablebox"><table>
+    <thead><tr><th>Перегон</th><th>По прямой</th><th>По реке</th><th>Ладьи, дней</th><th>Пешком со скотом, дней</th><th>По льду, дней</th></tr></thead>
+    <tbody>
+      <tr><td>Джукетау → Алабуга</td><td>≈ 100 км</td><td>≈ 160 км</td><td>5–8</td><td>9–13</td><td>4–5</td></tr>
+      <tr><td>Алабуга → Иске-аул</td><td>≈ 145 км</td><td>≈ 230 км</td><td>8–12</td><td>13–19</td><td>6–8</td></tr>
+      <tr><td>Иске-аул → Оссат</td><td>≈ 160 км</td><td>≈ 255 км</td><td>9–13</td><td>14–21</td><td>6–9</td></tr>
+      <tr><td>Оссат → устье Мулянки (Гляденово)</td><td>≈ 90 км</td><td>≈ 150 км</td><td>5–8</td><td>8–12</td><td>4–5</td></tr>
+      <tr><td>устье Мулянки → Анюшкар</td><td>≈ 65 км</td><td>≈ 110 км</td><td>4–6</td><td>6–9</td><td>3–4</td></tr>
+      <tr><td>Анюшкар → Афкула</td><td>≈ 45 км</td><td>≈ 70 км</td><td>3–4</td><td>4–6</td><td>2</td></tr>
+      <tr><td><b>Всего от Джукетау</b></td><td>≈ 600 км</td><td>≈ 975 км</td><td><b>35–50</b></td><td><b>55–80</b></td><td><b>25–35</b></td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Подъёмно.</b> Каждый перегон — от трёх дней до двух недель, и каждый кончается у дружественного народа. Весь путь — полтора-два месяца на ладьях, около двух с половиной месяцев пешком со скотом, около месяца санным путём. Батый ударил осенью 1236 года, так что первая волна естественно уходит зимой, по льду Камы. Скот прокормить в пути трудно: до Оссата есть пойменные луга и лесостепь, дальше на север — тайга. Отсюда естественное расслоение исхода: скотоводы оседают у чияликцев и башкир (Иске-аул, Белая, Оссат), а ремесленники, купцы и духовенство идут дальше, в Анюшкар и Афкулу.</p>
+
+  <h2>Как могло развиваться <span class="tag world">мир книги</span></h2>
+  <div class="stages">
+    <div class="stage"><div class="when">1236–1260-е</div><h3>Бегство и стены</h3><p>Ремесленники, купцы и духовенство из разорённых городов поднимаются по Каме. Афкула и Анюшкар разрастаются и обносят посады новыми валами. Пермская знать роднится с булгарскими семьями. Кама выше устья Чусовой становится «булгарской рекой без хана».</p></div>
+    <div class="stage"><div class="when">1260-е — XIV в.</div><h3>Союз рек</h3><p>Башкиры (Белая), удмурты (Чепца), пермяки и булгары держатся вместе. Пушнина уходит в Орду и в Новгород, по реке поднимаются серебро и соль. Ордынский Болгар выгоднее торговать, чем добить. Города Прикамья чеканят себе свои пломбы и меры.</p></div>
+    <div class="stage"><div class="when">1370–1390-е</div><h3>Стефан и анбур</h3><p>Миссия Стефана идёт от Усть-Выми на юг. Анбур, сложенный из пасов, становится письмом церкви и рынка. Рядом стоят мечети булгарских кварталов. В деньгах живёт старый счёт: ур, руч, низь.</p></div>
+    <div class="stage"><div class="when">XV–XVI вв.</div><h3>Тиски для Казани</h3><p>Казанское ханство слабеет. С севера давит Пермь с Камой, с запада — Москва. Пермь Великая остаётся автономией, а не уездом. После 1666 года побеждают старообрядцы — анбур закрепляется окончательно.</p></div>
+  </div>
+
+  <h2>Что проверить</h2>
+  <ul>
+    <li>Рассказ о булгарах у Юрия Всеволодовича известен только по Татищеву — искать подтверждение в летописях.</li>
+    <li>Имена вождей восстания (Баян, Джику) и даты — по Рашид ад-Дину.</li>
+    <li>Координаты городищ (Афкула, Анюшкар, Чепецкие, Уфа-II) — по паспортам памятников. На схеме они приблизительные.</li>
+    <li>Крупные городища коми-зырян XI–XIV веков (вымская культура): кроме Усть-Выми, достоверно крупных центров не нашёл.</li>
+  </ul>
+
+  <h2>Источники</h2>
+  <ul class="sources">
+    <li><a href="https://bigenc.ru/c/rossiia-istoriia-mongol-skoe-nashestvie-582432">Монгольское нашествие — Большая российская энциклопедия</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Mongol_invasion_of_Volga_Bulgaria">Mongol invasion of Volga Bulgaria — Wikipedia</a> (Ибн ал-Асир, Ибн Василь, Лаврентьевская летопись)</li>
+    <li><a href="https://cyberleninka.ru/article/n/chiyalikskaya-kultura-i-zolotaya-orda">Чияликская культура и Золотая Орда (КиберЛенинка)</a></li>
+    <li><a href="https://www.nauka-dialog.ru/jour/article/download/577/396">Антонов И. В. о чияликской культуре (Наука. Общество. Оборона / Вестник)</a></li>
+    <li><a href="https://journal.permsc.ru/index.php/pscj/article/download/2738/2252/7111">Об угорском компоненте Урала и Баяновском могильнике (Вестник ПФИЦ)</a></li>
+    <li><a href="https://evrazstep.ru/index.php/aes/article/download/147/181/202">Елабужское и Кирменское городища (Археология евразийских степей)</a></li>
+    <li><a href="https://milliard.tatar/news/istoriya-permskix-tatar-pervye-upominaniya-zagadka-istyakov-i-mulla-mametkul-838">История пермских татар: загадка иштяков (Миллиард.Татар)</a></li>
+    <li><a href="https://dic.academic.ru/dic.nsf/brokgauz_efron/75862/%D0%9E%D1%81%D1%82%D1%8F%D0%BA%D0%B8">Остяки — Энциклопедический словарь Брокгауза и Ефрона</a></li>
+    <li><a href="https://press.psu.ru/index.php/history/article/download/3760/2773/8798">Ойконимы бассейна Колвы в Перми Великой (Вестник ПГУ)</a></li>
+    <li><a href="https://press.psu.ru/index.php/history/article/download/3320/2404/7801">Поселения у Чашкинского озера (Вестник ПГУ)</a></li>
+    <li><a href="https://journals.udsu.ru/finno-ugric/article/download/6295/5666">Руденко К. А. Средневековые удмурты и Волжская Булгария в X — начале XIII вв. (2021)</a></li>
+    <li><a href="https://press.psu.ru/index.php/history/article/download/3690/2710/8645">Статья о городище Анюшкар и металлообработке (Вестник ПГУ)</a></li>
+    <li><a href="https://journal.permsc.ru/index.php/pscj/en/article/view/3204">Крыласова Н. Б. Городище Анюшкар — задачи и перспективы новых исследований (2025)</a></li>
+    <li>Белавин А. М., Крыласова Н. Б. Рождественский археологический комплекс (город Афкула) // Научный Татарстан. 2009. № 2 — по документу проекта «Земля календаря».</li>
+    <li>Бугарчев А. И., Крыласова Н. Б. Находки джучидских монет XIII–XIV вв. в Пермском крае (2023) — там же.</li>
+  </ul>
+</div>
+<script>
+(() => {
+  const box = document.getElementById('mapbox');
+  const map = { 't-reg': 'hide-reg', 't-route': 'hide-route', 't-rus': 'hide-rus', 't-way': 'hide-way', 't-com': 'hide-com' };
+  for (const [id, cls] of Object.entries(map)) {
+    const el = document.getElementById(id);
+    el.addEventListener('change', () => box.classList.toggle(cls, !el.checked));
+  }
+})();
+</script>
