@@ -312,6 +312,20 @@
 - **[Н]** Ernits E. Folktales of Meandash, the Mythic Sami Reindeer. Parts I–II // Folklore (Tartu).
   Vol. 11, 13: https://folklore.ee/Folklore/vol11/meandash.htm ; Meandash // Saami Encyclopedia:
   https://senc-prod.it.helsinki.fi/wiki/Meandash
+- **[Н]** Csáky V. et al. Early medieval genetic data from Ural region evaluated in the light
+  of archaeological evidence of ancient Hungarians // Scientific Reports. 2020. 10:19137 —
+  в Предуралье с древними венграми связаны ломоватовская и **неволинская** (Сылва, бассейн
+  Чусовой) культуры: https://pubmed.ncbi.nlm.nih.gov/33154399/
+- **[Н]** Gyuris B. et al. Long shared haplotypes identify the southern Urals as a primary source
+  for the 10th-century Hungarians // Cell. 2025 — потомки караякуповского населения жили
+  в Волго-Камье по меньшей мере до XIV в.:
+  https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/2025_Gyuris_Cell_HungarianOrigins.pdf
+- **[Н]** The issues of studying Magyars genesis (based on the Ural-Siberian materials of the Early
+  Middle Ages) // Российская археология — венгры в Восточной Европе в 819, ок. 830, 862 гг.,
+  уход в Карпатскую котловину ок. 895 г.: https://ras.jes.su/ra/s086960630015374-0-1-en
+- **[Н]** Усманов Э. М. К проблеме интерпретации сведений средневековых европейских источников
+  о прародине венгров // МАИАСК. 2016. Вып. 8 (Юлиан, Леведия, уральская прародина):
+  https://zenodo.org/records/556177
 - **[П]** Hungarian mythology, Ördög, Emese, Álmos, Turul — Wikipedia; легенда о Чудесном
   олене // Magyar Néprajz: https://vmek.oszk.hu/02700/02790/html/159.html
 - **[Н]** Hungarian religion // Encyclopedia of Religion: https://encyclopedia.com/environment/encyclopedias-almanacs-transcripts-and-maps/hungarian-religion ;
