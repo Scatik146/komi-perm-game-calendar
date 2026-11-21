@@ -208,6 +208,149 @@
   народов коми. 1996 (коми-пермяцкий миф о яйце, по Лимерову); Напольских В. В. Древнейшие
   этапы происхождения народов уральской языковой семьи. М., 1991 (мифы о ныряющей птице).
 
+### 4.1. Мир духов: три слоя (21 ноября 2026)
+
+Сводка «академический мир — „Человеколось“ — „Чёрная книга“» и второй пласт (легендарные
+личности края и их связь с богами). Рабочие страницы: «Мир духов: три слоя» и
+«Финно-угорские параллели: запад и Поволжье» (HTML, вне репозитория).
+
+**Коми и коми-пермяки**
+- **[Н]** Лимеров П. Ф. Монография о христианизации коми, гл. II «Мифологические сюжеты
+  и образы дохристианских представлений: фольклорная реконструкция» — что достоверно, что
+  кабинетная реконструкция (Красов: Ен — неологизм Стефана; Войпель — имя из послания
+  митр. Симона): https://folklore.ee/sator/wp-content/uploads/2024/04/Sator_24_05.pdf
+- **[Н]** Лимеров П. Ф. Богиня Мать в мифологии коми // Sator 24 — Зарни Ань, «Шонді Мам»,
+  лосиха как солнце, Кöстэ в маске лосихи: https://folklore.ee/sator/wp-content/uploads/2024/04/Sator_24_06.pdf
+- **[Н]** Лимеров П. Ф. Сюжет христианизации и легенды о чуди; колдовской эпос коми
+  (Йиркап, Яг-морт, Мартин, Сьöд Зон) // Sator 24: https://folklore.ee/sator/wp-content/uploads/2024/04/Sator_24_10.pdf ,
+  https://folklore.ee/sator/wp-content/uploads/2024/04/Sator_24_12.pdf
+- **[Н]** Кузнецов Н. Сотворение земли в коми мифологии // Sator 19. 2018 — у коми-пермяков
+  пара Ен и Куль: https://www.folklore.ee/rl/pubte/ee/sator/sator19/06.pdf
+- **[Н]** Материалы по коми-пермяцкой демонологии (2020) — **повторно**, полный перечень
+  персонажей: суседко, карта чуд, баняись и подмена младенца (*вежöм*), луншöрика, вöрись
+  (кöспель, киззя-виззя, вöрись инька), ваись (**вакулёк**), святочные шуликуны и вакули,
+  каляны, боболь, тöдiсь, икота/шева, кулöммез, важжез.
+- **[Н]** Голева Т. Г. Мифологические персонажи… Автореферат (2008):
+  https://dspace.kpfu.ru/xmlui/bitstream/handle/net/29643/0770171.pdf
+- **[Н]** Голева Т. Г. Персонажи преданий Юкся, Пукся, Чадз и Бач // Вестник ВолГУ. История.
+  2024. Т. 29, № 5: https://hfrir.jvolsu.com/index.php/en/component/attachments/download/3502
+- **[Н]** Королёва С. Ю., Кротова-Гарина А. В. Предки: мифологические персонажи и их названия
+  в устной традиции коми-пермяков // Фольклор: структура, типология, семиотика. 2021. № 4:
+  https://folklore.elpub.ru/jour/article/download/215/183
+- **[Н]** Королёва С. Ю. Коми-пермяцкий богатырь Пера // Живая старина. 2019. № 1.
+- **[Н]** Айбабина Е. А. Наименования водяного духа-хозяина в диалектах коми-зырянского языка //
+  Linguistica Uralica. 2022. № 4: https://kirj.ee/wp-content/plugins/kirj/pub/ling-2022-4-307-314_20260122161123.pdf
+- **[Н]** Канева И. А. Чудь в преданиях коми: https://www.booksite.ru/folk/data/kanevai.pdf ;
+  Смирнов Ю. И. Самопогребение чуди: https://www.booksite.ru/folk/data/samopogr.pdf ;
+  Данилко Е. С. Историческая память… зюздинских и язьвинских коми-пермяков // ЭО Online. 2007.
+- **[Н]** Уляшев О. Perm and Ob-Ugric relations in terms of folklore data // Folklore (Tartu).
+  Vol. 76. 2019 — **Пам-сотник как историческое лицо (1380–1392, набеги на Усть-Вымь
+  и Яренск, в 1392 с вогулами)**, мать Кудым-Оша — жрица Войпеля, Кöстэ — дочь Асыки,
+  брак «медведь — лосиха», родословная Асыки от сына Торума:
+  https://folklore.ee/folklore/vol76/uliashev.pdf — летописную основу дат сверить.
+- **[П]** Кудым-Ош, Легенда о сватовстве Кудым-Оша, Легенда о Пере-богатыре, Легенда о чуди,
+  Полюдов Камень — Знание.Вики (пересказы по Ожеговой и др.): https://znanierussia.ru/articles/Кудым-Ош
+- **[В]** Загадка Курöгкара (АиФ) — клятва пама вывести народ из-под земли:
+  https://vfokuse.mail.ru/news/67663413-zagadka-kur-gkara-kakie-legendy-drevney-chudi-hranit-kurinyy-gorodok/
+  — сверить по научной записи.
+- **[П]** Лимеров П. Ф. Пермские мифы для детей — Йиркап: https://mybook.ru/author/pavel-limerov/permskie-mify-dlya-detej/read/
+
+**Удмурты**
+- **[Н]** Владыкина Т. The Udmurt Pantheon and the Udmurt Worldview // Sator 22. 2021:
+  https://folklore.ee/sator/wp-content/uploads/2021/11/sator22-05.pdf
+- **[Н]** Панина Т., Владыкина Т. Forest Spirits in the Udmurt Worldview // Sator 22:
+  https://folklore.ee/sator/wp-content/uploads/2021/11/sator22-07.pdf ; Владыкина Т., Глухова Г.
+  Home Spirits in the Udmurt Mythology // Sator 22: https://folklore.ee/sator/wp-content/uploads/2021/11/sator22-08.pdf
+- **[Н]** Владыкина Т. Г., Панина Т. И. Палэсмурт // Ежегодник финно-угорских исследований:
+  https://journals.udsu.ru/finno-ugric/article/download/2925/2873
+- **[Н]** Шутова Н. И. Об этимологии и семантике термина воршуд // Linguistica Uralica. 2014. № 4.
+- **[Н]** Lintrop A. On the Udmurt Water Spirit and the Formation of the Concept ‘Holy’ among
+  Permian Peoples // Folklore (Tartu). Vol. 26: https://www.folklore.ee/Folklore/vol26/lintrop.pdf
+- **[Н]** Напольских В. В. Удмуртские этимологии: Алангасар: https://www.ruthenia.ru/folklore/napolskih4.pdf
+- **[Н]** Владыкин В. Е. Религиозно-мифологическая картина мира удмуртов. Ижевск, 1994
+  (по рецензии в ЭО. 1997. № 1).
+- **[П]** Мифы Поволжья: эпические сказания удмуртов о богатырях // Вокруг света — род Донды
+  (Идна, Гурья, Весья, Зуй, Эбга, Чибинь), Мардан (культ предка в 24 деревнях), Ядыгар, Эш-Терек:
+  https://www.vokrugsveta.ru/articles/mify-povolzhya-epicheskie-skazaniya-udmurtov-o-bogatyryakh-id872700
+- **[В]** Городище Иднакар (по кн. «В краю Донды-батыра», Глазов, 2014; «Мифы, легенды и сказки
+  удмуртского народа», Ижевск, 1995) — Кылдысин как предок Донды: https://batyres.github.io/page3.html
+- **[П]** Dorvyzhy — Wikipedia (литературный эпос Худякова, 1920-е).
+
+**Обские угры (опора для остяков Прикамья)**
+- **[Н]** Манси // Большая российская энциклопедия — три мира, Калтась-эква, Куль-отыр:
+  https://bigenc.ru/c/mansi-2a8401
+- **[П]** Атлас КМНС Югры: духовная культура хантов: https://atlaskmns.ru/page/en/people_hanty_spirit.html
+- **[П]** Kaltas-Ekwa (заяц, луна, апрель; имя ← Кылдысин — Напольских, Белых), Ob-Ugric creation
+  myth — Wikipedia.
+- **[Н]** Обряд почитания Ас тый ики // Сибирский филологический журнал. 2019. № 4:
+  https://www.philology.nsc.ru/journals/spj/pdf/2019_4/03.pdf
+- **[Н]** Керемет // Большая российская энциклопедия: https://bigenc.ru/c/keremet-692b30
+- **[П]** Поход Курбского и Салтыка-Травина на Асыку (1483) // Вокруг света:
+  https://www.vokrugsveta.ru/vs/article/4667
+
+**Игры Morteshka** (источник вдохновения, не фактов)
+- **[В]** The Mooseman — Wikipedia (зеркало): сюжет, разработка, консультации Пермского
+  краеведческого музея (Э. Чурилов), отказ от дуализма, опора на Мяндаша:
+  https://wiki.riteme.site/wiki/The_Mooseman ; достижения Steam: https://steamcommunity.com/stats/574310/achievements ;
+  обзоры StopGame (2017), DTF «Душа Пармы», The Blueprint (2025).
+- **[В]** Black Book: прохождение (https://kosgames.com/black-book-walkthrough-guide-30782/),
+  достижения (https://gameplay.tips/guides/black-book-100-full-achievement-guide-and-tips.html),
+  Guynes S. Playing “Black Book” (https://seanguynes.com/2024/11/17/playing-black-book/),
+  обзор Cybersport.ru, обсуждения Steam (концовки, глава 6).
+- **[В]** «Чёрная книга», настольная игра Hobby World: книга правил:
+  https://media.lavkaigr.ru/uploads/chjornaja-kniga-rules.pdf
+
+### 4.2. Финно-угорские параллели: запад и Поволжье (21 ноября 2026)
+
+- **[Н]** Финно-угорская мифология // Мифы народов мира: https://dic.academic.ru/dic.nsf/enc_myphology/4215/
+- **[П]** Финская мифология // ЭСБЕ: https://booksite.ru/fulltext/1/001/007/107/107360.htm ;
+  Finnish mythology, Finnic paganism — Wikipedia.
+- **[Н]** Иликаев А. С. Мотивы творения мира из яйца в космологических мифах прибалтийско-финских
+  народов, марийцев и удмуртов // Исторический журнал: научные исследования. 2023. № 2:
+  https://journals.rcsi.science/2454-0609/article/download/366366/339601 ; его же. Мифы
+  о Юмынудыр… // там же. 2024. № 6: https://journals.rcsi.science/2454-0609/article/download/366594/339811
+- **[Н]** Ernits E. Folktales of Meandash, the Mythic Sami Reindeer. Parts I–II // Folklore (Tartu).
+  Vol. 11, 13: https://folklore.ee/Folklore/vol11/meandash.htm ; Meandash // Saami Encyclopedia:
+  https://senc-prod.it.helsinki.fi/wiki/Meandash
+- **[Н]** Csáky V. et al. Early medieval genetic data from Ural region evaluated in the light
+  of archaeological evidence of ancient Hungarians // Scientific Reports. 2020. 10:19137 —
+  в Предуралье с древними венграми связаны ломоватовская и **неволинская** (Сылва, бассейн
+  Чусовой) культуры: https://pubmed.ncbi.nlm.nih.gov/33154399/
+- **[Н]** Gyuris B. et al. Long shared haplotypes identify the southern Urals as a primary source
+  for the 10th-century Hungarians // Cell. 2025 — потомки караякуповского населения жили
+  в Волго-Камье по меньшей мере до XIV в.:
+  https://reich.hms.harvard.edu/sites/reich.hms.harvard.edu/files/inline-files/2025_Gyuris_Cell_HungarianOrigins.pdf
+- **[Н]** The issues of studying Magyars genesis (based on the Ural-Siberian materials of the Early
+  Middle Ages) // Российская археология — венгры в Восточной Европе в 819, ок. 830, 862 гг.,
+  уход в Карпатскую котловину ок. 895 г.: https://ras.jes.su/ra/s086960630015374-0-1-en
+- **[Н]** Усманов Э. М. К проблеме интерпретации сведений средневековых европейских источников
+  о прародине венгров // МАИАСК. 2016. Вып. 8 (Юлиан, Леведия, уральская прародина):
+  https://zenodo.org/records/556177
+- **[П]** Hungarian mythology, Ördög, Emese, Álmos, Turul — Wikipedia; легенда о Чудесном
+  олене // Magyar Néprajz: https://vmek.oszk.hu/02700/02790/html/159.html
+- **[Н]** Hungarian religion // Encyclopedia of Religion: https://encyclopedia.com/environment/encyclopedias-almanacs-transcripts-and-maps/hungarian-religion ;
+  Pócs É. Hungarian Táltos and Shamanism of Pagan Hungarians (критика реконструкции).
+- **[Н]** Онар; Агавайрем // Большая российская энциклопедия: https://bigenc.ru/c/onar-8eb677
+- **[Н]** Добро и зло в марийской мифологии // Финно-угорский мир. 2009. № 2:
+  https://cyberleninka.ru/article/n/dobro-i-zlo-v-mariyskoy-mifologii/pdf ; Устьянцев Г. Ю.
+  Религиозно-мифологические представления марийского жречества // Фольклор: структура,
+  типология, семиотика. 2025. № 2: https://folklore.elpub.ru/jour/article/download/357/312
+- **[П]** Марийские священные рощи (culture.ru): https://www.culture.ru/objects/1848 ;
+  Чумбылат (Рувики, по Марийской биографической энциклопедии): https://ru.ruwiki.ru/wiki/Чумбылат
+- **[Н]** Сушкова Ю. Н. Обычно-правовые аспекты дохристианских верований у мордвы:
+  https://lib.herzen.spb.ru/media/magazines/contents/1/11(71)/sushkova_11_71_182_192.pdf ;
+  Шаронов А. М., Шаронова Е. А. Основные концепты эрзянской мифологии // Вестник угроведения.
+  2019. № 2: https://vestnik-ugrovedenia.ru/sites/default/files/vu/a._m._sharonov.pdf
+- **[П]** Mastorava (эпос Шаронова, 1994; Тюштя) — Wikipedia.
+- **[Н]** Chuvash religion // Encyclopedia of Religion:
+  https://encyclopedia.com/environment/encyclopedias-almanacs-transcripts-and-maps/chuvash-religion ;
+  Борисова Л. В., Ильина Г. Г., Чуева Э. В. Предварительный обзор чувашского демониума //
+  Сибирский филологический журнал. 2021. № 3: https://www.philology.nsc.ru/journals/spj/pdf/2021_3/03.pdf
+- **[П]** Каменский Никанор. Остатки языческих обрядов и религиозных верований у чуваш:
+  https://www.azbyka.ru/otechnik/Nikanor_Kamenskij/ostatki-azyceskih-obradov-i-religioznyh-verovanij-u-cuvas/
+- **[П] найти** Муравьева Т. Мифы Поволжья. М.: МИФ, 2023; Александров А. Чувашские мифы. 2025;
+  Девяткина Т. Мордовские мифы. 2026; Голубкова О. и др. Мифы коми. 2025 (полные тексты).
+
 ## 5. История, археология, эры
 
 - **[Н] найдено** Никонов В. В. От Троицы до Стречалун… // Вестник ПФИЦ. 2025. № 1 — прочитано
