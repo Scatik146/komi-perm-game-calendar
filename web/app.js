@@ -410,6 +410,22 @@ function chertaZmana(g, s, h) {
   el('line', { x1: 0, y1: 0, x2: f(x2), y2: f(y2), class: kraj ? 'z-edge horizon' : 'z-edge' }, g);
 }
 
+// yakor: снаружи подпись растёт от круга — справа вправо, слева влево, сверху и снизу — по середине
+function yakor(h, r) {
+  const [x] = point(h, r);
+  let storona = 'seredina';
+  if (r > R && x > 20) storona = 'vpravo';
+  if (r > R && x < -20) storona = 'vlevo';
+  return storona;
+}
+
+// vynoska: продолжение черты за круг — почти до подписи снаружи
+function vynoska(g, h, r) {
+  const [x1, y1] = point(h, R + 2);
+  const [x2, y2] = point(h, r - 3);
+  el('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), class: 'z-vynoska' }, g);
+}
+
 // fonPodpisi: на чём стоит подпись — снаружи круга, на светлом дне или на тёмной ночи
 function fonPodpisi(s, r) {
   const nec = sutkiZ.sobytiya.find((x) => x.id === 'nec');
@@ -420,32 +436,57 @@ function fonPodpisi(s, r) {
 
 // podpisZmana: подпись «русский — крупно, иврит — ниже» на радиусе r
 function podpisZmana(g, s, h, r) {
-  const [tx, ty] = point(h, r);
+  const [tx, ty] = tochkaPodpisi(h, r);
   const nazv = zmanPoId(s.id);
-  const podpis = el('g', { class: `rnum z-podpis ${fonPodpisi(s, r)}`, 'data-ids': s.id }, g);
+  if (r > R) vynoska(g, h, r);
+  const podpis = el('g', { class: `rnum z-podpis ${fonPodpisi(s, r)} ${yakor(h, r)}`, 'data-ids': s.id }, g);
   el('text', { x: f(tx), y: f(ty - 2), class: 'z-ru' }, podpis).textContent = nazv.kratko;
   el('text', { x: f(tx), y: f(ty + 12), class: 'z-he', lang: 'he' }, podpis).textContent = nazv.heKratko;
 }
 
 // UROVNI_ZMANIM: радиусы подписей по очереди — снаружи, дальше снаружи, внутри, ближе к центру
-const UROVNI_ZMANIM = [R_NAMAZ, R_NAMAZ + 38, R_NAMAZ - 68, R_NAMAZ - 108];
+const UROVNI_ZMANIM = [R + 20, R + 52, R - 46, R - 86];
 
-// svobodnyjUroven: первый круг, где рядом (ближе часа) ещё нет подписи; -1 — места нет
-function svobodnyjUroven(zanyato, h) {
-  const uroven = zanyato.findIndex((chasy) => chasy.every((x) => span(x, h) >= 1 && span(h, x) >= 1));
-  return uroven;
+// GRANICA_ZMANIM: подпись не выходит за поле круга
+const GRANICA_ZMANIM = 258;
+
+// tochkaPodpisi: где стоит подпись времени на радиусе r (сверху и снизу снаружи — чуть дальше)
+function tochkaPodpisi(h, r) {
+  const tochka = point(h, r > R && yakor(h, r) === 'seredina' ? r + 12 : r);
+  return tochka;
 }
 
-// podpisiZmanim: подписи времён на круге; где тесно — на круг внутрь, где совсем тесно — только черта
+// ramkaPodpisi: прямоугольник подписи { x, y, w, h } — центр и размер, по длине русской строки
+function ramkaPodpisi(s, h, r) {
+  const [tx, ty] = tochkaPodpisi(h, r);
+  const w = zmanPoId(s.id).kratko.length * 8 + 6;
+  const sdvig = { vpravo: w / 2, vlevo: -w / 2, seredina: 0 }[yakor(h, r)];
+  return { x: tx + sdvig, y: ty + 5, w, h: 30 };
+}
+
+// mestoSvobodno: рамка в поле круга и не задевает уже поставленные подписи
+function mestoSvobodno(ramka, postavleny) {
+  const vPole = Math.abs(ramka.x) + ramka.w / 2 <= GRANICA_ZMANIM && Math.abs(ramka.y) + ramka.h / 2 <= GRANICA_ZMANIM;
+  const peresekaet = (d) => Math.abs(d.x - ramka.x) < (d.w + ramka.w) / 2 && Math.abs(d.y - ramka.y) < (d.h + ramka.h) / 2;
+  return vPole && !postavleny.some(peresekaet);
+}
+
+// svobodnyjRadius: первый радиус по очереди, где подписи есть место; null — места нет
+function svobodnyjRadius(s, h, postavleny) {
+  const r = UROVNI_ZMANIM.find((x) => mestoSvobodno(ramkaPodpisi(s, h, x), postavleny));
+  return r === undefined ? null : r;
+}
+
+// podpisiZmanim: подписи времён; где тесно — дальше наружу или ближе к центру, где совсем тесно — только черта
 function podpisiZmanim(svg, hOf) {
   const g = el('g', {}, svg);
-  const zanyato = UROVNI_ZMANIM.map(() => []);
+  const postavleny = [];
   for (const s of sutkiZ.sobytiya.filter((x) => zmanPoId(x.id).naKruge)) {
     const h = hOf(s.t);
-    const uroven = svobodnyjUroven(zanyato, h);
+    const r = svobodnyjRadius(s, h, postavleny);
     chertaZmana(g, s, h);
-    if (uroven >= 0) zanyato[uroven].push(h);
-    if (uroven >= 0) podpisZmana(g, s, h, UROVNI_ZMANIM[uroven]);
+    if (r !== null) postavleny.push(ramkaPodpisi(s, h, r));
+    if (r !== null) podpisZmana(g, s, h, r);
   }
 }
 
