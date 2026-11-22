@@ -424,10 +424,10 @@ function yakor(h, r) {
   return storona;
 }
 
-// vynoska: продолжение черты за круг — почти до подписи снаружи
-function vynoska(g, h, r) {
+// vynoska: продолжение черты за круг до радиуса konec — почти до подписи снаружи
+function vynoska(g, h, konec) {
   const [x1, y1] = point(h, R + 2);
-  const [x2, y2] = point(h, r - 3);
+  const [x2, y2] = point(h, konec);
   el('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), class: 'z-vynoska' }, g);
 }
 
@@ -441,12 +441,12 @@ function fonPodpisi(s, r) {
 
 // podpisZmana: подпись «русский — крупно, иврит — ниже» на радиусе r
 function podpisZmana(g, s, h, r) {
-  const [tx, ty] = tochkaPodpisi(h, r);
+  const [tx, ty] = tochkaPodpisi(s, h, r);
   const nazv = zmanPoId(s.id);
-  if (r > R) vynoska(g, h, r);
+  if (r > R) vynoska(g, h, Math.hypot(tx, ty) - (yakor(h, r) === 'seredina' ? 16 * masshtabPodpisi() : 3));
   const podpis = el('g', { class: `rnum z-podpis ${fonPodpisi(s, r)} ${yakor(h, r)}`, 'data-ids': s.id }, g);
   el('text', { x: f(tx), y: f(ty - 2), class: 'z-ru' }, podpis).textContent = nazv.kratko;
-  el('text', { x: f(tx), y: f(ty + 12), class: 'z-he', lang: 'he' }, podpis).textContent = nazv.heKratko;
+  el('text', { x: f(tx), y: f(ty + 13 * masshtabPodpisi()), class: 'z-he', lang: 'he' }, podpis).textContent = nazv.heKratko;
 }
 
 // UROVNI_ZMANIM: радиусы подписей по очереди — снаружи, дальше снаружи, внутри, ближе к центру
@@ -455,19 +455,36 @@ const UROVNI_ZMANIM = [R + 20, R + 52, R - 46, R - 86];
 // GRANICA_ZMANIM: подпись не выходит за поле круга
 const GRANICA_ZMANIM = 258;
 
-// tochkaPodpisi: где стоит подпись времени на радиусе r (сверху и снизу снаружи — чуть дальше)
-function tochkaPodpisi(h, r) {
-  const tochka = point(h, r > R && yakor(h, r) === 'seredina' ? r + 12 : r);
-  return tochka;
+// masshtabPodpisi: во сколько раз подписи крупнее обычного (на телефоне — 1,3)
+function masshtabPodpisi() {
+  return UZKIJ_EKRAN.matches ? 1.3 : 1;
 }
 
-// ramkaPodpisi: прямоугольник подписи { x, y, w, h } — центр и размер, по длине русской строки
-function ramkaPodpisi(s, h, r) {
-  const [tx, ty] = tochkaPodpisi(h, r);
-  const k = UZKIJ_EKRAN.matches ? 1.3 : 1;
+// ramkaVTochke: прямоугольник подписи { x, y, w, h }, если её точка — (tx, ty)
+function ramkaVTochke(s, h, r, [tx, ty]) {
+  const k = masshtabPodpisi();
   const w = (zmanPoId(s.id).kratko.length * 8 + 6) * k;
   const sdvig = { vpravo: w / 2, vlevo: -w / 2, seredina: 0 }[yakor(h, r)];
-  return { x: tx + sdvig, y: ty + 5, w, h: 30 * k };
+  return { x: tx + sdvig, y: ty + 2 * k, w, h: 30 * k };
+}
+
+// udalenie: как далеко от центра круга ближняя точка прямоугольника
+function udalenie(ramka) {
+  const dx = Math.max(Math.abs(ramka.x) - ramka.w / 2, 0);
+  const dy = Math.max(Math.abs(ramka.y) - ramka.h / 2, 0);
+  return Math.hypot(dx, dy);
+}
+
+// tochkaPodpisi: где стоит подпись; снаружи — отодвинута так, чтобы не задеть дугу Луны
+function tochkaPodpisi(s, h, r) {
+  let rr = r;
+  while (r > R && rr < r + 48 && udalenie(ramkaVTochke(s, h, r, point(h, rr))) < R_MOON + 8) rr += 3;
+  return point(h, rr);
+}
+
+// ramkaPodpisi: прямоугольник подписи времени s на радиусе r
+function ramkaPodpisi(s, h, r) {
+  return ramkaVTochke(s, h, r, tochkaPodpisi(s, h, r));
 }
 
 // mestoSvobodno: рамка в поле круга и не задевает уже поставленные подписи
