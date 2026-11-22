@@ -18,8 +18,15 @@ Copyright 2026 Scatik146 (https://github.com/Scatik146)
 Таблица анбура (древнепермского письма) составлена по книге:
 Лыткин В. И. Древнепермский язык. М., 1952.
 
-Шрифты: PT Serif, PT Sans (ParaType), Noto Sans Old Permic и Noto Serif Hebrew
-(The Noto Project Authors) — лицензия SIL Open Font License 1.1.
+Шрифты — только свои, лежат на сайте (папка fonts/); системные шрифты не используются.
+Все — под лицензией SIL Open Font License 1.1, тексты лицензий — fonts/OFL-*.txt:
+- PT Serif, PT Sans — © 2009–2010 ParaType Inc. (авторы А. Королькова, О. Умпелева,
+  В. Ефимов); файлы — пакеты @fontsource/pt-serif, @fontsource/pt-sans;
+- Noto Sans Old Permic — анбур; © The Noto Project Authors;
+- Noto Serif Hebrew — подписи на иврите (режим «Еврейские»); © The Noto Project Authors;
+  пакет @fontsource/noto-serif-hebrew;
+- Noto Naskh Arabic — подписи по-арабски (режим «Мусульманские»); © The Noto Project
+  Authors; пакет @fontsource/noto-naskh-arabic.
 
 Знаки-пасы «Солнечной восьмёрки» (числа, восьмёрки, пасы месяцев) и шрифт Pasy
 (web/fonts/Pasy.ttf) — авторская разработка Scatik146, лицензия Apache License 2.0.
