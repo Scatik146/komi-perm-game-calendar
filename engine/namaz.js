@@ -15,7 +15,7 @@ export const METODIKA_CDUM = {
   ugolVoshoda: -0.833,
   tenAsra: 2,
   shirotaZapasnaya: 45,
-  ihtiyat: { fadzhr: -2, shuruk: -2, zuhr: 3, asr: 2, magrib: 2, isha: 2 },
+  ihtiyat: { fadzhr: -2, shuruk: -2, zuhr: 2, asr: 2, magrib: 2, isha: 2 },
 };
 
 // Порядок намазов на циферблате.
@@ -77,11 +77,16 @@ function poDolyamNochi(vremena, zapas) {
   return itog;
 }
 
-// sIhtiyatom: каждое время сдвинуто на ихтият — в безопасную сторону
+// doMinuty: момент, округлённый до ближайшей минуты (как в таблицах ЦДУМ)
+function doMinuty(t) {
+  return Math.round(t / MIN_MS) * MIN_MS;
+}
+
+// sIhtiyatom: каждое время сдвинуто на ихтият — в безопасную сторону — и округлено до минуты
 function sIhtiyatom(vremena) {
   const itog = {};
   for (const imya of NAMAZY) {
-    itog[imya] = vremena[imya] + METODIKA_CDUM.ihtiyat[imya] * MIN_MS;
+    itog[imya] = doMinuty(vremena[imya] + METODIKA_CDUM.ihtiyat[imya] * MIN_MS);
   }
   return itog;
 }
