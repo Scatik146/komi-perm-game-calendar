@@ -28,7 +28,11 @@ done
 # Каждый файл шрифта, на который ссылается CSS, должен лежать на сайте.
 if [ -n "${CI:-}" ]; then
   for f in $(grep -oh 'fonts/[A-Za-z0-9.-]*\.woff2' web/*.css | sort -u); do
-    [ -f "_site/$f" ] || { echo "Нет файла шрифта: $f" >&2; exit 1; }
+    if [ ! -f "_site/$f" ]; then
+      echo "Нет файла шрифта: $f; в пакетах есть:" >&2
+      ls node_modules/@fontsource/*/files | grep -E '(math|symbols).*400-normal.woff2' >&2 || true
+      exit 1
+    fi
   done
 fi
 echo "Сайт собран в _site/"
