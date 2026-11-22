@@ -449,7 +449,7 @@ function podpisZmana(g, s, h, r) {
   el('text', { x: f(tx), y: f(ty + 13 * masshtabPodpisi()), class: 'z-he', lang: 'he' }, podpis).textContent = nazv.heKratko;
 }
 
-// UROVNI_ZMANIM: радиусы подписей по очереди — снаружи, дальше снаружи, внутри, ближе к центру
+// UROVNI_ZMANIM: радиусы подписей — снаружи, дальше снаружи, внутри, ближе к центру
 const UROVNI_ZMANIM = [R + 20, R + 52, R - 46, R - 86];
 
 // GRANICA_ZMANIM: подпись не выходит за поле круга
@@ -494,9 +494,10 @@ function mestoSvobodno(ramka, postavleny) {
   return vPole && !postavleny.some(peresekaet);
 }
 
-// svobodnyjRadius: первый радиус по очереди, где подписи есть место; null — места нет
+// svobodnyjRadius: первый радиус своей стороны (начала молитв — внутри, сроки и закат — снаружи), где есть место; null — места нет
 function svobodnyjRadius(s, h, postavleny) {
-  const r = UROVNI_ZMANIM.find((x) => mestoSvobodno(ramkaPodpisi(s, h, x), postavleny));
+  const poryadok = zmanPoId(s.id).vnutri ? UROVNI_ZMANIM.slice(2) : UROVNI_ZMANIM.slice(0, 2);
+  const r = poryadok.find((x) => mestoSvobodno(ramkaPodpisi(s, h, x), postavleny));
   return r === undefined ? null : r;
 }
 
