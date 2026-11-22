@@ -1,11 +1,10 @@
-// Проверка: каждый знак, который сайт показывает, есть в одном из наших шрифтов (папка _site/fonts).
+// Проверка: каждый знак, который сайт показывает, есть в одном из наших шрифтов (те, что подключены в CSS).
 // Системными шрифтами сайт не пользуется. Запуск после сборки: node scripts/proverit-shrifty.mjs
 // Нужен пакет fontkit (на GitHub ставится в pages.yml). Код выхода 1 — есть знаки без шрифта.
 import fs from 'node:fs';
 import path from 'node:path';
 import * as fontkit from 'fontkit';
 
-const PAPKA = '_site/fonts';
 const ISTOCHNIKI = ['web', 'data'];
 const RASSHIRENIYA = ['.html', '.js', '.json'];
 
@@ -28,10 +27,11 @@ function znakiSajta() {
   return znaki;
 }
 
-// shrifty: открытые файлы шрифтов сайта
+// shrifty: открытые файлы шрифтов, на которые ссылаются стили сайта
 function shrifty() {
-  const fajly = fs.readdirSync(PAPKA).filter((f) => /\.(woff2|ttf)$/.test(f));
-  return fajly.map((f) => fontkit.openSync(path.join(PAPKA, f)));
+  const css = fs.readdirSync('web').filter((f) => f.endsWith('.css')).map((f) => fs.readFileSync(path.join('web', f), 'utf8')).join('\n');
+  const fajly = [...new Set(css.match(/fonts\/[\w.-]+\.(woff2|ttf)/g))];
+  return fajly.map((f) => fontkit.openSync(path.join('_site', f)));
 }
 
 // bezShrifta: знаки, которых нет ни в одном шрифте (пробелы и невидимые не считаем)
