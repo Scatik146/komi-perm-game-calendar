@@ -34,6 +34,17 @@ const TABLICA_SALEHARD = [
   ['2026-12-01', '6:40 10:27 12:24 12:46 14:16 17:54', 1],
   ['2026-12-08', '6:51 10:53 12:27 12:37 13:56 17:48', 1],
 ];
+// Челябинск — 55,16° с. ш., 61,40° в. д., UTC+5 (cdum.ru/time-namaz/Chelyabinsk/Chelyabinsk2015.php, «Челябинск 2026»).
+const CHELYABINSK = { lat: 55.16, lon: 61.40 };
+const TABLICA_CHELYABINSK = [
+  ['2026-03-01', '5:42 7:43 13:09 16:34 18:31 20:25', 1],
+  ['2026-06-01', '2:24 4:20 12:54 18:35 21:25 23:11', 2],
+  ['2026-07-01', '2:18 4:17 13:00 18:45 21:39 23:28', 2],
+  ['2026-07-21', '2:48 4:42 13:03 18:36 21:19 23:02', 2],
+  ['2026-08-01', '3:11 5:00 13:03 18:26 21:00 22:41', 2],
+  ['2026-08-19', '2:49 5:34 13:00 18:00 20:22 22:51', 1],
+  ['2026-09-01', '3:36 5:58 12:56 17:37 19:50 22:01', 1],
+];
 const DOPUSK = 3;
 
 // minutyIzTablicy: время «ч:мм» по UTC+5 → минуты от полуночи
@@ -67,6 +78,14 @@ function sverka(mesto, data, stroka) {
 for (const [data, stroka, stupen] of TABLICA_PERM) {
   test(`Пермь ${data}: таблица ЦДУМ ±${DOPUSK} мин, ступень ${stupen}`, () => {
     const s = sverka(PERM, data, stroka);
+    assert.equal(s.stupen, stupen);
+    s.raznicy.forEach((d, i) => assert.ok(Math.abs(d) <= DOPUSK, `${NAMAZY[i]}: ${d.toFixed(1)} мин`));
+  });
+}
+
+for (const [data, stroka, stupen] of TABLICA_CHELYABINSK) {
+  test(`Челябинск ${data}: таблица ЦДУМ ±${DOPUSK} мин, ступень ${stupen}`, () => {
+    const s = sverka(CHELYABINSK, data, stroka);
     assert.equal(s.stupen, stupen);
     s.raznicy.forEach((d, i) => assert.ok(Math.abs(d) <= DOPUSK, `${NAMAZY[i]}: ${d.toFixed(1)} мин`));
   });
