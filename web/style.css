@@ -317,3 +317,6 @@ body[data-quarter="oy"], body[data-quarter="ryt"] { --c-iud-tekst: #9dbbe6; }
 .z-vynoska { stroke: var(--ink); stroke-width: 1.2; opacity: 0.55; }
 .z-podpis.vpravo text { text-anchor: start; }
 .z-podpis.vlevo text { text-anchor: end; }
+#dial.uzkij .z-ru { font-size: 17px; }
+#dial.uzkij .z-he { font-size: 15px; }
+#dial.uzkij .rnum.current .z-ru { font-size: 18px; }

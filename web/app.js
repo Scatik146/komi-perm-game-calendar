@@ -299,12 +299,17 @@ let opisIgrovoj = null;   // описание игрового круга для
 // VIEWBOX_OBYCHNYJ, VIEWBOX_ZMANIM: поле круга; у зманим шире — для второго круга подписей снаружи
 const VIEWBOX_OBYCHNYJ = '-222 -222 444 444';
 const VIEWBOX_ZMANIM = '-262 -262 524 524';
+const VIEWBOX_ZMANIM_UZKIJ = '-236 -236 472 472';
+
+// UZKIJ_EKRAN: на телефоне на круге подписаны только главные времена — крупнее
+const UZKIJ_EKRAN = window.matchMedia('(max-width: 520px)');
 
 // drawDial: очистить круг и нарисовать циферблат выбранного режима
 function drawDial() {
   const svg = $('dial');
   svg.querySelectorAll(':scope > :not(desc)').forEach((n) => n.remove());
   svg.setAttribute('viewBox', VIEWBOX_OBYCHNYJ);
+  svg.classList.remove('uzkij');
   if (opisIgrovoj === null) opisIgrovoj = $('dial-desc').textContent;
   $('dial-desc').textContent = opisIgrovoj;
   if (musulmanskij()) drawDialNamaz(svg);
@@ -459,9 +464,10 @@ function tochkaPodpisi(h, r) {
 // ramkaPodpisi: прямоугольник подписи { x, y, w, h } — центр и размер, по длине русской строки
 function ramkaPodpisi(s, h, r) {
   const [tx, ty] = tochkaPodpisi(h, r);
-  const w = zmanPoId(s.id).kratko.length * 8 + 6;
+  const k = UZKIJ_EKRAN.matches ? 1.3 : 1;
+  const w = (zmanPoId(s.id).kratko.length * 8 + 6) * k;
   const sdvig = { vpravo: w / 2, vlevo: -w / 2, seredina: 0 }[yakor(h, r)];
-  return { x: tx + sdvig, y: ty + 5, w, h: 30 };
+  return { x: tx + sdvig, y: ty + 5, w, h: 30 * k };
 }
 
 // mestoSvobodno: рамка в поле круга и не задевает уже поставленные подписи
@@ -477,11 +483,16 @@ function svobodnyjRadius(s, h, postavleny) {
   return r === undefined ? null : r;
 }
 
+// naKruge: подписывать ли время на циферблате (на узком экране — только главные)
+function naKruge(nazv) {
+  return nazv.naKruge && (!UZKIJ_EKRAN.matches || Boolean(nazv.glavnoe));
+}
+
 // podpisiZmanim: подписи времён; где тесно — дальше наружу или ближе к центру, где совсем тесно — только черта
 function podpisiZmanim(svg, hOf) {
   const g = el('g', {}, svg);
   const postavleny = [];
-  for (const s of sutkiZ.sobytiya.filter((x) => zmanPoId(x.id).naKruge)) {
+  for (const s of sutkiZ.sobytiya.filter((x) => naKruge(zmanPoId(x.id)))) {
     const h = hOf(s.t);
     const r = svobodnyjRadius(s, h, postavleny);
     chertaZmana(g, s, h);
@@ -494,7 +505,8 @@ function podpisiZmanim(svg, hOf) {
 function drawDialZmanim(svg) {
   const hOf = (t) => apparentSolarTime(t, place.lon);
   shift = 12 - hOf(sutkiZ.start);
-  svg.setAttribute('viewBox', VIEWBOX_ZMANIM);
+  svg.setAttribute('viewBox', UZKIJ_EKRAN.matches ? VIEWBOX_ZMANIM_UZKIJ : VIEWBOX_ZMANIM);
+  svg.classList.toggle('uzkij', UZKIJ_EKRAN.matches);
   sektoryZmanim(svg, hOf);
   podpisiZmanim(svg, hOf);
   drawMoon(svg, hOf);
@@ -849,6 +861,7 @@ async function start() {
     });
   });
   $('locate').addEventListener('click', locate);
+  UZKIJ_EKRAN.addEventListener('change', recompute);
   podklyuchitNastrojku();
   fillPlaces();
   setInterval(tick, 1000);

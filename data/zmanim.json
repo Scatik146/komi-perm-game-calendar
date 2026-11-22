@@ -1,22 +1,22 @@
 {
-  "_comment": "Названия времён (зманим) для режима «Еврейские». ru — русское название (первым и выделено), kratko — подпись на циферблате, poyasnenie — что это, he — на иврите, heKratko — иврит на циферблате, molitva — к какому времени молитвы относится промежуток от этого времени до следующего (shaharit, minha, maariv) или null, naKruge — подписывать ли на циферблате. Порядок — как в сутках от заката. Методика — engine/zmanim.js, docs/rezhimy.md.",
+  "_comment": "Названия времён (зманим) для режима «Еврейские». ru — русское название (первым и выделено), kratko — подпись на циферблате, poyasnenie — что это, he — на иврите, heKratko — иврит на циферблате, molitva — к какому времени молитвы относится промежуток от этого времени до следующего (shaharit, minha, maariv) или null, naKruge — подписывать ли на циферблате; glavnoe — подписывать и на узком экране (телефон). Порядок — как в сутках от заката. Методика — engine/zmanim.js, docs/rezhimy.md.",
   "istochnik": "по методике chabad.org (община «Хабад Любавич Ор Авнер», Пермь)",
   "vremena": [
-    { "id": "shkia", "ru": "Закат", "kratko": "Закат", "poyasnenie": "шкия: начало суток", "he": "שקיעה", "heKratko": "שקיעה", "molitva": null, "naKruge": true },
+    { "id": "shkia", "ru": "Закат", "kratko": "Закат", "poyasnenie": "шкия: начало суток", "he": "שקיעה", "heKratko": "שקיעה", "molitva": null, "naKruge": true, "glavnoe": true },
     { "id": "cet", "ru": "Выход звёзд", "kratko": "Звёзды", "poyasnenie": "цет а-кохавим: Солнце на 6° под горизонтом", "he": "צאת הכוכבים", "heKratko": "צאה״כ", "molitva": "maariv", "naKruge": true },
-    { "id": "ishod", "ru": "Исход субботы", "kratko": "Исход", "poyasnenie": "Солнце на 8,5° под горизонтом", "he": "צאת השבת", "heKratko": "מוצ״ש", "molitva": "maariv", "naKruge": true },
-    { "id": "hacotLajla", "ru": "Полночь", "kratko": "Полночь", "poyasnenie": "хацот лайла: середина ночи", "he": "חצות הלילה", "heKratko": "חצות", "molitva": "maariv", "naKruge": true },
+    { "id": "ishod", "ru": "Исход субботы", "kratko": "Исход", "poyasnenie": "Солнце на 8,5° под горизонтом", "he": "צאת השבת", "heKratko": "מוצ״ש", "molitva": "maariv", "naKruge": true, "glavnoe": true },
+    { "id": "hacotLajla", "ru": "Полночь", "kratko": "Полночь", "poyasnenie": "хацот лайла: середина ночи", "he": "חצות הלילה", "heKratko": "חצות", "molitva": "maariv", "naKruge": true, "glavnoe": true },
     { "id": "alot", "ru": "Рассвет", "kratko": "Рассвет", "poyasnenie": "алот а-шахар: Солнце на 16,9° под горизонтом", "he": "עלות השחר", "heKratko": "עלות", "molitva": "shaharit", "naKruge": true },
     { "id": "misheyakir", "ru": "Мишеякир", "kratko": "Талит", "poyasnenie": "самое раннее время талита и тфилин: Солнце на 10,2° под горизонтом", "he": "משיכיר", "heKratko": "משיכיר", "molitva": "shaharit", "naKruge": false },
-    { "id": "nec", "ru": "Восход", "kratko": "Восход", "poyasnenie": "нец а-хама", "he": "הנץ החמה", "heKratko": "הנץ", "molitva": "shaharit", "naKruge": true },
+    { "id": "nec", "ru": "Восход", "kratko": "Восход", "poyasnenie": "нец а-хама", "he": "הנץ החמה", "heKratko": "הנץ", "molitva": "shaharit", "naKruge": true, "glavnoe": true },
     { "id": "shma", "ru": "Конец времени «Шма»", "kratko": "Шма", "poyasnenie": "соф зман криат Шма: восход + 3 «часа времени»", "he": "סוף זמן קריאת שמע", "heKratko": "ק״ש", "molitva": "shaharit", "naKruge": true },
     { "id": "tfila", "ru": "Конец времени Шахарита", "kratko": "Шахарит", "poyasnenie": "соф зман тфила: восход + 4 «часа времени»", "he": "סוף זמן תפילה", "heKratko": "תפילה", "molitva": null, "naKruge": true },
-    { "id": "hacot", "ru": "Полдень", "kratko": "Полдень", "poyasnenie": "хацот: середина дня", "he": "חצות היום", "heKratko": "חצות", "molitva": null, "naKruge": true },
+    { "id": "hacot", "ru": "Полдень", "kratko": "Полдень", "poyasnenie": "хацот: середина дня", "he": "חצות היום", "heKratko": "חצות", "molitva": null, "naKruge": true, "glavnoe": true },
     { "id": "minhaGdola", "ru": "Минха гдола", "kratko": "Минха", "poyasnenie": "самое раннее время минхи: восход + 6,5 «часа времени»", "he": "מנחה גדולה", "heKratko": "מנחה", "molitva": "minha", "naKruge": true },
     { "id": "minhaGdola30", "ru": "Минха гдола — для тех, кто ждёт", "kratko": "", "poyasnenie": "некоторые ждут 30 минут после полудня", "he": "מנחה גדולה", "heKratko": "", "molitva": "minha", "naKruge": false },
     { "id": "minhaKtana", "ru": "Минха ктана", "kratko": "М. ктана", "poyasnenie": "«малая минха»: закат − 2,5 «часа времени»", "he": "מנחה קטנה", "heKratko": "מ. קטנה", "molitva": "minha", "naKruge": true },
     { "id": "plag", "ru": "Плаг а-минха", "kratko": "Плаг", "poyasnenie": "«половина минхи»: закат − 1,25 «часа времени»", "he": "פלג המנחה", "heKratko": "פלג", "molitva": "minha", "naKruge": true },
-    { "id": "svechi", "ru": "Зажигание свечей", "kratko": "Свечи", "poyasnenie": "за 18 минут до заката", "he": "הדלקת נרות", "heKratko": "נרות", "molitva": "minha", "naKruge": true }
+    { "id": "svechi", "ru": "Зажигание свечей", "kratko": "Свечи", "poyasnenie": "за 18 минут до заката", "he": "הדלקת נרות", "heKratko": "נרות", "molitva": "minha", "naKruge": true, "glavnoe": true }
   ],
   "ishodNadpisi": {
     "shabbat": "Исход субботы",
