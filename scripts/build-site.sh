@@ -8,10 +8,10 @@ cp -r web/. _site/
 cp engine/*.js _site/engine/
 cp data/*.json _site/data/
 cp LICENSE NOTICE _site/
-for fam in pt-serif pt-sans; do
+for fam in pt-serif pt-sans noto-serif-hebrew noto-naskh-arabic noto-sans-math noto-sans-symbols-2 noto-serif noto-sans; do
   dir="node_modules/@fontsource/$fam/files"
   if [ -d "$dir" ]; then
-    for subset in cyrillic cyrillic-ext latin; do
+    for subset in cyrillic cyrillic-ext latin latin-ext hebrew arabic math symbols; do
       for w in 400 700; do
         f="$dir/$fam-$subset-$w-normal.woff2"
         [ -f "$f" ] && cp "$f" _site/fonts/
@@ -19,5 +19,20 @@ for fam in pt-serif pt-sans; do
     done
     [ -f "node_modules/@fontsource/$fam/LICENSE" ] && cp "node_modules/@fontsource/$fam/LICENSE" "_site/fonts/OFL-$fam.txt"
   fi
+  # На GitHub (CI) шрифт и его лицензия обязательны: системными шрифтами сайт не пользуется.
+  if [ -n "${CI:-}" ] && [ ! -f "_site/fonts/OFL-$fam.txt" ]; then
+    echo "Нет шрифта или лицензии: $fam" >&2
+    exit 1
+  fi
 done
+# Каждый файл шрифта, на который ссылается CSS, должен лежать на сайте.
+if [ -n "${CI:-}" ]; then
+  for f in $(grep -oh 'fonts/[A-Za-z0-9.-]*\.woff2' web/*.css | sort -u); do
+    if [ ! -f "_site/$f" ]; then
+      echo "Нет файла шрифта: $f; в пакетах есть:" >&2
+      ls node_modules/@fontsource/*/files | grep -E '(math|symbols).*400-normal.woff2' >&2 || true
+      exit 1
+    fi
+  done
+fi
 echo "Сайт собран в _site/"

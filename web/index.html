@@ -42,7 +42,7 @@
       <label for="place" class="sr">Место</label>
       <select id="place"></select>
       <button id="locate" type="button">Моё место</button>
-      <button id="nastrojka-open" class="gear" type="button" aria-haspopup="dialog" aria-controls="nastrojka" title="Настройка часов"><span aria-hidden="true">⚙</span><span class="sr">Настройка часов</span></button>
+      <button id="nastrojka-open" class="gear" type="button" aria-haspopup="dialog" aria-controls="nastrojka" title="Настройка часов"><svg class="gear-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.6 7.6 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.6 7.6 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg><span class="sr">Настройка часов</span></button>
     </div>
   </header>
 
@@ -68,6 +68,12 @@
         <p class="next"><span id="namaz-next-label"></span> <strong id="namaz-next-in"></strong></p>
       </div>
 
+      <div class="zmanim-info" aria-live="polite">
+        <p id="zmanim-sejchas" class="namaz-sejchas zmanim-sejchas"></p>
+        <p id="zmanim-shabbat" class="zmanim-shabbat"></p>
+        <p class="next"><span id="zmanim-next-label"></span> <strong id="zmanim-next-in"></strong></p>
+      </div>
+
       <dl class="clocks">
         <div><dt>Часы</dt><dd id="civil"></dd><dd id="civil-tz" class="small"></dd></div>
         <div><dt>По Солнцу</dt><dd id="solar"></dd><dd class="small">истинное местное время</dd></div>
@@ -86,6 +92,13 @@
         <ol id="namazy" class="rubezhi namazy"></ol>
         <p id="namaz-stupen" class="small"></p>
         <p id="namaz-istochnik" class="small istochnik"></p>
+      </div>
+
+      <div class="zmanim-info">
+        <h2 class="list-title">Зманим этих суток</h2>
+        <ol id="zmanim" class="rubezhi namazy zmanim"></ol>
+        <p id="zmanim-zameny" class="small"></p>
+        <p id="zmanim-istochnik" class="small istochnik"></p>
       </div>
 
       <div class="dialect igrovoe" role="radiogroup" aria-label="Форма слов">

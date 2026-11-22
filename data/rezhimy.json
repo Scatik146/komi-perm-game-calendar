@@ -18,10 +18,10 @@
     {
       "id": "evrejskij",
       "ru": "Еврейские",
-      "poyasnenie": "Зманим по методике еврейской общины Перми; подписи на иврите",
+      "poyasnenie": "Зманим по методике chabad.org (община Перми) — для любого места; подписи по-русски и на иврите",
       "cifer": 24,
       "vera": "iudaizm",
-      "gotov": false
+      "gotov": true
     },
     {
       "id": "musulmanskij",

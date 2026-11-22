@@ -1,17 +1,35 @@
 /* Шрифты PT Serif / PT Sans (ParaType, OFL) — созданы для языков народов России,
    поддерживают ӧ и і. Файлы кладёт в fonts/ сборка (scripts/build-site.sh). */
-@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: local("PT Serif"), url("fonts/pt-serif-cyrillic-ext-400-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
-@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: local("PT Serif"), url("fonts/pt-serif-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: local("PT Serif"), url("fonts/pt-serif-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: local("PT Serif Bold"), url("fonts/pt-serif-cyrillic-ext-700-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
-@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: local("PT Serif Bold"), url("fonts/pt-serif-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: local("PT Serif Bold"), url("fonts/pt-serif-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
-@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: local("PT Sans"), url("fonts/pt-sans-cyrillic-ext-400-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
-@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: local("PT Sans"), url("fonts/pt-sans-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: local("PT Sans"), url("fonts/pt-sans-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-cyrillic-ext-700-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
-@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: url("fonts/pt-serif-cyrillic-ext-400-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: url("fonts/pt-serif-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: url("fonts/pt-serif-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: url("fonts/pt-serif-cyrillic-ext-700-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: url("fonts/pt-serif-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: url("fonts/pt-serif-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: url("fonts/pt-sans-cyrillic-ext-400-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: url("fonts/pt-sans-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: url("fonts/pt-sans-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: url("fonts/pt-sans-cyrillic-ext-700-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: url("fonts/pt-sans-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: url("fonts/pt-sans-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
+@font-face { font-family: "Noto Serif Hebrew"; font-weight: 400; font-display: swap; src: url("fonts/noto-serif-hebrew-hebrew-400-normal.woff2") format("woff2"); unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Noto Serif Hebrew"; font-weight: 700; font-display: swap; src: url("fonts/noto-serif-hebrew-hebrew-700-normal.woff2") format("woff2"); unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Noto Naskh Arabic"; font-weight: 400; font-display: swap; src: url("fonts/noto-naskh-arabic-arabic-400-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: "Noto Naskh Arabic"; font-weight: 700; font-display: swap; src: url("fonts/noto-naskh-arabic-arabic-700-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+
+/* Знаки, которых нет в PT: латиница с надстрочными, стрелки и ≤ ≥ (Noto Sans Math), значки ☰ ◀ ▶ ● ◐ (Noto Sans Symbols 2); шестерёнка — рисунок SVG */
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: url("fonts/pt-serif-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: url("fonts/pt-serif-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: url("fonts/pt-sans-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: url("fonts/pt-sans-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+/* ĕ и другие буквы, которых нет в PT: Noto Serif и Noto Sans (латинское расширение) */
+@font-face { font-family: "Noto Serif"; font-weight: 400; font-display: swap; src: url("fonts/noto-serif-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Noto Serif"; font-weight: 700; font-display: swap; src: url("fonts/noto-serif-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Noto Sans"; font-weight: 400; font-display: swap; src: url("fonts/noto-sans-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Noto Sans"; font-weight: 700; font-display: swap; src: url("fonts/noto-sans-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Noto Sans Math"; font-weight: 400; font-display: swap; src: url("fonts/noto-sans-math-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Noto Sans Symbols 2"; font-weight: 400; font-display: swap; src: url("fonts/noto-sans-symbols-2-symbols-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Noto Sans Symbols 2 Math"; font-weight: 400; font-display: swap; src: url("fonts/noto-sans-symbols-2-math-400-normal.woff2") format("woff2"); }
 
 /* Цвета четвертей на циферблате — постоянные */
 :root {
@@ -21,8 +39,8 @@
   --q-ryt: #8a5a2b;    /* вечер — бронза пермского звериного стиля */
   --sun: #f0b43c;
 
-  --serif: "PT Serif", Georgia, "DejaVu Serif", serif;
-  --sans: "PT Sans", "Segoe UI", "DejaVu Sans", sans-serif;
+  --serif: "PT Serif", "Noto Serif", "Noto Serif Hebrew", "Noto Naskh Arabic", "Noto Sans Math", "Noto Sans Symbols 2", "Noto Sans Symbols 2 Math", serif;
+  --sans: "PT Sans", "Noto Sans", "Noto Serif Hebrew", "Noto Naskh Arabic", "Noto Sans Math", "Noto Sans Symbols 2", "Noto Sans Symbols 2 Math", sans-serif;
 }
 
 /* Фон страницы — небо текущей четверти суток */
@@ -248,7 +266,9 @@ main {
 /* Режим «Мусульманские»: сутки от заката, ислам — зелёный (как на листах «Составить календарь») */
 :root { --c-musl: #1f7a46; --c-musl-tekst: #1f7a46; }
 body[data-quarter="oy"], body[data-quarter="ryt"] { --c-musl-tekst: #7fd3a0; }
-body[data-rezhim="musulmanskij"] .igrovoe { display: none; }
+body[data-rezhim="musulmanskij"] .igrovoe,
+body[data-rezhim="evrejskij"] .igrovoe { display: none; }
+body:not([data-rezhim="evrejskij"]) .zmanim-info { display: none; }
 body:not([data-rezhim="musulmanskij"]) .namaz-info { display: none; }
 .namaz-sejchas { margin: 0 0 0.25rem; font: 700 clamp(2rem, 8vw, 3rem)/1.1 var(--serif); }
 .namaz-sejchas [lang="ar"] { font-weight: 400; margin-left: 0.4em; }
@@ -269,3 +289,34 @@ body:not([data-rezhim="musulmanskij"]) .namaz-info { display: none; }
 .n-ru { fill: var(--ink); font: 700 12px var(--serif); text-anchor: middle; }
 .n-ar { fill: var(--soft); font: 400 12px var(--serif); text-anchor: middle; }
 .rnum.current .n-ru { fill: var(--c-musl-tekst); font-size: 14px; }
+
+/* режим «Еврейские»: иудаизм — синий, суббота и праздник — заливкой, как на листах «Составить календарь» */
+:root { --c-iud: #24548f; --c-iud-tekst: #24548f; --c-shabbat: #cdd9ec; }
+body[data-quarter="oy"], body[data-quarter="ryt"] { --c-iud-tekst: #9dbbe6; }
+.zmanim [lang="he"], .zmanim-sejchas [lang="he"] { font: 400 1.1rem var(--serif); margin-left: 0.5em; color: var(--soft); }
+.zmanim-sejchas [lang="he"] { font-size: 0.6em; }
+.zmanim li.current .nazv { color: var(--c-iud-tekst); }
+.zmanim li.current { box-shadow: inset 4px 0 0 var(--c-iud-tekst); padding-inline-start: 0.5rem; }
+.zmanim li.svyatoj { background: color-mix(in srgb, var(--c-shabbat) 35%, transparent); }
+.zmanim-shabbat { margin: 0 0 0.25rem; font-weight: 700; color: var(--c-iud-tekst); }
+.zmanim-shabbat:empty { display: none; }
+.z-shabbat { fill: var(--c-shabbat); opacity: 0.55; }
+.z-sektor { fill: var(--c-iud); }
+.z-sektor.noch { opacity: 0.35; }
+.z-sektor.den  { opacity: 0.2; }
+.z-sektor.pusto { opacity: 0; }
+.z-edge { stroke: var(--c-iud); stroke-width: 2; }
+.z-edge.horizon { stroke: #8a5a2b; stroke-width: 2.5; }
+.z-ru { fill: var(--ink); font: 700 13px var(--serif); text-anchor: middle; }
+.z-he { fill: var(--soft); font: 400 12.5px var(--serif); text-anchor: middle; }
+.rnum.current .z-ru { fill: var(--c-iud-tekst); font-size: 14px; }
+.z-ru, .z-he { paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.gear-icon { width: 1.25em; height: 1.25em; fill: currentColor; vertical-align: -0.2em; }
+.z-podpis.na-dne .z-ru, .z-podpis.na-dne .z-he { fill: #1b2a2a; stroke: #e9efe2; }
+.z-podpis.na-nochi .z-ru, .z-podpis.na-nochi .z-he { fill: #e4e8e1; stroke: #1b2a2a; }
+.z-vynoska { stroke: var(--ink); stroke-width: 1.2; opacity: 0.55; }
+.z-podpis.vpravo text { text-anchor: start; }
+.z-podpis.vlevo text { text-anchor: end; }
+#dial.uzkij .z-ru { font-size: 17px; }
+#dial.uzkij .z-he { font-size: 15px; }
+#dial.uzkij .rnum.current .z-ru { font-size: 18px; }
