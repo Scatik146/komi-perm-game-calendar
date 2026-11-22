@@ -296,10 +296,15 @@ function evrejskij() {
 
 let opisIgrovoj = null;   // описание игрового круга для читалок (из index.html)
 
+// VIEWBOX_OBYCHNYJ, VIEWBOX_ZMANIM: поле круга; у зманим шире — для второго круга подписей снаружи
+const VIEWBOX_OBYCHNYJ = '-222 -222 444 444';
+const VIEWBOX_ZMANIM = '-262 -262 524 524';
+
 // drawDial: очистить круг и нарисовать циферблат выбранного режима
 function drawDial() {
   const svg = $('dial');
   svg.querySelectorAll(':scope > :not(desc)').forEach((n) => n.remove());
+  svg.setAttribute('viewBox', VIEWBOX_OBYCHNYJ);
   if (opisIgrovoj === null) opisIgrovoj = $('dial-desc').textContent;
   $('dial-desc').textContent = opisIgrovoj;
   if (musulmanskij()) drawDialNamaz(svg);
@@ -405,17 +410,25 @@ function chertaZmana(g, s, h) {
   el('line', { x1: 0, y1: 0, x2: f(x2), y2: f(y2), class: kraj ? 'z-edge horizon' : 'z-edge' }, g);
 }
 
+// fonPodpisi: на чём стоит подпись — снаружи круга, на светлом дне или на тёмной ночи
+function fonPodpisi(s, r) {
+  const nec = sutkiZ.sobytiya.find((x) => x.id === 'nec');
+  let fon = 'snaruzhi';
+  if (r < R) fon = nec && s.t >= nec.t ? 'na-dne' : 'na-nochi';
+  return fon;
+}
+
 // podpisZmana: подпись «русский — крупно, иврит — ниже» на радиусе r
 function podpisZmana(g, s, h, r) {
   const [tx, ty] = point(h, r);
   const nazv = zmanPoId(s.id);
-  const podpis = el('g', { class: 'rnum z-podpis', 'data-ids': s.id }, g);
+  const podpis = el('g', { class: `rnum z-podpis ${fonPodpisi(s, r)}`, 'data-ids': s.id }, g);
   el('text', { x: f(tx), y: f(ty - 2), class: 'z-ru' }, podpis).textContent = nazv.kratko;
   el('text', { x: f(tx), y: f(ty + 12), class: 'z-he', lang: 'he' }, podpis).textContent = nazv.heKratko;
 }
 
-// UROVNI_ZMANIM: радиусы подписей — снаружи внутрь; близкие подписи уходят на следующий круг
-const UROVNI_ZMANIM = [R_NAMAZ, R_NAMAZ - 42, R_NAMAZ - 84];
+// UROVNI_ZMANIM: радиусы подписей по очереди — снаружи, дальше снаружи, внутри, ближе к центру
+const UROVNI_ZMANIM = [R_NAMAZ, R_NAMAZ + 38, R_NAMAZ - 68, R_NAMAZ - 108];
 
 // svobodnyjUroven: первый круг, где рядом (ближе часа) ещё нет подписи; -1 — места нет
 function svobodnyjUroven(zanyato, h) {
@@ -440,6 +453,7 @@ function podpisiZmanim(svg, hOf) {
 function drawDialZmanim(svg) {
   const hOf = (t) => apparentSolarTime(t, place.lon);
   shift = 12 - hOf(sutkiZ.start);
+  svg.setAttribute('viewBox', VIEWBOX_ZMANIM);
   sektoryZmanim(svg, hOf);
   podpisiZmanim(svg, hOf);
   drawMoon(svg, hOf);

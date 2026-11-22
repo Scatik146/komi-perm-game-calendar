@@ -312,3 +312,5 @@ body[data-quarter="oy"], body[data-quarter="ryt"] { --c-iud-tekst: #9dbbe6; }
 .rnum.current .z-ru { fill: var(--c-iud-tekst); font-size: 14px; }
 .z-ru, .z-he { paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
 .gear-icon { width: 1.25em; height: 1.25em; fill: currentColor; vertical-align: -0.2em; }
+.z-podpis.na-dne .z-ru, .z-podpis.na-dne .z-he { fill: #1b2a2a; stroke: #e9efe2; }
+.z-podpis.na-nochi .z-ru, .z-podpis.na-nochi .z-he { fill: #e4e8e1; stroke: #1b2a2a; }
