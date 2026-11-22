@@ -28,22 +28,25 @@ test('РПЦ — 12-часовой циферблат, игровой — 24', (
   assert.equal(rezhimPoId(dannye, 'net-takogo'), null);
 });
 
-test('пример: игровой и еврейский режимы доступны; контрпример: комбо пока нет', () => {
+test('пример: игровой, еврейский и комбо доступны; контрпример: РПЦ пока нет', () => {
   assert.equal(rezhimDostupen(dannye, 'igrovoj'), true);
   assert.equal(rezhimDostupen(dannye, 'evrejskij'), true);
-  assert.equal(rezhimDostupen(dannye, 'kombo'), false);
+  assert.equal(rezhimDostupen(dannye, 'kombo'), true);
+  assert.equal(rezhimDostupen(dannye, 'rpc'), false);
 });
 
 test('выбор режима: неготовый и неизвестный — игровой, готовый — он сам', () => {
-  assert.equal(vybratRezhim(dannye, 'kombo'), 'igrovoj');
+  assert.equal(vybratRezhim(dannye, 'rpc'), 'igrovoj');
+  assert.equal(vybratRezhim(dannye, 'kombo'), 'kombo');
   assert.equal(vybratRezhim(dannye, 'evrejskij'), 'evrejskij');
   assert.equal(vybratRezhim(dannye, 'abc'), 'igrovoj');
   assert.equal(vybratRezhim(gotovye, 'musulmanskij'), 'musulmanskij');
 });
 
 test('слои: включается только готовый слой, о котором просили', () => {
-  assert.deepEqual(vybratSloi(dannye, { islam: true }), VSE_VYKL);
-  assert.deepEqual(vybratSloi(gotovye, { islam: true, iudaizm: true }), { ...VSE_VYKL, islam: true });
+  assert.deepEqual(vybratSloi(dannye, { pravoslavie: true }), VSE_VYKL);
+  assert.deepEqual(vybratSloi(dannye, { islam: true, iudaizm: true, pravoslavie: true }), { ...VSE_VYKL, islam: true, iudaizm: true });
+  assert.deepEqual(vybratSloi(gotovye, { islam: true }), { ...VSE_VYKL, islam: true });
   assert.deepEqual(vybratSloi(gotovye, null), VSE_VYKL);
 });
 

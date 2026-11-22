@@ -1,11 +1,11 @@
 // Офлайн-кэш: сайт работает без сети после первого открытия.
-const CACHE = 'shondi-v23';
+const CACHE = 'shondi-v24';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
   'anbur.html', 'anbur.css', 'anbur.js', 'plashka.js', 'menu.js', 'fonts/NotoSansOldPermic-Regular.ttf', 'fonts/Pasy.ttf',
   'kalendar.html', 'kalendar.js', 'sostav.html', 'sostav.js', 'sostav.css',
   'engine/index.js', 'engine/sun.js', 'engine/sutki.js', 'engine/moon.js', 'engine/anbur.js', 'engine/kalendar.js', 'engine/pasy.js', 'engine/hijri.js',
-  'engine/evrei.js', 'engine/rezhimy.js', 'engine/namaz.js', 'engine/zmanim.js', 'engine/prazdniki.js', 'engine/nebo.js', 'engine/astronomy.js',
+  'engine/evrei.js', 'engine/rezhimy.js', 'engine/namaz.js', 'engine/zmanim.js', 'engine/kombo.js', 'engine/prazdniki.js', 'engine/nebo.js', 'engine/astronomy.js',
   'data/places.json', 'data/names.json', 'data/anbur.json', 'data/kalendar.json', 'data/pasy.json', 'data/kartinki.json', 'data/rezhimy.json', 'data/namaz.json', 'data/zmanim.json',
   'kartinki/gerb-cherdyn.png', 'kartinki/gerb-gainy.png', 'kartinki/gerb-kochevo.png', 'kartinki/gerb-kosa.png', 'kartinki/gerb-koygorodok.png', 'kartinki/gerb-kudymkar.png', 'kartinki/gerb-yurla.png', 'kartinki/gerb-yusva.png',
 ];
