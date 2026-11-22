@@ -1,6 +1,7 @@
 import {
   stateAt, apparentSolarTime, subdivisionsOf, subdivisionAt, moonEvents, moonPhase, makeTransliterator,
   SUTKI_ORDER, numberSign, prochestNastrojku, zapisatNastrojku, vybratRezhim, vybratSloi,
+  sutkiNamaza, sleduyushcheeSobytie, tekushcheeSobytie,
 } from './engine/index.js';
 
 /** Знак-пас рубежа: рубежи считаются от заката — I = 1 … VIII = 8. */
@@ -24,17 +25,21 @@ let state = null;
 let moon = null;
 let rezhimy = null;
 let nastrojka = null;
+let namazy = null;     // data/namaz.json: названия шести времён
+let sutkiN = null;     // сутки намаза: { start, end, sobytiya, stupen }
 
 /* ---------- данные ---------- */
 
 async function loadData() {
-  const [p, n, a, rz] = await Promise.all([
+  const [p, n, a, rz, nz] = await Promise.all([
     fetch('data/places.json').then((r) => r.json()),
     fetch('data/names.json').then((r) => r.json()),
     fetch('data/anbur.json').then((r) => r.json()),
     fetch('data/rezhimy.json').then((r) => r.json()),
+    fetch('data/namaz.json').then((r) => r.json()),
   ]);
   rezhimy = rz;
+  namazy = nz;
   anbur = makeTransliterator(a);
   places = p.places;
   names = n;
@@ -195,9 +200,8 @@ function wedge(h1, h2) {
   return `M0,0L${pts.map(([x, y]) => `${f(x)},${f(y)}`).join('L')}Z`;
 }
 
-function drawDial() {
-  const svg = $('dial');
-  svg.querySelectorAll(':scope > :not(desc)').forEach((n) => n.remove());
+// drawDialIgrovoj: игровой циферблат — восемь частей суток, доли, рубежи, Луна
+function drawDialIgrovoj(svg) {
   const lon = place.lon;
   const list = state.sutki.rubezhi;
   const ends = [...list.slice(1).map((r) => r.t), state.sutki.end];
@@ -246,25 +250,114 @@ function drawDial() {
     el('title', {}, tx2).textContent = `Рубеж ${roman}`;
   }
 
-  // Луна: когда она над горизонтом в эти сутки, и её фаза в момент кульминации
+  drawMoon(svg, hOf);
+  drawGnomon(svg);
+}
+
+// dugaLuny: дуга на полосе Луны от a до b (мс)
+function dugaLuny(mg, hOf, a, b) {
+  const h1 = hOf(a);
+  const s = span(h1, hOf(b));
+  const steps = Math.max(2, Math.ceil(s * 6));
+  const pts = [];
+  for (let i = 0; i <= steps; i++) pts.push(point(h1 + (s * i) / steps, R_MOON));
+  el('path', { d: `M${pts.map(([x, y]) => `${f(x)},${f(y)}`).join('L')}`, class: 'moon-arc' }, mg);
+}
+
+// drawMoon: полоса Луны над горизонтом в эти сутки и её фаза в кульминацию
+function drawMoon(svg, hOf) {
   const mg = el('g', { class: 'moon-band' }, svg);
-  for (const [a, b] of moon.up) {
-    const h1 = hOf(a);
-    const s = span(h1, hOf(b));
-    const steps = Math.max(2, Math.ceil(s * 6));
-    const pts = [];
-    for (let i = 0; i <= steps; i++) pts.push(point(h1 + (s * i) / steps, R_MOON));
-    el('path', { d: `M${pts.map(([x, y]) => `${f(x)},${f(y)}`).join('L')}`, class: 'moon-arc' }, mg);
-  }
+  for (const [a, b] of moon.up) dugaLuny(mg, hOf, a, b);
   const transit = moon.events.find((e) => e.type === 'transit');
   const glyphAt = transit ? transit.t : state.now;
-  const ph = moonPhase(glyphAt);
   const [mx, my] = point(hOf(glyphAt), R_MOON);
-  moonGlyph(mg, mx, my, 8, ph);
+  moonGlyph(mg, mx, my, 8, moonPhase(glyphAt));
+}
 
-  // стрелка-тень и гномон
+// drawGnomon: стрелка-тень и гномон
+function drawGnomon(svg) {
   el('polygon', { id: 'shadow', class: 'shadow' }, svg);
   el('circle', { r: 7, class: 'gnomon' }, svg);
+}
+
+// musulmanskij: включён ли режим «Мусульманские»
+function musulmanskij() {
+  return Boolean(nastrojka) && nastrojka.rezhim === 'musulmanskij';
+}
+
+let opisIgrovoj = null;   // описание игрового круга для читалок (из index.html)
+
+// drawDial: очистить круг и нарисовать циферблат выбранного режима
+function drawDial() {
+  const svg = $('dial');
+  svg.querySelectorAll(':scope > :not(desc)').forEach((n) => n.remove());
+  if (opisIgrovoj === null) opisIgrovoj = $('dial-desc').textContent;
+  $('dial-desc').textContent = opisIgrovoj;
+  if (musulmanskij()) drawDialNamaz(svg);
+  else drawDialIgrovoj(svg);
+}
+
+/* ---------- циферблат «Мусульманские»: сутки от магриба (заката) наверху ---------- */
+
+const R_NAMAZ = 190;   // подписи времён намаза
+
+// namazPoId: название времени намаза по id (data/namaz.json)
+function namazPoId(id) {
+  return namazy.vremena.find((v) => v.id === id);
+}
+
+// konecSobytiya: момент, когда кончается время события i (начало следующего или конец суток)
+function konecSobytiya(i) {
+  const sleduyushchee = sutkiN.sobytiya[i + 1];
+  return sleduyushchee ? sleduyushchee.t : sutkiN.end;
+}
+
+// sektoryNamaza: светлый день, тёмная ночь и зелёные секторы времён намаза
+function sektoryNamaza(svg, hOf) {
+  const shuruk = sutkiN.sobytiya.find((s) => s.id === 'shuruk').t;
+  const g = el('g', {}, svg);
+  el('path', { d: wedge(hOf(sutkiN.start), hOf(shuruk)), class: 'n-noch' }, g);
+  el('path', { d: wedge(hOf(shuruk), hOf(sutkiN.end)), class: 'n-den' }, g);
+  sutkiN.sobytiya.forEach((s, i) => {
+    const vid = namazPoId(s.id).namaz ? (s.t < shuruk ? 'noch' : 'den') : 'pusto';
+    el('path', { d: wedge(hOf(s.t), hOf(konecSobytiya(i))), class: `n-sektor ${vid}` }, g);
+  });
+  el('circle', { r: R, class: 'rim' }, svg);
+}
+
+// podpisNamaza: черта и подпись «русский — крупно, арабский — ниже» у начала времени
+function podpisNamaza(g, s, h, r) {
+  const [x2, y2] = point(h, R);
+  const kraj = s.id === 'magrib' || s.id === 'shuruk';
+  el('line', { x1: 0, y1: 0, x2: f(x2), y2: f(y2), class: kraj ? 'n-edge horizon' : 'n-edge' }, g);
+  const [tx, ty] = point(h, r);
+  const nazv = namazPoId(s.id);
+  const podpis = el('g', { class: 'rnum n-podpis', 'data-ids': s.id }, g);
+  el('text', { x: f(tx), y: f(ty - 2), class: 'n-ru' }, podpis).textContent = nazv.ru;
+  el('text', { x: f(tx), y: f(ty + 12), class: 'n-ar', lang: 'ar' }, podpis).textContent = nazv.ar;
+}
+
+// podpisiNamaza: подписи всех времён; близкие подписи — через одну внутрь круга
+function podpisiNamaza(svg, hOf) {
+  const g = el('g', {}, svg);
+  let proshloe = null;
+  let vnutr = false;
+  for (const s of sutkiN.sobytiya) {
+    const h = hOf(s.t);
+    vnutr = proshloe !== null && span(proshloe, h) < 0.8 && !vnutr;
+    podpisNamaza(g, s, h, vnutr ? R_NAMAZ - 44 : R_NAMAZ);
+    proshloe = h;
+  }
+}
+
+// drawDialNamaz: циферблат суток намаза — магриб наверху, по часовой стрелке
+function drawDialNamaz(svg) {
+  const hOf = (t) => apparentSolarTime(t, place.lon);
+  shift = 12 - hOf(sutkiN.start);
+  sektoryNamaza(svg, hOf);
+  podpisiNamaza(svg, hOf);
+  drawMoon(svg, hOf);
+  drawGnomon(svg);
 }
 
 function moonGlyph(parent, cx, cy, r, { illumination, waxing }) {
@@ -291,8 +384,9 @@ function moveShadow(now) {
   shadow.setAttribute('points', [
     [bx + px, by + py], [f(tx), f(ty)], [bx - px, by - py],
   ].map((p) => p.map((v) => f(+v)).join(',')).join(' '));
+  const tekushchij = musulmanskij() ? tekushcheeSobytie(sutkiN, now).id : state.current.id;
   $('dial').querySelectorAll('.rnum').forEach((t) => {
-    t.classList.toggle('current', t.dataset.ids.split(' ').includes(state.current.id));
+    t.classList.toggle('current', t.dataset.ids.split(' ').includes(tekushchij));
   });
 }
 
@@ -345,9 +439,68 @@ function renderMoon(fmt) {
     : (moon.up.length ? 'В эти сутки Луна не заходит.' : 'В эти сутки Луна не восходит.');
 }
 
+/* ---------- текст: режим «Мусульманские» ---------- */
+
+const STUPENI = {
+  1: '',
+  2: 'Солнце не опускается на 18° или 17°: фаджр и иша — долей ночи, как на широте 45° (правило ЦДУМ).',
+  3: 'Полярный день или полярная ночь: все времена — как на широте 45° той же долготы (правило ЦДУМ).',
+};
+
+// strokaNamaza: строка списка — русское название, арабское, пояснение, время
+function strokaNamaza(s, fmt, tekushchij) {
+  const nazv = namazPoId(s.id);
+  const li = document.createElement('li');
+  li.classList.toggle('current', s.id === tekushchij);
+  li.classList.toggle('past', s.t <= state.now);
+  li.innerHTML = '<span><span class="nazv"></span><span lang="ar" dir="rtl"></span><span class="ru"></span></span><span class="t"></span>';
+  li.querySelector('.nazv').textContent = nazv.ru;
+  li.querySelector('[lang="ar"]').textContent = nazv.ar;
+  li.querySelector('.ru').textContent = nazv.poyasnenie;
+  li.querySelector('.t').textContent = fmt.format(s.t);
+  return li;
+}
+
+// renderNamaz: текущее время намаза, список этих суток, ступень правила и источник
+function renderNamaz() {
+  const fmt = civilFormat(place.tz, false);
+  const tekushchij = tekushcheeSobytie(sutkiN, state.now).id;
+  const nazv = namazPoId(tekushchij);
+  $('namaz-sejchas').innerHTML = '<span></span><span lang="ar" dir="rtl"></span>';
+  $('namaz-sejchas').firstChild.textContent = `Сейчас: ${nazv.ru}`;
+  $('namaz-sejchas').lastChild.textContent = nazv.ar;
+  $('namazy').replaceChildren(...sutkiN.sobytiya.map((s) => strokaNamaza(s, fmt, tekushchij)));
+  $('namaz-stupen').textContent = STUPENI[sutkiN.stupen];
+  $('namaz-istochnik').textContent = `Время — ${namazy.istochnik}, для любого места.`;
+  $('dial-desc').textContent = 'Круг суток намаза: начало суток — магриб (закат) — сверху, дальше по часовой стрелке. Светлое поле — день, тёмное — ночь, зелёные секторы — время намазов. Стрелка-тень указывает на текущее время.';
+  renderMoon(fmt);
+  document.title = `${nazv.ru} — Солнечные часы`;
+}
+
+// sledN: ближайшее событие суток намаза или конец суток
+function sledN(now) {
+  const s = sleduyushcheeSobytie(sutkiN, now);
+  const sled = s || { id: 'magrib', t: sutkiN.end };
+  return sled;
+}
+
+// tickNamaz: каждую секунду — сколько осталось до следующего времени
+function tickNamaz(now) {
+  const sled = sledN(now);
+  $('namaz-next-label').textContent = `Следующее — ${namazPoId(sled.id).ru}, через`;
+  $('namaz-next-in').textContent = duration(sled.t - now);
+}
+
+// pora: пора ли пересчитать сутки (прошёл рубеж или время намаза)
+function pora(now) {
+  let nado = !state || now >= state.next.t;
+  if (!nado && musulmanskij()) nado = !sutkiN || now >= sledN(state.now).t;
+  return nado;
+}
+
 function tick() {
   const now = Date.now();
-  if (!state || now >= state.next.t) {
+  if (pora(now)) {
     recompute();
     return;
   }
@@ -358,14 +511,17 @@ function tick() {
   moveShadow(now);
   const sub = subdivisionAt(now, state.current, state.next, names.subdivisions);
   $('sub').textContent = `доля ${sub.index} из ${sub.of}`;
+  if (musulmanskij()) tickNamaz(now);
 }
 
 function recompute() {
   if (!place || !names) return;
   state = stateAt(Date.now(), place);
   moon = moonEvents(state.sutki.start, state.sutki.end, place.lat, place.lon);
+  sutkiN = sutkiNamaza(state.now, place.lat, place.lon);
   drawDial();
   renderText();
+  if (musulmanskij()) renderNamaz();
   tick();
 }
 
@@ -418,6 +574,7 @@ function primenitNastrojku(novaya) {
   store.set('nastrojka', zapisatNastrojku(nastrojka));
   document.body.dataset.rezhim = nastrojka.rezhim;
   spisokSloev();
+  recompute();
 }
 
 // podklyuchitNastrojku: прочесть сохранённое, заполнить окно, повесить события
