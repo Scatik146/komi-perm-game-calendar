@@ -606,12 +606,13 @@ function renderText() {
 function renderMoon(fmt) {
   const ph = moonPhase(state.now);
   const pct = Math.round(ph.illumination * 100);
+  const igrovoj = !musulmanskij() && !evrejskij();
   let kp = '';
-  if (ph.phase === 'первая четверть' || ph.phase === 'последняя четверть') kp = ' Джынтӧлісь — полумесяц.';
-  else if (!ph.waxing && ph.phase !== 'новолуние') kp = ' Тӧлісьыс рытйӧ — луна на ущербе.';
+  if (igrovoj && (ph.phase === 'первая четверть' || ph.phase === 'последняя четверть')) kp = ' Джынтӧлісь — полумесяц.';
+  else if (igrovoj && !ph.waxing && ph.phase !== 'новолуние') kp = ' Тӧлісьыс рытйӧ — луна на ущербе.';
   const names = { rise: 'восход', transit: 'кульминация', set: 'заход' };
   const ev = moon.events.map((e) => `${names[e.type]} ${fmt.format(e.t)}`).join(', ');
-  $('moon').textContent = `Тӧлісь: ${ph.phase}, освещено ${pct} %.${kp}`;
+  $('moon').textContent = `${igrovoj ? 'Тӧлісь' : 'Луна'}: ${ph.phase}, освещено ${pct} %.${kp}`;
   $('moon-times').textContent = ev
     ? `В эти сутки: ${ev}.`
     : (moon.up.length ? 'В эти сутки Луна не заходит.' : 'В эти сутки Луна не восходит.');
