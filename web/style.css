@@ -17,6 +17,14 @@
 @font-face { font-family: "Noto Naskh Arabic"; font-weight: 400; font-display: swap; src: url("fonts/noto-naskh-arabic-arabic-400-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
 @font-face { font-family: "Noto Naskh Arabic"; font-weight: 700; font-display: swap; src: url("fonts/noto-naskh-arabic-arabic-700-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
 
+/* Знаки, которых нет в PT: латиница с надстрочными, стрелки и ≤ ≥ (Noto Sans Math), значки ☰ ⚙ ◀ ▶ ● ◐ (Noto Sans Symbols 2) */
+@font-face { font-family: "PT Serif"; font-weight: 400; font-display: swap; src: url("fonts/pt-serif-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-display: swap; src: url("fonts/pt-serif-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "PT Sans"; font-weight: 400; font-display: swap; src: url("fonts/pt-sans-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: url("fonts/pt-sans-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Noto Sans Math"; font-weight: 400; font-display: swap; src: url("fonts/noto-sans-math-math-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Noto Sans Symbols 2"; font-weight: 400; font-display: swap; src: url("fonts/noto-sans-symbols-2-symbols-400-normal.woff2") format("woff2"); }
+
 /* Цвета четвертей на циферблате — постоянные */
 :root {
   --q-oy: #2c3f58;     /* ночь — ельник под звёздами */
@@ -25,8 +33,8 @@
   --q-ryt: #8a5a2b;    /* вечер — бронза пермского звериного стиля */
   --sun: #f0b43c;
 
-  --serif: "PT Serif", "Noto Serif Hebrew", "Noto Naskh Arabic", serif;
-  --sans: "PT Sans", "Noto Serif Hebrew", "Noto Naskh Arabic", sans-serif;
+  --serif: "PT Serif", "Noto Serif Hebrew", "Noto Naskh Arabic", "Noto Sans Math", "Noto Sans Symbols 2", serif;
+  --sans: "PT Sans", "Noto Serif Hebrew", "Noto Naskh Arabic", "Noto Sans Math", "Noto Sans Symbols 2", sans-serif;
 }
 
 /* Фон страницы — небо текущей четверти суток */

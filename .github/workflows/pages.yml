@@ -25,12 +25,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Шрифты PT Serif, PT Sans, Noto Serif Hebrew, Noto Naskh Arabic (SIL OFL 1.1)
-        run: npm install --no-save @fontsource/pt-serif @fontsource/pt-sans @fontsource/noto-serif-hebrew @fontsource/noto-naskh-arabic
+      - name: Шрифты PT, Noto Serif Hebrew, Noto Naskh Arabic, Noto Sans Math, Noto Sans Symbols 2 (SIL OFL 1.1)
+        run: npm install --no-save @fontsource/pt-serif @fontsource/pt-sans @fontsource/noto-serif-hebrew @fontsource/noto-naskh-arabic @fontsource/noto-sans-math @fontsource/noto-sans-symbols-2 fontkit
       - name: Тесты ядра
         run: npm test
       - name: Сборка сайта
         run: ./scripts/build-site.sh
+      - name: Все знаки сайта — в наших шрифтах
+        run: node scripts/proverit-shrifty.mjs
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:
