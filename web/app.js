@@ -439,11 +439,11 @@ function fonPodpisi(s, r) {
   return fon;
 }
 
-// podpisZmana: подпись «русский — крупно, иврит — ниже» на радиусе r
-function podpisZmana(g, s, h, r) {
+// podpisZmana: подпись «русский — крупно, иврит — ниже» на радиусе r; выноска — к линиям, буквы — поверх
+function podpisZmana(gLinii, g, s, h, r) {
   const [tx, ty] = tochkaPodpisi(s, h, r);
   const nazv = zmanPoId(s.id);
-  if (r > R) vynoska(g, h, Math.hypot(tx, ty) - (yakor(h, r) === 'seredina' ? 16 * masshtabPodpisi() : 3));
+  if (r > R) vynoska(gLinii, h, Math.hypot(tx, ty) - (yakor(h, r) === 'seredina' ? 16 * masshtabPodpisi() : 3));
   const podpis = el('g', { class: `rnum z-podpis ${fonPodpisi(s, r)} ${yakor(h, r)}`, 'data-ids': s.id }, g);
   el('text', { x: f(tx), y: f(ty - 2), class: 'z-ru' }, podpis).textContent = nazv.kratko;
   el('text', { x: f(tx), y: f(ty + 13 * masshtabPodpisi()), class: 'z-he', lang: 'he' }, podpis).textContent = nazv.heKratko;
@@ -501,21 +501,22 @@ function svobodnyjRadius(s, h, postavleny) {
   return r === undefined ? null : r;
 }
 
-// naKruge: подписывать ли время на циферблате (на узком экране — только главные)
+// naKruge: подписывать ли время на циферблате (на узком экране — только главные; черта остаётся у всех)
 function naKruge(nazv) {
   return nazv.naKruge && (!UZKIJ_EKRAN.matches || Boolean(nazv.glavnoe));
 }
 
 // podpisiZmanim: подписи времён; где тесно — дальше наружу или ближе к центру, где совсем тесно — только черта
 function podpisiZmanim(svg, hOf) {
-  const g = el('g', {}, svg);
+  const gLinii = el('g', {}, svg);
+  const gBukvy = el('g', {}, svg);
   const postavleny = [];
-  for (const s of sutkiZ.sobytiya.filter((x) => naKruge(zmanPoId(x.id)))) {
+  for (const s of sutkiZ.sobytiya.filter((x) => zmanPoId(x.id).naKruge)) {
     const h = hOf(s.t);
-    const r = svobodnyjRadius(s, h, postavleny);
-    chertaZmana(g, s, h);
+    const r = naKruge(zmanPoId(s.id)) ? svobodnyjRadius(s, h, postavleny) : null;
+    chertaZmana(gLinii, s, h);
     if (r !== null) postavleny.push(ramkaPodpisi(s, h, r));
-    if (r !== null) podpisZmana(g, s, h, r);
+    if (r !== null) podpisZmana(gLinii, gBukvy, s, h, r);
   }
 }
 
