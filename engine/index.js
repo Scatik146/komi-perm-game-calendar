@@ -8,4 +8,5 @@ export * from './pasy.js';
 export * from './hijri.js';
 export * from './evrei.js';
 export * from './prazdniki.js';
+export * from './rezhimy.js';
 // Небо (engine/nebo.js) подключается отдельно: оно тянет большую библиотеку astronomy.js.

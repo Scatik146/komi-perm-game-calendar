@@ -11,31 +11,38 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="anbur.css">
   <script type="module" src="app.js"></script>
+  <script type="module" src="menu.js"></script>
 </head>
 <body data-quarter="lun">
   <header class="bar">
     <h1 class="sr">Солнечные часы игрового календаря «Солнечная восьмёрка»</h1>
-    <nav class="tabs" aria-label="Разделы">
+    <div class="razdely">
       <a class="tab" href="./" aria-current="page">
         <span class="tab-ru">Солнечные часы</span>
         <span class="tab-kp">Шонді</span>
         <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇</span>
       </a>
-      <a class="tab" href="kalendar.html">
-        <span class="tab-ru">Календарь</span>
-        <span class="tab-kp">Шонді кыкьямыс</span>
-        <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇ 𐍚𐍧𐍚𐍰𐍴𐍜𐍧𐍡</span>
-      </a>
-      <a class="tab" href="anbur.html">
-        <span class="tab-ru">Пишем анбуром</span>
-        <span class="tab-kp">Анбурӧн гижам</span>
-        <span class="tab-anb anbur" aria-hidden="true">𐍐𐍝𐍑𐍣𐍠𐍩𐍝 𐍒𐍙𐍕𐍐𐍜</span>
-      </a>
-    </nav>
+      <details class="menu">
+        <summary class="menu-knopka" title="Другие разделы"><span aria-hidden="true">☰</span><span class="sr">Другие разделы</span></summary>
+        <nav class="tabs menu-spisok" aria-label="Другие разделы">
+          <a class="tab" href="kalendar.html">
+            <span class="tab-ru">Календарь</span>
+            <span class="tab-kp">Шонді кыкьямыс</span>
+            <span class="tab-anb anbur" aria-hidden="true">𐍥𐍞𐍝𐍓𐍙̇ 𐍚𐍧𐍚𐍰𐍴𐍜𐍧𐍡</span>
+          </a>
+          <a class="tab" href="anbur.html">
+            <span class="tab-ru">Пишем анбуром</span>
+            <span class="tab-kp">Анбурӧн гижам</span>
+            <span class="tab-anb anbur" aria-hidden="true">𐍐𐍝𐍑𐍣𐍠𐍩𐍝 𐍒𐍙𐍕𐍐𐍜</span>
+          </a>
+        </nav>
+      </details>
+    </div>
     <div class="where">
       <label for="place" class="sr">Место</label>
       <select id="place"></select>
       <button id="locate" type="button">Моё место</button>
+      <button id="nastrojka-open" class="gear" type="button" aria-haspopup="dialog" aria-controls="nastrojka" title="Настройка часов"><span aria-hidden="true">⚙</span><span class="sr">Настройка часов</span></button>
     </div>
   </header>
 
@@ -76,6 +83,22 @@
       <p id="status" class="status" role="status"></p>
     </section>
   </main>
+
+  <dialog id="nastrojka" class="nastrojka" aria-labelledby="nastrojka-title">
+    <form method="dialog">
+      <h2 id="nastrojka-title">Настройка часов</h2>
+      <fieldset>
+        <legend>Режим</legend>
+        <div id="rezhimy" class="vybor"></div>
+      </fieldset>
+      <fieldset id="sloi-pole">
+        <legend>Комбо: что показать поверх игровых часов</legend>
+        <div id="sloi" class="vybor"></div>
+      </fieldset>
+      <p class="small">Режимы с пометкой «скоро» появятся по очереди. Выбор запоминается в этом браузере.</p>
+      <button value="gotovo">Готово</button>
+    </form>
+  </dialog>
 
   <footer class="foot">
     <p><strong>Игровая реконструкция.</strong> Не воспроизводит и не заменяет реальные календари, существовавшие в крае, округе и местах проживания коми-пермяков; основана на коми-пермяцком языке, культуре и особенностях пермских языков.</p>

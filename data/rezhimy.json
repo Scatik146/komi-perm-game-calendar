@@ -1,0 +1,56 @@
+{
+  "_comment": "Режимы солнечных часов и слои комбо-режима. Только описание, без вычислений. ru — название на экране; poyasnenie — строка под ним; cifer — часов на циферблате; vera — ссылка на запись в very; gotov — режим или слой уже работает. Решения автора 22.11.2026 — docs/rezhimy.md.",
+  "poUmolchaniyu": "igrovoj",
+  "very": [
+    { "id": "iudaizm", "ru": "иудаизм", "cvet": "синий" },
+    { "id": "islam", "ru": "ислам", "cvet": "зелёный" },
+    { "id": "pravoslavie", "ru": "православие (РПЦ)", "cvet": "красный" }
+  ],
+  "rezhimy": [
+    {
+      "id": "igrovoj",
+      "ru": "Наш, игровой",
+      "poyasnenie": "Солнечная восьмёрка: восемь рубежей по Солнцу, коми-пермяцкие слова и анбур",
+      "cifer": 24,
+      "vera": null,
+      "gotov": true
+    },
+    {
+      "id": "evrejskij",
+      "ru": "Еврейские",
+      "poyasnenie": "Зманим по методике еврейской общины Перми; подписи на иврите",
+      "cifer": 24,
+      "vera": "iudaizm",
+      "gotov": false
+    },
+    {
+      "id": "musulmanskij",
+      "ru": "Мусульманские",
+      "poyasnenie": "Время намаза по методике Соборной мечети Перми; подписи по-арабски",
+      "cifer": 24,
+      "vera": "islam",
+      "gotov": false
+    },
+    {
+      "id": "kombo",
+      "ru": "Комбо",
+      "poyasnenie": "Игровые часы, а поверх — время молитв; каждую веру можно включить отдельно",
+      "cifer": 24,
+      "vera": null,
+      "gotov": false
+    },
+    {
+      "id": "rpc",
+      "ru": "Богослужения РПЦ",
+      "poyasnenie": "Когда успеть на вечерню, всенощную и литургию; время зависит от епархии",
+      "cifer": 12,
+      "vera": "pravoslavie",
+      "gotov": false
+    }
+  ],
+  "sloiKombo": [
+    { "id": "iudaizm", "ru": "Иудеи — точки начала молитв", "znak": "tochka", "vera": "iudaizm", "gotov": false },
+    { "id": "islam", "ru": "Мусульмане — точки начала намазов", "znak": "tochka", "vera": "islam", "gotov": false },
+    { "id": "pravoslavie", "ru": "РПЦ — дуги служб", "znak": "duga", "vera": "pravoslavie", "gotov": false }
+  ]
+}
