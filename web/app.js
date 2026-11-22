@@ -1,6 +1,6 @@
 import {
   stateAt, apparentSolarTime, subdivisionsOf, subdivisionAt, moonEvents, moonPhase, makeTransliterator,
-  SUTKI_ORDER, numberSign,
+  SUTKI_ORDER, numberSign, prochestNastrojku, zapisatNastrojku, vybratRezhim, vybratSloi,
 } from './engine/index.js';
 
 /** Знак-пас рубежа: рубежи считаются от заката — I = 1 … VIII = 8. */
@@ -22,15 +22,19 @@ let place = null;
 let dialect = store.get('dialect') === 'inv' ? 'inv' : 'kp';
 let state = null;
 let moon = null;
+let rezhimy = null;
+let nastrojka = null;
 
 /* ---------- данные ---------- */
 
 async function loadData() {
-  const [p, n, a] = await Promise.all([
+  const [p, n, a, rz] = await Promise.all([
     fetch('data/places.json').then((r) => r.json()),
     fetch('data/names.json').then((r) => r.json()),
     fetch('data/anbur.json').then((r) => r.json()),
+    fetch('data/rezhimy.json').then((r) => r.json()),
   ]);
+  rezhimy = rz;
   anbur = makeTransliterator(a);
   places = p.places;
   names = n;
@@ -365,6 +369,67 @@ function recompute() {
   tick();
 }
 
+/* ---------- настройка: режимы часов (данные — data/rezhimy.json) ---------- */
+
+// punktVybora: строка выбора (переключатель или флажок) с пометкой «скоро» у неготового
+function punktVybora(tip, imya, zapis, otmechen) {
+  const label = document.createElement('label');
+  const input = Object.assign(document.createElement('input'), { type: tip, name: imya, value: zapis.id });
+  input.checked = otmechen;
+  input.disabled = !zapis.gotov;
+  const tekst = document.createElement('span');
+  tekst.textContent = zapis.gotov ? zapis.ru : `${zapis.ru} — скоро`;
+  label.append(input, tekst);
+  return label;
+}
+
+// spisokRezhimov: переключатели режимов с пояснениями
+function spisokRezhimov() {
+  const mesto = $('rezhimy');
+  mesto.replaceChildren();
+  for (const r of rezhimy.rezhimy) {
+    const punkt = punktVybora('radio', 'rezhim', r, r.id === nastrojka.rezhim);
+    const poyasnenie = Object.assign(document.createElement('small'), { textContent: r.poyasnenie });
+    punkt.append(poyasnenie);
+    mesto.append(punkt);
+  }
+}
+
+// spisokSloev: флажки слоёв комбо; работают только в режиме «Комбо»
+function spisokSloev() {
+  const mesto = $('sloi');
+  mesto.replaceChildren();
+  for (const s of rezhimy.sloiKombo) mesto.append(punktVybora('checkbox', 'sloy', s, nastrojka.sloi[s.id]));
+  $('sloi-pole').disabled = nastrojka.rezhim !== 'kombo';
+}
+
+// sobratNastrojku: настройка из того, что отмечено в окне
+function sobratNastrojku() {
+  const otmechennyj = document.querySelector('input[name="rezhim"]:checked');
+  const prosili = {};
+  document.querySelectorAll('input[name="sloy"]').forEach((f) => { prosili[f.value] = f.checked; });
+  const novaya = { rezhim: vybratRezhim(rezhimy, otmechennyj && otmechennyj.value), sloi: vybratSloi(rezhimy, prosili) };
+  return novaya;
+}
+
+// primenitNastrojku: запомнить настройку и отметить режим на странице
+function primenitNastrojku(novaya) {
+  nastrojka = novaya;
+  store.set('nastrojka', zapisatNastrojku(nastrojka));
+  document.body.dataset.rezhim = nastrojka.rezhim;
+  spisokSloev();
+}
+
+// podklyuchitNastrojku: прочесть сохранённое, заполнить окно, повесить события
+function podklyuchitNastrojku() {
+  nastrojka = prochestNastrojku(rezhimy, store.get('nastrojka'));
+  document.body.dataset.rezhim = nastrojka.rezhim;
+  spisokRezhimov();
+  spisokSloev();
+  $('nastrojka').addEventListener('change', () => primenitNastrojku(sobratNastrojku()));
+  $('nastrojka-open').addEventListener('click', () => $('nastrojka').showModal());
+}
+
 /* ---------- запуск ---------- */
 
 async function start() {
@@ -383,6 +448,7 @@ async function start() {
     });
   });
   $('locate').addEventListener('click', locate);
+  podklyuchitNastrojku();
   fillPlaces();
   setInterval(tick, 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) recompute(); });

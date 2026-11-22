@@ -36,6 +36,7 @@
       <label for="place" class="sr">Место</label>
       <select id="place"></select>
       <button id="locate" type="button">Моё место</button>
+      <button id="nastrojka-open" class="gear" type="button" aria-haspopup="dialog" aria-controls="nastrojka" title="Настройка часов"><span aria-hidden="true">⚙</span><span class="sr">Настройка часов</span></button>
     </div>
   </header>
 
@@ -76,6 +77,22 @@
       <p id="status" class="status" role="status"></p>
     </section>
   </main>
+
+  <dialog id="nastrojka" class="nastrojka" aria-labelledby="nastrojka-title">
+    <form method="dialog">
+      <h2 id="nastrojka-title">Настройка часов</h2>
+      <fieldset>
+        <legend>Режим</legend>
+        <div id="rezhimy" class="vybor"></div>
+      </fieldset>
+      <fieldset id="sloi-pole">
+        <legend>Комбо: что показать поверх игровых часов</legend>
+        <div id="sloi" class="vybor"></div>
+      </fieldset>
+      <p class="small">Режимы с пометкой «скоро» появятся по очереди. Выбор запоминается в этом браузере.</p>
+      <button value="gotovo">Готово</button>
+    </form>
+  </dialog>
 
   <footer class="foot">
     <p><strong>Игровая реконструкция.</strong> Не воспроизводит и не заменяет реальные календари, существовавшие в крае, округе и местах проживания коми-пермяков; основана на коми-пермяцком языке, культуре и особенностях пермских языков.</p>
