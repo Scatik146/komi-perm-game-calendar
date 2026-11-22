@@ -27,8 +27,10 @@ Copyright 2026 Scatik146 (https://github.com/Scatik146)
   пакет @fontsource/noto-serif-hebrew;
 - Noto Naskh Arabic — подписи по-арабски (режим «Мусульманские»); © The Noto Project
   Authors; пакет @fontsource/noto-naskh-arabic;
-- Noto Sans Math — стрелки, ≤ и ≥; Noto Sans Symbols 2 — значки ☰ ⚙ ◀ ▶, фазы Луны;
-  © The Noto Project Authors; пакеты @fontsource/noto-sans-math, @fontsource/noto-sans-symbols-2.
+- Noto Sans Math — стрелки, ≤ и ≥; Noto Sans Symbols 2 — значки ☰ ◀ ▶, фазы Луны;
+  Noto Serif, Noto Sans (латинское расширение) — буквы вроде ĕ, которых нет в PT;
+  © The Noto Project Authors; пакеты @fontsource/noto-sans-math, @fontsource/noto-sans-symbols-2,
+  @fontsource/noto-serif, @fontsource/noto-sans. Шестерёнка настройки — рисунок SVG.
 Знаки сайта сверяются со шрифтами при сборке (scripts/proverit-shrifty.mjs).
 
 Знаки-пасы «Солнечной восьмёрки» (числа, восьмёрки, пасы месяцев) и шрифт Pasy

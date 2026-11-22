@@ -25,8 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Шрифты PT, Noto Serif Hebrew, Noto Naskh Arabic, Noto Sans Math, Noto Sans Symbols 2 (SIL OFL 1.1)
-        run: npm install --no-save @fontsource/pt-serif @fontsource/pt-sans @fontsource/noto-serif-hebrew @fontsource/noto-naskh-arabic @fontsource/noto-sans-math @fontsource/noto-sans-symbols-2 fontkit
+      - name: Шрифты PT, Noto Serif Hebrew, Noto Naskh Arabic, Noto Sans Math, Noto Sans Symbols 2, Noto Serif, Noto Sans (SIL OFL 1.1)
+        run: npm install --no-save @fontsource/pt-serif @fontsource/pt-sans @fontsource/noto-serif-hebrew @fontsource/noto-naskh-arabic @fontsource/noto-sans-math @fontsource/noto-sans-symbols-2 @fontsource/noto-serif @fontsource/noto-sans fontkit
       - name: Тесты ядра
         run: npm test
       - name: Сборка сайта

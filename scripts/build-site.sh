@@ -8,7 +8,7 @@ cp -r web/. _site/
 cp engine/*.js _site/engine/
 cp data/*.json _site/data/
 cp LICENSE NOTICE _site/
-for fam in pt-serif pt-sans noto-serif-hebrew noto-naskh-arabic noto-sans-math noto-sans-symbols-2; do
+for fam in pt-serif pt-sans noto-serif-hebrew noto-naskh-arabic noto-sans-math noto-sans-symbols-2 noto-serif noto-sans; do
   dir="node_modules/@fontsource/$fam/files"
   if [ -d "$dir" ]; then
     for subset in cyrillic cyrillic-ext latin latin-ext hebrew arabic math symbols; do
