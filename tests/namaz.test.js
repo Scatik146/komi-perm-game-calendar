@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { vremenaNamaza, sutkiPoDate, sutkiNamaza, sleduyushcheeSobytie, NAMAZY } from '../engine/namaz.js';
+import { vremenaNamaza, bezIhtiyata, sutkiPoDate, sutkiNamaza, sleduyushcheeSobytie, NAMAZY } from '../engine/namaz.js';
+import { altitudeCrossing } from '../engine/sun.js';
 
 // Таблицы ЦДУМ России на 2026 г. (cdum.ru/time-namaz): фаджр, шурук, зухр, аср, магриб, иша.
 // Пермь — 58,01° с. ш., 56,23° в. д.; Салехард — 66,53° с. ш., 66,60° в. д.; оба — UTC+5.
@@ -12,9 +13,16 @@ const TABLICA_PERM = [
   ['2026-03-14', '5:19 7:33 13:26 17:12 19:17 21:23', 1],
   ['2026-03-25', '4:42 7:02 13:23 17:32 19:42 21:53', 1],
   ['2026-03-31', '4:20 6:45 13:21 17:42 19:55 22:11', 1],
+  ['2026-04-24', '2:14 5:39 13:15 18:19 20:49 23:53', 1],
+  ['2026-04-25', '2:05 5:36 13:15 18:20 20:51 23:59', 1],
+  ['2026-04-26', '1:53 5:34 13:15 18:21 20:53 0:07', 1],
+  ['2026-05-01', '3:41 5:21 13:14 18:28 21:05 22:38', 2],
+  ['2026-05-02', '3:38 5:19 13:14 18:30 21:07 22:40', 2],
+  ['2026-05-03', '3:35 5:16 13:14 18:31 21:09 22:43', 2],
   ['2026-06-03', '2:33 4:18 13:15 19:04 22:09 23:45', 2],
   ['2026-06-08', '2:27 4:13 13:16 19:08 22:16 23:52', 2],
   ['2026-06-12', '2:25 4:11 13:17 19:10 22:20 23:56', 2],
+  ['2026-06-18', '2:23 4:09 13:18 19:13 22:23 0:00', 2],
   ['2026-12-01', '7:05 9:32 13:06 14:46 16:35 18:55', 1],
   ['2026-12-08', '7:13 9:44 13:09 14:41 16:29 18:52', 1],
   ['2026-12-14', '7:19 9:52 13:12 14:40 16:27 18:52', 1],
@@ -77,18 +85,34 @@ for (const [data, stroka, stupen] of TABLICA_SALEHARD) {
   });
 }
 
-// Переход с угла на долю ночи (Пермь): иша ещё по углу −17°, но Солнце почти
-// не опускается до него — расчёт позже таблицы: 28 апр. −3, 29 апр. −4, 30 апр. −10 мин.
-// Причина не установлена (docs/rezhimy.md); тест держит расхождение, чтобы заметить его рост.
-const PEREHOD = [['2026-04-28', '0:25', 3], ['2026-04-29', '0:37', 5], ['2026-04-30', '0:56', 11]];
-for (const [data, isha, dopusk] of PEREHOD) {
-  test(`Пермь ${data}: переход, иша ${isha} (известное расхождение до ${dopusk} мин)`, () => {
+// Переход с угла на долю ночи (Пермь). Точки переключения совпадают с таблицей:
+// фаджр — с 28 апреля, иша — с 1 мая. В последние дни перед переключением
+// Солнце едва доходит до угла, и расчёт позже таблицы: фаджр 27 апр. −4,
+// иша 28 апр. −3, 29 апр. −4, 30 апр. −10 мин. Причина не установлена
+// (docs/rezhimy.md); тест держит расхождение, чтобы заметить его рост.
+const PEREHOD = [
+  ['2026-04-27', 'fadzhr', '1:37', 5], ['2026-04-28', 'isha', '0:25', 3],
+  ['2026-04-29', 'isha', '0:37', 5], ['2026-04-30', 'isha', '0:56', 11],
+];
+for (const [data, imya, vremya, dopusk] of PEREHOD) {
+  test(`Пермь ${data}: переход, ${imya} ${vremya} (известное расхождение до ${dopusk} мин)`, () => {
     const [g, m, d] = data.split('-').map(Number);
     const v = vremenaNamaza(sutkiPoDate(g, m, d), PERM.lat, PERM.lon);
-    const r = raznica(minutyIzTablicy(isha), minutyRascheta(v.isha));
-    assert.ok(r <= 0 && r >= -dopusk, `иша: ${r.toFixed(1)} мин`);
+    const r = raznica(minutyIzTablicy(vremya), minutyRascheta(v[imya]));
+    assert.ok(r <= 0 && r >= -dopusk, `${imya}: ${r.toFixed(1)} мин`);
   });
 }
+
+test('Пермь: фаджр уходит на долю ночи 28 апреля, иша — 1 мая (как в таблице ЦДУМ)', () => {
+  const ugol = (m, d, imya) => bezIhtiyata(sutkiPoDate(2026, m, d), PERM.lat, PERM.lon).vremena[imya];
+  const poUglu = (m, d, imya) => {
+    const k = sutkiPoDate(2026, m, d);
+    return altitudeCrossing(k, PERM.lat, PERM.lon, imya === 'fadzhr' ? -18 : -17, imya === 'fadzhr' ? -1 : 1).t !== null;
+  };
+  assert.ok(poUglu(4, 27, 'fadzhr') && !poUglu(4, 28, 'fadzhr'));
+  assert.ok(poUglu(4, 30, 'isha') && !poUglu(5, 1, 'isha'));
+  assert.ok(Number.isFinite(ugol(5, 1, 'isha')));
+});
 
 test('сутки намаза — от магриба до магриба, шесть событий по порядку', () => {
   const t = Date.UTC(2026, 11, 1, 8, 0);
