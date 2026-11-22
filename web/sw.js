@@ -1,8 +1,8 @@
 // Офлайн-кэш: сайт работает без сети после первого открытия.
-const CACHE = 'shondi-v20';
+const CACHE = 'shondi-v21';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
-  'anbur.html', 'anbur.css', 'anbur.js', 'plashka.js', 'fonts/NotoSansOldPermic-Regular.ttf', 'fonts/Pasy.ttf',
+  'anbur.html', 'anbur.css', 'anbur.js', 'plashka.js', 'menu.js', 'fonts/NotoSansOldPermic-Regular.ttf', 'fonts/Pasy.ttf',
   'kalendar.html', 'kalendar.js', 'sostav.html', 'sostav.js', 'sostav.css',
   'engine/index.js', 'engine/sun.js', 'engine/sutki.js', 'engine/moon.js', 'engine/anbur.js', 'engine/kalendar.js', 'engine/pasy.js', 'engine/hijri.js',
   'engine/evrei.js', 'engine/rezhimy.js', 'engine/prazdniki.js', 'engine/nebo.js', 'engine/astronomy.js',
