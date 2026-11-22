@@ -54,14 +54,19 @@
     </section>
 
     <section class="info">
-      <div class="now" aria-live="polite">
+      <div class="now igrovoe" aria-live="polite">
         <p id="part-kp" class="part-kp"></p>
         <p id="part-anbur" class="part-anbur anbur" aria-hidden="true"></p>
         <p id="part-ru" class="part-ru"></p>
         <p id="sub" class="sub-share"></p>
       </div>
-      <p id="quarter" class="quarter"></p>
-      <p class="next"><span id="next-label"></span> <strong id="next-in"></strong></p>
+      <p id="quarter" class="quarter igrovoe"></p>
+      <p class="next igrovoe"><span id="next-label"></span> <strong id="next-in"></strong></p>
+
+      <div class="namaz-info" aria-live="polite">
+        <p id="namaz-sejchas" class="namaz-sejchas"></p>
+        <p class="next"><span id="namaz-next-label"></span> <strong id="namaz-next-in"></strong></p>
+      </div>
 
       <dl class="clocks">
         <div><dt>Часы</dt><dd id="civil"></dd><dd id="civil-tz" class="small"></dd></div>
@@ -73,10 +78,17 @@
         <p id="moon-times" class="small"></p>
       </div>
 
-      <h2 class="list-title">Рубежи этих суток</h2>
-      <ol id="rubezhi" class="rubezhi"></ol>
+      <h2 class="list-title igrovoe">Рубежи этих суток</h2>
+      <ol id="rubezhi" class="rubezhi igrovoe"></ol>
 
-      <div class="dialect" role="radiogroup" aria-label="Форма слов">
+      <div class="namaz-info">
+        <h2 class="list-title">Время намаза этих суток</h2>
+        <ol id="namazy" class="rubezhi namazy"></ol>
+        <p id="namaz-stupen" class="small"></p>
+        <p id="namaz-istochnik" class="small istochnik"></p>
+      </div>
+
+      <div class="dialect igrovoe" role="radiogroup" aria-label="Форма слов">
         <label><input type="radio" name="dialect" value="kp" checked> литературная</label>
         <label><input type="radio" name="dialect" value="inv"> иньвенская</label>
       </div>
