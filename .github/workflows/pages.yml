@@ -33,6 +33,13 @@ jobs:
         run: ./scripts/build-site.sh
       - name: Все знаки сайта — в наших шрифтах
         run: node scripts/proverit-shrifty.mjs
+      - name: Собранный сайт PR — посмотреть до слияния
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sajt-pr
+          path: _site
+          retention-days: 3
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:
