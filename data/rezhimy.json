@@ -37,7 +37,7 @@
       "poyasnenie": "Игровые часы, а поверх — время молитв; каждую веру можно включить отдельно",
       "cifer": 24,
       "vera": null,
-      "gotov": false
+      "gotov": true
     },
     {
       "id": "rpc",
@@ -49,8 +49,8 @@
     }
   ],
   "sloiKombo": [
-    { "id": "iudaizm", "ru": "Иудеи — точки начала молитв", "znak": "tochka", "vera": "iudaizm", "gotov": false },
-    { "id": "islam", "ru": "Мусульмане — точки начала намазов", "znak": "tochka", "vera": "islam", "gotov": false },
+    { "id": "iudaizm", "ru": "Иудеи — точки начала молитв", "znak": "tochka", "vera": "iudaizm", "gotov": true },
+    { "id": "islam", "ru": "Мусульмане — точки начала намазов", "znak": "tochka", "vera": "islam", "gotov": true },
     { "id": "pravoslavie", "ru": "РПЦ — дуги служб", "znak": "duga", "vera": "pravoslavie", "gotov": false }
   ]
 }

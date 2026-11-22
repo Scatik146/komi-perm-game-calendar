@@ -2,6 +2,7 @@ import {
   stateAt, apparentSolarTime, subdivisionsOf, subdivisionAt, moonEvents, moonPhase, makeTransliterator,
   SUTKI_ORDER, numberSign, prochestNastrojku, zapisatNastrojku, vybratRezhim, vybratSloi,
   sutkiNamaza, sleduyushcheeSobytie, tekushcheeSobytie, sutkiZmanim,
+  sloiKombo, imenaIudeev, imenaMusulman, vseTochki, sleduyushchayaTochka,
 } from './engine/index.js';
 
 /** Знак-пас рубежа: рубежи считаются от заката — I = 1 … VIII = 8. */
@@ -29,6 +30,8 @@ let namazy = null;     // data/namaz.json: названия шести врем�
 let sutkiN = null;     // сутки намаза: { start, end, sobytiya, stupen }
 let zmanimy = null;    // data/zmanim.json: названия зманим
 let sutkiZ = null;     // сутки зманим: { start, end, sobytiya, zalivka, zameny, vid } или null
+let imenaK = null;     // какие времена идут в слои комбо: { iudaizm: [...], islam: [...] }
+let sloiK = null;      // слои комбо: { iudaizm, islam } — { tochki, net, stupen } или null
 
 /* ---------- данные ---------- */
 
@@ -44,6 +47,7 @@ async function loadData() {
   zmanimy = zm;
   rezhimy = rz;
   namazy = nz;
+  imenaK = { iudaizm: imenaIudeev(zm), islam: imenaMusulman(nz) };
   anbur = makeTransliterator(a);
   places = p.places;
   names = n;
@@ -294,6 +298,11 @@ function evrejskij() {
   return Boolean(nastrojka) && nastrojka.rezhim === 'evrejskij' && sutkiZ !== null;
 }
 
+// kombo: включён ли режим «Комбо»
+function kombo() {
+  return Boolean(nastrojka) && nastrojka.rezhim === 'kombo' && sloiK !== null;
+}
+
 let opisIgrovoj = null;   // описание игрового круга для читалок (из index.html)
 
 // VIEWBOX_OBYCHNYJ, VIEWBOX_ZMANIM: поле круга; у зманим шире — для второго круга подписей снаружи
@@ -315,6 +324,54 @@ function drawDial() {
   if (musulmanskij()) drawDialNamaz(svg);
   else if (evrejskij()) drawDialZmanim(svg);
   else drawDialIgrovoj(svg);
+  if (kombo()) drawSloiKombo(svg);
+}
+
+/* ---------- режим «Комбо»: игровой круг, поверх — точки начала молитв ---------- */
+
+// R_TOCHKA: синие точки — ближе к центру, зелёные — дальше, на том же луче
+const R_TOCHKA = { iudaizm: R - 40, islam: R - 24 };
+const R_TOCHKI = 5;
+
+// VERY_KOMBO: как вера названа в списке
+const VERY_KOMBO = { iudaizm: 'иудеи', islam: 'мусульмане' };
+
+// zapisTochki: название времени точки (data/zmanim.json или data/namaz.json)
+function zapisTochki(p) {
+  let zapis = namazPoId(p.id);
+  if (p.vera === 'iudaizm') zapis = zmanPoId(p.id);
+  return zapis;
+}
+
+// ruTochki: русское название точки; у исхода — по виду дня, если сутки зманим есть
+function ruTochki(p) {
+  let ru = zapisTochki(p).ru;
+  if (p.vera === 'iudaizm' && sutkiZ !== null) ru = nazvanieZmana(p.id);
+  return ru;
+}
+
+// podskazkaTochki: «Минха гдола (иудеи) — 13:20»
+function podskazkaTochki(p, fmt) {
+  const tekst = `${ruTochki(p)} (${VERY_KOMBO[p.vera]}) — ${fmt.format(p.t)}`;
+  return tekst;
+}
+
+// tochkaKombo: цветная точка на круге с подсказкой (наведение, касание, клавиатура)
+function tochkaKombo(g, p, fmt) {
+  const [x, y] = point(apparentSolarTime(p.t, place.lon), R_TOCHKA[p.vera]);
+  const c = el('circle', { cx: f(x), cy: f(y), r: R_TOCHKI, class: `k-tochka k-${p.vera}`, tabindex: 0 }, g);
+  c.classList.toggle('past', p.t <= state.now);
+  const tekst = podskazkaTochki(p, fmt);
+  el('title', {}, c).textContent = tekst;
+  c.addEventListener('click', () => { $('kombo-podskazka').textContent = tekst; });
+  c.addEventListener('focus', () => { $('kombo-podskazka').textContent = tekst; });
+}
+
+// drawSloiKombo: точки всех включённых слоёв поверх игрового круга
+function drawSloiKombo(svg) {
+  const fmt = civilFormat(place.tz, false);
+  const g = el('g', { class: 'kombo-tochki' }, svg);
+  for (const p of vseTochki(sloiK)) tochkaKombo(g, p, fmt);
 }
 
 /* ---------- циферблат «Мусульманские»: сутки от магриба (заката) наверху ---------- */
@@ -620,6 +677,51 @@ function renderMoon(fmt) {
     : (moon.up.length ? 'В эти сутки Луна не заходит.' : 'В эти сутки Луна не восходит.');
 }
 
+/* ---------- текст: режим «Комбо» ---------- */
+
+// strokaKombo: строка списка — знак веры, русское название, иврит или арабский, пояснение, время
+function strokaKombo(p, fmt) {
+  const zapis = zapisTochki(p);
+  const li = document.createElement('li');
+  li.className = `k-${p.vera}`;
+  li.classList.toggle('past', p.t <= state.now);
+  li.innerHTML = '<span><span class="k-znak" aria-hidden="true"></span><span class="nazv"></span><span dir="rtl"></span><span class="ru"></span></span><span class="t"></span>';
+  li.querySelector('.nazv').textContent = ruTochki(p);
+  const chuzhoj = li.querySelector('[dir="rtl"]');
+  chuzhoj.lang = p.vera === 'iudaizm' ? 'he' : 'ar';
+  chuzhoj.textContent = p.vera === 'iudaizm' ? zapis.he : zapis.ar;
+  li.querySelector('.ru').textContent = `${VERY_KOMBO[p.vera]}: ${zapis.poyasnenie}`;
+  li.querySelector('.t').textContent = fmt.format(p.t);
+  return li;
+}
+
+// zametkiKombo: что включить; где времён нет; где времена взяты с 45°
+function zametkiKombo() {
+  const zametki = [];
+  if (!sloiK.iudaizm && !sloiK.islam) zametki.push('Веры не включены: отметьте их в окне «Настройка часов» (шестерёнка).');
+  if (sloiK.iudaizm && sloiK.iudaizm.net) zametki.push('Иудеи: здесь нет восхода или заката — зманим по методике chabad.org не считаются; chabad.org советует спросить раввина.');
+  if (sloiK.islam && sloiK.islam.stupen > 1) zametki.push(`Мусульмане: ${STUPENI[sloiK.islam.stupen]}`);
+  return zametki.join(' ');
+}
+
+// istochnikiKombo: методики включённых слоёв
+function istochnikiKombo() {
+  const stroki = [];
+  if (sloiK.iudaizm) stroki.push(`Иудеи — ${zmanimy.istochnik}.`);
+  if (sloiK.islam) stroki.push(`Мусульмане — ${namazy.istochnik}.`);
+  return stroki.join(' ');
+}
+
+// renderKombo: список времён вер этих игровых суток, заметки, источники, описание круга
+function renderKombo() {
+  const fmt = civilFormat(place.tz, false);
+  $('kombo-spisok').replaceChildren(...vseTochki(sloiK).map((p) => strokaKombo(p, fmt)));
+  $('kombo-zametki').textContent = zametkiKombo();
+  $('kombo-istochnik').textContent = istochnikiKombo();
+  $('kombo-podskazka').textContent = '';
+  $('dial-desc').textContent = `${opisIgrovoj} Поверх — точки начала молитв: синие (иудеи) ближе к центру, зелёные (мусульмане) дальше.`;
+}
+
 /* ---------- текст: режим «Мусульманские» ---------- */
 
 const STUPENI = {
@@ -762,6 +864,14 @@ function pora(now) {
   let nado = !state || now >= state.next.t;
   if (!nado && musulmanskij()) nado = !sutkiN || now >= sledN(state.now).t;
   if (!nado && evrejskij()) nado = now >= sledZ(state.now).t;
+  if (!nado && kombo()) nado = poraKombo(now);
+  return nado;
+}
+
+// poraKombo: наступило ли время следующей точки комбо (чтобы отметить её прошедшей)
+function poraKombo(now) {
+  const sled = sleduyushchayaTochka(sloiK, state.now);
+  const nado = sled !== null && now >= sled.t;
   return nado;
 }
 
@@ -793,10 +903,12 @@ function recompute() {
   moon = moonEvents(state.sutki.start, state.sutki.end, place.lat, place.lon);
   sutkiN = sutkiNamaza(state.now, place.lat, place.lon);
   sutkiZ = sutkiZmanim(state.now, place.lat, place.lon);
+  sloiK = nastrojka.rezhim === 'kombo' ? sloiKombo(state.sutki, place.lat, place.lon, nastrojka.sloi, imenaK) : null;
   drawDial();
   renderText();
   if (musulmanskij()) renderNamaz();
   if (evrejskij()) renderZmanim();
+  if (kombo()) renderKombo();
   if (nastrojka.rezhim === 'evrejskij' && sutkiZ === null) renderBezZmanim();
   tick();
 }

@@ -11,4 +11,5 @@ export * from './prazdniki.js';
 export * from './rezhimy.js';
 export * from './namaz.js';
 export { sutkiZmanim, zmanimDnya, METODIKA_HABAD } from './zmanim.js';
+export { sloiKombo, imenaIudeev, imenaMusulman, vseTochki, sleduyushchayaTochka } from './kombo.js';
 // Небо (engine/nebo.js) подключается отдельно: оно тянет большую библиотеку astronomy.js.
