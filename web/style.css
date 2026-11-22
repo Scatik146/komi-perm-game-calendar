@@ -12,6 +12,8 @@
 @font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-cyrillic-ext-700-normal.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
 @font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-cyrillic-700-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
 @font-face { font-family: "PT Sans"; font-weight: 700; font-display: swap; src: local("PT Sans Bold"), url("fonts/pt-sans-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2212; }
+@font-face { font-family: "Noto Serif Hebrew"; font-weight: 400; font-display: swap; src: local("Noto Serif Hebrew"), url("fonts/noto-serif-hebrew-hebrew-400-normal.woff2") format("woff2"); unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: "Noto Serif Hebrew"; font-weight: 700; font-display: swap; src: local("Noto Serif Hebrew Bold"), url("fonts/noto-serif-hebrew-hebrew-700-normal.woff2") format("woff2"); unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
 
 /* Цвета четвертей на циферблате — постоянные */
 :root {
@@ -21,7 +23,7 @@
   --q-ryt: #8a5a2b;    /* вечер — бронза пермского звериного стиля */
   --sun: #f0b43c;
 
-  --serif: "PT Serif", Georgia, "DejaVu Serif", serif;
+  --serif: "PT Serif", "Noto Serif Hebrew", Georgia, "DejaVu Serif", serif;
   --sans: "PT Sans", "Segoe UI", "DejaVu Sans", sans-serif;
 }
 
@@ -248,7 +250,9 @@ main {
 /* Режим «Мусульманские»: сутки от заката, ислам — зелёный (как на листах «Составить календарь») */
 :root { --c-musl: #1f7a46; --c-musl-tekst: #1f7a46; }
 body[data-quarter="oy"], body[data-quarter="ryt"] { --c-musl-tekst: #7fd3a0; }
-body[data-rezhim="musulmanskij"] .igrovoe { display: none; }
+body[data-rezhim="musulmanskij"] .igrovoe,
+body[data-rezhim="evrejskij"] .igrovoe { display: none; }
+body:not([data-rezhim="evrejskij"]) .zmanim-info { display: none; }
 body:not([data-rezhim="musulmanskij"]) .namaz-info { display: none; }
 .namaz-sejchas { margin: 0 0 0.25rem; font: 700 clamp(2rem, 8vw, 3rem)/1.1 var(--serif); }
 .namaz-sejchas [lang="ar"] { font-weight: 400; margin-left: 0.4em; }
@@ -269,3 +273,25 @@ body:not([data-rezhim="musulmanskij"]) .namaz-info { display: none; }
 .n-ru { fill: var(--ink); font: 700 12px var(--serif); text-anchor: middle; }
 .n-ar { fill: var(--soft); font: 400 12px var(--serif); text-anchor: middle; }
 .rnum.current .n-ru { fill: var(--c-musl-tekst); font-size: 14px; }
+
+/* режим «Еврейские»: иудаизм — синий, суббота и праздник — заливкой, как на листах «Составить календарь» */
+:root { --c-iud: #24548f; --c-iud-tekst: #24548f; --c-shabbat: #cdd9ec; }
+body[data-quarter="oy"], body[data-quarter="ryt"] { --c-iud-tekst: #9dbbe6; }
+.zmanim [lang="he"], .zmanim-sejchas [lang="he"] { font: 400 1.1rem var(--serif); margin-left: 0.5em; color: var(--soft); }
+.zmanim-sejchas [lang="he"] { font-size: 0.6em; }
+.zmanim li.current .nazv { color: var(--c-iud-tekst); }
+.zmanim li.current { box-shadow: inset 4px 0 0 var(--c-iud-tekst); padding-inline-start: 0.5rem; }
+.zmanim li.svyatoj { background: color-mix(in srgb, var(--c-shabbat) 35%, transparent); }
+.zmanim-shabbat { margin: 0 0 0.25rem; font-weight: 700; color: var(--c-iud-tekst); }
+.zmanim-shabbat:empty { display: none; }
+.z-shabbat { fill: var(--c-shabbat); opacity: 0.55; }
+.z-sektor { fill: var(--c-iud); }
+.z-sektor.noch { opacity: 0.35; }
+.z-sektor.den  { opacity: 0.2; }
+.z-sektor.pusto { opacity: 0; }
+.z-edge { stroke: var(--c-iud); stroke-width: 2; }
+.z-edge.horizon { stroke: #8a5a2b; stroke-width: 2.5; }
+.z-ru { fill: var(--ink); font: 700 12px var(--serif); text-anchor: middle; }
+.z-he { fill: var(--soft); font: 400 12px var(--serif); text-anchor: middle; }
+.rnum.current .z-ru { fill: var(--c-iud-tekst); font-size: 14px; }
+.z-ru, .z-he { paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }

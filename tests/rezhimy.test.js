@@ -28,13 +28,15 @@ test('РПЦ — 12-часовой циферблат, игровой — 24', (
   assert.equal(rezhimPoId(dannye, 'net-takogo'), null);
 });
 
-test('пример: игровой режим доступен; контрпример: еврейский пока нет', () => {
+test('пример: игровой и еврейский режимы доступны; контрпример: комбо пока нет', () => {
   assert.equal(rezhimDostupen(dannye, 'igrovoj'), true);
-  assert.equal(rezhimDostupen(dannye, 'evrejskij'), false);
+  assert.equal(rezhimDostupen(dannye, 'evrejskij'), true);
+  assert.equal(rezhimDostupen(dannye, 'kombo'), false);
 });
 
 test('выбор режима: неготовый и неизвестный — игровой, готовый — он сам', () => {
-  assert.equal(vybratRezhim(dannye, 'evrejskij'), 'igrovoj');
+  assert.equal(vybratRezhim(dannye, 'kombo'), 'igrovoj');
+  assert.equal(vybratRezhim(dannye, 'evrejskij'), 'evrejskij');
   assert.equal(vybratRezhim(dannye, 'abc'), 'igrovoj');
   assert.equal(vybratRezhim(gotovye, 'musulmanskij'), 'musulmanskij');
 });
